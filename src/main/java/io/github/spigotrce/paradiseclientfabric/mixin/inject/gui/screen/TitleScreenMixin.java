@@ -1,10 +1,7 @@
 package io.github.spigotrce.paradiseclientfabric.mixin.inject.gui.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import io.github.spigotrce.paradiseclientfabric.Constants;
-import io.github.spigotrce.paradiseclientfabric.Helper;
-import io.github.spigotrce.paradiseclientfabric.ParadiseClient_Fabric;
-import io.github.spigotrce.paradiseclientfabric.WallPaper;
+import io.github.spigotrce.paradiseclientfabric.*;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -206,7 +203,7 @@ public abstract class TitleScreenMixin extends Screen {
                     this.splashText.render(context, this.width, this.textRenderer, i);
             context.drawTextWithShadow(this.textRenderer, Constants.WINDOW_TITLE, 2, this.height - 10, 16777215 | i);
             if (this.isRealmsNotificationsGuiDisplayed() && f >= 1.0F) {
-                RenderSystem.enableDepthTest();
+                GLHelper.enableDepthTest();
                 this.realmsNotificationGui.render(context, mouseX, mouseY, delta);
             }
         }

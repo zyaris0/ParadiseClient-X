@@ -143,7 +143,7 @@ public class Helper {
         }
 
         if (copyMessage != null && !copyMessage.isEmpty()) {
-            text.setStyle(text.getStyle().withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, copyMessage)));
+            text.setStyle(text.getStyle().withClickEvent(new ClickEvent.CopyToClipboard(copyMessage)));
         }
 
         return text;

@@ -41,7 +41,7 @@ public class PlayersCommand extends Command {
                     getMinecraftClient().player.networkHandler.getPlayerList().forEach(playerInfo -> {
                         String playerName = playerInfo.getProfile().getName();
                         String playerUUID = playerInfo.getProfile().getId().toString();
-                        String playerGamemode = playerInfo.getGameMode().getName();
+                        String playerGamemode = playerInfo.getGameMode().name();
                         int playerPing = playerInfo.getLatency();
                         PlayerData playerData = new PlayerData(playerName, playerUUID, playerGamemode, playerPing);
                         playerDataMap.put(playerName, playerData);

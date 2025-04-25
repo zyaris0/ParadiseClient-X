@@ -7,12 +7,13 @@ import io.github.spigotrce.paradiseclientfabric.event.packet.incoming.PacketInco
 import io.github.spigotrce.paradiseclientfabric.event.packet.outgoing.PacketOutgoingPostEvent;
 import io.github.spigotrce.paradiseclientfabric.event.packet.outgoing.PacketOutgoingPreEvent;
 import io.netty.channel.ChannelHandlerContext;
+import net.minecraft.SharedConstants;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.DisconnectionInfo;
-import net.minecraft.network.NetworkState;
 import net.minecraft.network.PacketCallbacks;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.network.state.NetworkState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -138,7 +139,7 @@ public class ClientConnectionMixin {
     }
 
     @Inject(method = "transitionInbound", at = @At("HEAD"))
-    public <T extends PacketListener> void transitionInbound(NetworkState<T> state, T packetListener, CallbackInfo ci) {
-        ParadiseClient_Fabric.NETWORK_CONFIGURATION.state = state;
+    public <T extends PacketListener> void onTransitionInbound(NetworkState<T> state, T packetListener, CallbackInfo ci) {
+        ParadiseClient_Fabric.NETWORK_CONFIGURATION.set(state.id(), state.side(), SharedConstants.getProtocolVersion());
     }
 }
