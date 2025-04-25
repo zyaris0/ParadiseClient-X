@@ -65,11 +65,11 @@ jobs:
         run: |
           curl -u ${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }} \
                --upload-file ${{ env.JAR_FILE }} \
-               https://repo.paradise-client.xyz/public/ParadiseClient-Fabric-${{ env.MOD_VERSION }}.jar
+               https://repo.paradise-client.net/public/ParadiseClient-Fabric-${{ env.MOD_VERSION }}.jar
 
       - name: Upload artifact to Webserver
         run: |
-          curl -X PUT "https://paradise-client.xyz/api/versions" \
+          curl -X PUT "https://paradise-client.net/api/versions" \
                -u ${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }} \
                -F "file=@${{ env.JAR_FILE }}" \
                -F "version=${{ env.MOD_VERSION }}" \

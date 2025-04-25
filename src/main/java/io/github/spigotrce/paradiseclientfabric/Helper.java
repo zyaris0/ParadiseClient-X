@@ -212,7 +212,7 @@ public class Helper {
 
     public static String getLatestReleaseTag() throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(
-                "http://paradise-client.xyz/api/versions"
+                "http://paradise-client.net/api/versions"
         ).openConnection();
         connection.setRequestProperty("Accept", "application/json");
         connection.setRequestMethod("GET");
