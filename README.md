@@ -42,6 +42,6 @@ For the best experience, we recommend:
 ## **Support and Development Builds**
 
 Find support and access development builds via our official Discord server:  
-[**Join Here**](https://discord.gg/3meyfSZ37J)
+[**Join Here**](https://discord.gg/WpGAqWhXJX)
 
 ---
