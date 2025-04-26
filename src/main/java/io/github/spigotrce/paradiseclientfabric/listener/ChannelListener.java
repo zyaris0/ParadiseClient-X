@@ -29,7 +29,6 @@ public class ChannelListener implements Listener {
         } catch (Exception e) {
             Helper.printChatMessage("&4Error handling listener for payload for channel: " + channelName + " " + e.getMessage());
             Constants.LOGGER.error("&4Error handling listener for channel: {} {}", channelName, e);
-
         }
     }
 }
