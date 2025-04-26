@@ -73,7 +73,7 @@ public class ChatRoomCommand extends Command {
                                 return SINGLE_SUCCESS;
                             }
                             try {
-                                Client.connected();
+                                Client.connect();
                             } catch (Exception e) {
                                 Helper.printChatMessage("§4§lError: Failed to connect to chatroom");
                                 Constants.LOGGER.error("Failed to connect to chatroom", e);

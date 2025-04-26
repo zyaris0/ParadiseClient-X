@@ -6,7 +6,7 @@ import io.github.spigotrce.paradiseclientfabric.chatroom.common.packet.PacketReg
 import io.github.spigotrce.paradiseclientfabric.chatroom.common.packet.impl.DisconnectPacket;
 
 public class Client {
-    public static void connected() throws Exception {
+    public static void connect() throws Exception {
         PacketRegistry.registerPackets();
         new ChatRoomClient(TokenStore.token.split("\\.")[3], 25565).connect();
         ParadiseClient_Fabric.CHAT_ROOM_MOD.isConnected = false;
