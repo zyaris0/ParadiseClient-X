@@ -79,7 +79,7 @@ enum PayloadRegistry {
     MINECRAFT_1_21_2(ProtocolConstants.MINECRAFT_1_21_2, 25),
     MINECRAFT_1_21_3(ProtocolConstants.MINECRAFT_1_21_3, 25),
     MINECRAFT_1_21_4(ProtocolConstants.MINECRAFT_1_21_4, 25),
-    MINECRAFT_1_21_5(ProtocolConstants.MINECRAFT_1_21_5, 25);
+    MINECRAFT_1_21_5(ProtocolConstants.MINECRAFT_1_21_5, 24);
 
     final int protocolVersion;
     final int packetId;
