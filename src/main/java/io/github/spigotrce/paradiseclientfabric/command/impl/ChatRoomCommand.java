@@ -73,13 +73,6 @@ public class ChatRoomCommand extends Command {
                                 return SINGLE_SUCCESS;
                             }
                             try {
-                                TokenStore.readToken();
-                            } catch (IOException e) {
-                                Helper.printChatMessage("§4§lError: Failed to read token");
-                                Constants.LOGGER.error("Failed to read token", e);
-                                return SINGLE_SUCCESS;
-                            }
-                            try {
                                 Client.connected();
                             } catch (Exception e) {
                                 Helper.printChatMessage("§4§lError: Failed to connect to chatroom");

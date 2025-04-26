@@ -1,5 +1,5 @@
 # Do not edit
-"file-version": 1
+"file-version": 2
 
 # Token of your discord bot
 "discord_token": "token to discord bot"
@@ -37,6 +37,10 @@
 
 # Time between an ip opening another connection in milliseconds
 "connection_throttle": 5000
+
+# Hostname for the server used to automatically connect
+# to the chat server
+"hostname": "localhost"
 
 # Database
 database_hostname: "localhost:3306"

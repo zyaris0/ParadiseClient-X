@@ -46,7 +46,8 @@ public class Config extends ConfigProvider {
                 getFileConfig().getBoolean("use_haproxy"),
                 getFileConfig().getInt("message_cooldown"),
                 getFileConfig().getInt("max_message_characters"),
-                getFileConfig().getInt("connection_throttle")
+                getFileConfig().getInt("connection_throttle"),
+                getFileConfig().getString("hostname")
         );
 
         databaseModel = new DatabaseModel(getFileConfig().getString("database_hostname"),

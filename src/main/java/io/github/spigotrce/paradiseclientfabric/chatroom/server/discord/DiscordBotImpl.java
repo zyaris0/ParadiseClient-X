@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.EnumSet;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -194,7 +195,7 @@ public class DiscordBotImpl extends ListenerAdapter {
                     return;
                 }
 
-                event.reply("Access token: `" + user.uuid() + "." + user.token() + "`").setEphemeral(true).queue();
+                event.reply("Access token: `" + user.uuid() + "." + user.token() + "." + Base64.getEncoder().encodeToString(Main.CONFIG.getServer().hostname().getBytes()) + "`").setEphemeral(true).queue();
                 sendWebhook(user, "Access Token Created");
                 break;
             case "verify":

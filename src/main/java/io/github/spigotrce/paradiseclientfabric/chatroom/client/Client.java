@@ -8,7 +8,7 @@ import io.github.spigotrce.paradiseclientfabric.chatroom.common.packet.impl.Disc
 public class Client {
     public static void connected() throws Exception {
         PacketRegistry.registerPackets();
-        new ChatRoomClient("chatroom_public.paradise-client.net", 45000).connect();
+        new ChatRoomClient(TokenStore.token.split("\\.")[3], 25565).connect();
         ParadiseClient_Fabric.CHAT_ROOM_MOD.isConnected = false;
     }
 

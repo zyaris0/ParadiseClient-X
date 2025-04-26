@@ -5,6 +5,15 @@ import java.nio.file.*;
 
 public class TokenStore {
     private static final Path FILE_PATH = Path.of("token.txt");
+    public static String token;
+
+    static {
+        try {
+            token = readToken();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static String readToken() throws IOException {
         if (!Files.exists(FILE_PATH)) {
