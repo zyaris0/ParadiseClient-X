@@ -4,6 +4,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.github.spigotrce.paradiseclientfabric.Helper;
 import io.github.spigotrce.paradiseclientfabric.command.Command;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.command.CommandSource;
 
 import java.util.Objects;
@@ -36,10 +37,11 @@ public class GriefCommand extends Command {
         return literal(getName())
                 .then(literal("tpall")
                         .executes((context) -> {
-                            Objects.requireNonNull(getMinecraftClient().getNetworkHandler()).sendChatCommand("tpall");
-                            Objects.requireNonNull(getMinecraftClient().getNetworkHandler()).sendChatCommand("etpall");
-                            Objects.requireNonNull(getMinecraftClient().getNetworkHandler()).sendChatCommand("minecraft:tp @a @p");
-                            Objects.requireNonNull(getMinecraftClient().getNetworkHandler()).sendChatCommand("tp @a @p");
+                            ClientPlayNetworkHandler handler = MinecraftClient.getInstance().getNetworkHandler();
+                            handler.sendChatCommand("tpall");
+                            handler.sendChatCommand("etpall");
+                            handler.sendChatCommand("minecraft:tp @a @p");
+                            handler.sendChatCommand("tp @a @p");
                             return SINGLE_SUCCESS;
                         })
                 )

@@ -11,6 +11,10 @@ import net.minecraft.network.PacketByteBuf;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
+/**
+ * Listener responsible for notifying when a plugin message
+ * is sent from the client
+ */
 public class ChannelListener implements Listener {
     @SuppressWarnings("unused")
     @EventHandler

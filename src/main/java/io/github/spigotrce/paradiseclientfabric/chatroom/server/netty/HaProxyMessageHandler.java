@@ -1,4 +1,4 @@
-package io.github.spigotrce.paradiseclientfabric.chatroom.client.netty.proxy;
+package io.github.spigotrce.paradiseclientfabric.chatroom.server.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

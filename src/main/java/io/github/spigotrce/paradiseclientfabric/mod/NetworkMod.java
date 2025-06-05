@@ -28,26 +28,6 @@ public class NetworkMod {
     public String serverIP = "";
 
     /**
-     * The last incoming network packet received.
-     */
-    public Packet<?> lastIncomingPacket;
-
-    /**
-     * The timestamp when the last incoming packet was received.
-     */
-    public long lastIncomingPacketTime = 0; // Disabled temporarily;
-
-    /**
-     * The last outgoing network packet sent.
-     */
-    public Packet<?> lastOutgoingPacket;
-
-    /**
-     * The timestamp when the last outgoing packet was sent.
-     */
-    public long lastOutgoingPacketTime = 0; // Disabled temporarily;
-
-    /**
      * The registered channels by their names.
      */
     public ArrayList<String> getRegisteredChannelsByName() {

@@ -1,6 +1,5 @@
 package io.github.spigotrce.paradiseclientfabric.chatroom.server.netty;
 
-import io.github.spigotrce.paradiseclientfabric.chatroom.client.netty.proxy.HaProxyMessageHandler;
 import io.github.spigotrce.paradiseclientfabric.chatroom.common.netty.CommonChannelInitializer;
 import io.github.spigotrce.paradiseclientfabric.chatroom.server.Main;
 import io.netty.channel.ChannelInitializer;

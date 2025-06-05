@@ -32,7 +32,12 @@ public class ChatRoomServerHandler extends SimpleChannelInboundHandler<ByteBuf> 
         ChatRoomServer.channels.remove(ctx.channel());
         if (packetHandler.userModel != null) {
             ChatRoomServer.onlineUsers.remove(packetHandler.userModel);
-            Logging.info("Disconnection: " + packetHandler.userModel.username() +  ctx.channel().attr(AttributeKey.valueOf("proxiedAddress")).get());
+            Logging.info("Disconnection: " + packetHandler.userModel.username() +
+                    ctx.channel().attr(
+                            AttributeKey.valueOf(
+                                    "proxiedAddress"
+                            )
+                    ).get());
             ChatRoomServer.broadcastMessage(packetHandler.userModel.username() + " left the chat");
         }
         packetHandler = null;
@@ -41,7 +46,12 @@ public class ChatRoomServerHandler extends SimpleChannelInboundHandler<ByteBuf> 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         Logging.error("Exception caught on netty thread", cause);
-        PacketRegistry.sendPacket(new DisconnectPacket("Error in netty thread, check server console."), ctx.channel());
+        PacketRegistry.sendPacket(
+                new DisconnectPacket(
+                        "Error in netty thread, check server console."
+                ),
+                ctx.channel()
+        );
         ctx.close();
     }
 }

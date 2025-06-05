@@ -36,6 +36,11 @@ public abstract class ChatInputSuggestorMixin {
     @Shadow
     protected abstract void showCommandSuggestions();
 
+    /**
+     * To suggest tab completion for paradise registered commands.
+     * @param ci
+     * @param reader
+     */
     @Inject(method = "refresh",
             at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/StringReader;canRead()Z", remap = false),
             cancellable = true
@@ -48,11 +53,24 @@ public abstract class ChatInputSuggestorMixin {
             reader.setCursor(reader.getCursor() + length);
 
             if (this.parse == null)
-                this.parse = ParadiseClient_Fabric.COMMAND_MANAGER.DISPATCHER.parse(reader, MinecraftClient.getInstance().getNetworkHandler().getCommandSource());
+                this.parse = ParadiseClient_Fabric.COMMAND_MANAGER
+                        .DISPATCHER
+                        .parse(
+                                reader,
+                                MinecraftClient.getInstance()
+                                        .getNetworkHandler()
+                                        .getCommandSource()
+                        );
 
             int cursor = textField.getCursor();
             if (cursor >= length && (this.window == null || !this.completingSuggestions)) {
-                this.pendingSuggestions = ParadiseClient_Fabric.COMMAND_MANAGER.DISPATCHER.getCompletionSuggestions(this.parse, cursor);
+                this.pendingSuggestions = ParadiseClient_Fabric
+                        .COMMAND_MANAGER
+                        .DISPATCHER
+                        .getCompletionSuggestions(
+                                this.parse,
+                                cursor
+                        );
                 this.pendingSuggestions.thenRun(() -> {
                     if (this.pendingSuggestions.isDone())
                         this.showCommandSuggestions();

@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
 
 /**
@@ -51,7 +52,10 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientPlayNetwork
      * @param info   The callback information.
      */
     @Inject(method = "onGameJoin", at = @At("TAIL"))
-    private void onGameJoin(GameJoinS2CPacket packet, CallbackInfo info) {
+    private void onGameJoin(
+            GameJoinS2CPacket packet,
+            CallbackInfo info
+    ) {
         ParadiseClient_Fabric.NETWORK_MOD.isConnected = true;
         ParadiseClient_Fabric.NETWORK_MOD.serverIP = ((ClientPlayNetworkHandler) (Object) this).getConnection().getAddress().toString().split("/")[0];
         if (ParadiseClient_Fabric.MISC_MOD.isClientOutdated)
@@ -65,13 +69,9 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientPlayNetwork
      * @param ci      The callback information.
      */
     @Inject(method = "sendChatMessage", at = @At("HEAD"), cancellable = true)
-    private void onSendChatMessageH(String content, CallbackInfo ci) {
+    private void onSendChatMessageH(String content, CallbackInfo ci) throws InvocationTargetException, IllegalAccessException {
         ChatPreEvent event = new ChatPreEvent(content);
-        try {
-            ParadiseClient_Fabric.EVENT_MANAGER.fireEvent(event);
-        } catch (Exception e) {
-            Constants.LOGGER.error("Failed to fire ChatPreEvent", e);
-        }
+        ParadiseClient_Fabric.EVENT_MANAGER.fireEvent(event);
         if (event.isCancel()) ci.cancel();
     }
 
@@ -82,13 +82,9 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientPlayNetwork
      * @param ci      The callback information.
      */
     @Inject(method = "sendChatMessage", at = @At("TAIL"))
-    private void onSendChatMessageT(String content, CallbackInfo ci) {
+    private void onSendChatMessageT(String content, CallbackInfo ci) throws InvocationTargetException, IllegalAccessException {
         ChatPostEvent event = new ChatPostEvent(content);
-        try {
-            ParadiseClient_Fabric.EVENT_MANAGER.fireEvent(event);
-        } catch (Exception e) {
-            Constants.LOGGER.error("Failed to fire ChatPreEvent", e);
-        }
+        ParadiseClient_Fabric.EVENT_MANAGER.fireEvent(event);
     }
 
     /**

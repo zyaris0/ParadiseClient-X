@@ -1,6 +1,5 @@
 package io.github.spigotrce.paradiseclientfabric.mixin.inject.network.handler;
 
-import com.mojang.logging.LogUtils;
 import io.github.spigotrce.paradiseclientfabric.Helper;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -11,15 +10,12 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.PacketType;
 import net.minecraft.network.state.NetworkState;
 import net.minecraft.util.profiling.jfr.FlightProfiler;
-import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.*;
 
 import java.util.List;
 
 @Mixin(DecoderHandler.class)
 public class DecoderHandlerMixin<T extends PacketListener> {
-    @Shadow
-    private static final Logger LOGGER = LogUtils.getLogger();
     @Mutable
     @Final
     @Shadow
@@ -30,8 +26,10 @@ public class DecoderHandlerMixin<T extends PacketListener> {
         this.state = state;
     }
 
-
     /**
+     * Prevents issues with via version wrongly translating packets.
+     * Notifies in chat about handling errors.
+     *
      * @author SpigotRCE
      * @reason To prevent disconnection issues
      */

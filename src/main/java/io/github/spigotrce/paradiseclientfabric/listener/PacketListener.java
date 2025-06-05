@@ -3,24 +3,36 @@ package io.github.spigotrce.paradiseclientfabric.listener;
 import io.github.spigotrce.eventbus.event.EventHandler;
 import io.github.spigotrce.eventbus.event.listener.Listener;
 import io.github.spigotrce.paradiseclientfabric.Helper;
-import io.github.spigotrce.paradiseclientfabric.ParadiseClient_Fabric;
 import io.github.spigotrce.paradiseclientfabric.event.packet.incoming.PacketIncomingPreEvent;
-import io.github.spigotrce.paradiseclientfabric.event.packet.outgoing.PacketOutgoingPostEvent;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.packet.s2c.common.ResourcePackSendS2CPacket;
 import net.minecraft.network.packet.s2c.play.CommandSuggestionsS2CPacket;
+import net.minecraft.text.Text;
 
 import java.util.List;
 
-@SuppressWarnings("unused")
+/**
+ * Listener responsible for packet related events.
+ */
 public class PacketListener implements Listener {
+    /**
+     * Responsible for notifying the server
+     * resource pack url.
+     *
+     * @param event the event
+     */
     @EventHandler
     public void onResourcePackPacketReceive(PacketIncomingPreEvent event) {
         if (!(event.getPacket() instanceof ResourcePackSendS2CPacket packet)) return;
         String url = packet.url();
-        Helper.printChatMessage("Server resource pack url: " + url);
+        Helper.printChatMessage(Text.of("Server resource pack url: " + url));
     }
 
+    /**
+     * Responsible for sending bungeecord ip commands
+     * when the server sends a tab completion packet.
+     * @param event
+     */
     @EventHandler
     public void onIncomingPacketReceive(PacketIncomingPreEvent event) {
         if (!(event.getPacket() instanceof CommandSuggestionsS2CPacket packet)) return;
@@ -36,11 +48,5 @@ public class PacketListener implements Listener {
             } catch (Exception ignored) {
             }
         }).start();
-    }
-
-    @EventHandler
-    public void onOutgoingPacketReceive(PacketOutgoingPostEvent event) {
-        ParadiseClient_Fabric.NETWORK_MOD.lastOutgoingPacket = event.getPacket();
-        ParadiseClient_Fabric.NETWORK_MOD.lastOutgoingPacketTime = System.currentTimeMillis();
     }
 }
