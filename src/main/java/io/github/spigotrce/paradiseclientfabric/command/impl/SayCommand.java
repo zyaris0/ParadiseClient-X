@@ -3,7 +3,7 @@ package io.github.spigotrce.paradiseclientfabric.command.impl;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.github.spigotrce.paradiseclientfabric.command.Command;
-import io.github.spigotrce.paradiseclientfabric.mixin.accessor.ClientPlayNetworkHandlerAccessor;
+import io.github.spigotrce.paradiseclientfabric.inject.accessor.ClientPlayNetworkHandlerAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandSource;
 

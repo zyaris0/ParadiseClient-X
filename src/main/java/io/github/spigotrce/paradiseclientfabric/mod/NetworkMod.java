@@ -1,8 +1,7 @@
 package io.github.spigotrce.paradiseclientfabric.mod;
 
-import io.github.spigotrce.paradiseclientfabric.mixin.accessor.PayloadTypeRegistryImplAccessor;
+import io.github.spigotrce.paradiseclientfabric.inject.accessor.PayloadTypeRegistryImplAccessor;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.network.packet.Packet;
 
 import java.util.ArrayList;
 

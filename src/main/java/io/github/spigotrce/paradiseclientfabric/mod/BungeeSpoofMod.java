@@ -1,6 +1,6 @@
 package io.github.spigotrce.paradiseclientfabric.mod;
 
-import io.github.spigotrce.paradiseclientfabric.mixin.accessor.SessionAccessor;
+import io.github.spigotrce.paradiseclientfabric.inject.accessor.SessionAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.session.Session;
 
