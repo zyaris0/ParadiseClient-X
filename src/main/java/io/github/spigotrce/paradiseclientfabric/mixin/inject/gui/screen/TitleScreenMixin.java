@@ -178,8 +178,6 @@ public abstract class TitleScreenMixin extends Screen {
         if (this.backgroundFadeStart == 0L && this.doBackgroundFade)
             this.backgroundFadeStart = Util.getMeasuringTimeMs();
 
-        WallPaper.render(context, this.width, this.height);
-
         float f = 1.0F;
         if (this.doBackgroundFade) {
             float g = (float) (Util.getMeasuringTimeMs() - this.backgroundFadeStart) / 2000.0F;
@@ -195,6 +193,7 @@ public abstract class TitleScreenMixin extends Screen {
             this.setWidgetAlpha(f);
         }
 
+        this.renderPanoramaBackground(context, delta);
         int i = MathHelper.ceil(f * 255.0F) << 24;
         if ((i & -67108864) != 0) {
             super.render(context, mouseX, mouseY, delta);

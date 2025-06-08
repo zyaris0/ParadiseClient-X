@@ -1,6 +1,7 @@
 package io.github.spigotrce.paradiseclientfabric.mixin.inject.gui.screen;
 
 import io.github.spigotrce.paradiseclientfabric.WallPaper;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,9 +20,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Screen.class)
 public abstract class ScreenMixin {
     @Shadow
-    public int height;
-    @Shadow
-    public int width;
+    protected MinecraftClient client;
+
+    @Shadow protected abstract void renderPanoramaBackground(DrawContext context, float deltaTicks);
 
     /**
      * Injects custom background rendering into the renderBackground method.
@@ -35,7 +36,9 @@ public abstract class ScreenMixin {
      */
     @Inject(method = "renderBackground", at = @At(value = "HEAD"), cancellable = true)
     private void renderBackground(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        WallPaper.render(context, width, height);
+        if (this.client.world == null) {
+            this.renderPanoramaBackground(context, delta);
+        }
         ci.cancel();
     }
 }
