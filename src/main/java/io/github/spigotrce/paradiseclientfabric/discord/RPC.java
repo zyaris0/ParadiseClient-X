@@ -1,21 +1,23 @@
 package io.github.spigotrce.paradiseclientfabric.discord;
 
-//import de.jcm.discordgamesdk.Core;
-//import de.jcm.discordgamesdk.CreateParams;
-//import de.jcm.discordgamesdk.activity.Activity;
-
+import de.jcm.discordgamesdk.Core;
+import de.jcm.discordgamesdk.CreateParams;
+import de.jcm.discordgamesdk.activity.Activity;
 import io.github.spigotrce.paradiseclientfabric.Constants;
+import io.github.spigotrce.paradiseclientfabric.ParadiseClient_Fabric;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
 
-import java.io.File;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.io.*;
+import java.net.URL;
+import java.nio.file.*;
+import java.time.Instant;
+import java.util.Objects;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Implements Runnable interface to run Discord Rich Presence functionality.
- * This class sets up the Discord RPC client, updates the presence status, and handles the game's state.
+ * Downloads and sets up the Discord SDK if needed.
  *
  * @author SpigotRCE
  * @since 2.17
@@ -25,76 +27,101 @@ public class RPC implements Runnable {
 
     @Override
     public void run() {
-        this.loadDiscordRPC();
-//
-//        try {
-//            Core.init(new File(MinecraftClient.getInstance().runDirectory.getAbsolutePath() + File.separator + "paradise" + File.separator + "discord" + File.separator + "discord_game_sdk.dll"));
-//        } catch (Exception e) {
-//            Constants.LOGGER.error("Failed to initialize Discord SDK: {}", e.getMessage());
-//            return;
-//        }
-//
-//        try (CreateParams params = new CreateParams()) {
-//            params.setClientID(1164104022265974784L);
-//            params.setFlags(CreateParams.getDefaultFlags());
-//
-//            try (Core core = new Core(params)) {
-//                try (Activity activity = new Activity()) {
-//                    activity.setDetails("In Menu");
-//                    activity.timestamps().setStart(Instant.now());
-//
-//                    core.activityManager().updateActivity(activity);
-//
-//                    while (true) {
-//                        try {
-//                            core.runCallbacks();
-//
-//                            if (ParadiseClient_Fabric.networkMod.isConnected) {
-//                                activity.setDetails("Playing on a server");
-//                                activity.setState(Objects.isNull(MinecraftClient.getInstance().getCurrentServerEntry()) ? "Hidden" : MinecraftClient.getInstance().getCurrentServerEntry().address);
-//                            } else {
-//                                activity.setDetails("In Menu");
-//                                activity.setState("");
-//                            }
-//
-//                            core.activityManager().updateActivity(activity);
-//                            Thread.sleep(1000);
-//                        } catch (InterruptedException e) {
-//                            Constants.LOGGER.error("Interrupted Discord RPC thread: {}", e.getMessage());
-//                            break;
-//                        } catch (Exception e) {
-//                            Constants.LOGGER.error("Error while updating Discord activity: {}", e.getMessage());
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        try {
+            installDiscordSDK();
+        } catch (IOException e) {
+            Constants.LOGGER.error("Failed to download Discord SDK: {}", e.getMessage());
+            return;
+        }
+
+        try {
+            File sdkFile = new File(MinecraftClient.getInstance().runDirectory,
+                    "paradise/discord/discord_game_sdk.dll");
+            Core.init(sdkFile);
+        } catch (Exception e) {
+            Constants.LOGGER.error("Failed to initialize Discord SDK: {}", e.getMessage());
+            return;
+        }
+
+        try (CreateParams params = new CreateParams()) {
+            params.setClientID(1164104022265974784L);
+            params.setFlags(CreateParams.getDefaultFlags());
+
+            try (Core core = new Core(params)) {
+                try (Activity activity = new Activity()) {
+                    activity.assets().setLargeImage("af9df3fa19b7374e5e7582865f9fb1e7");
+                    activity.setDetails("In Menu");
+                    activity.timestamps().setStart(Instant.now());
+
+                    core.activityManager().updateActivity(activity);
+
+                    while (true) {
+                        try {
+                            core.runCallbacks();
+
+                            if (ParadiseClient_Fabric.NETWORK_MOD.isConnected) {
+                                activity.setDetails("Playing on a server");
+                                activity.setState(Objects.isNull(MinecraftClient.getInstance().getCurrentServerEntry())
+                                        ? "Hidden"
+                                        : MinecraftClient.getInstance().getCurrentServerEntry().address);
+                            } else {
+                                activity.setDetails("In Menu");
+                                activity.setState("");
+                            }
+
+                            core.activityManager().updateActivity(activity);
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            Constants.LOGGER.error("Interrupted Discord RPC thread: {}", e.getMessage());
+                            break;
+                        } catch (Exception e) {
+                            Constants.LOGGER.error("Error while updating Discord activity: {}", e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
-     * Loads the Discord Game SDK DLL file from the resource manager and copies it to the game directory.
+     * Downloads and installs the Discord Game SDK DLL.
      */
-    private void loadDiscordRPC() {
-        Identifier identifier = Identifier.of(Constants.MOD_ID, "discord/discord_game_sdk.dll");
+    public static void installDiscordSDK() throws IOException {
+        File targetDir = new File(MinecraftClient.getInstance().runDirectory, "paradise/discord");
+        File outputFile = new File(targetDir, "discord_game_sdk.dll");
 
-        String gameDir = MinecraftClient.getInstance().runDirectory.getAbsolutePath();
-        String filePath = gameDir + File.separator + "paradise" + File.separator;
-        File dir = new File(filePath);
+        if (outputFile.exists()) {
+            return;
+        }
 
-        try {
-            dir.mkdirs();
-            File file = new File(filePath + identifier.getPath());
+        String url = "https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip";
+        Path tempZipPath = Files.createTempFile("discord_sdk", ".zip");
 
-            if (!file.exists()) {
-                Constants.LOGGER.info("Copying missing Discord game SDK file: {}", file.getPath());
-                try (InputStream inputStream = MinecraftClient.getInstance().getResourceManager().getResource(identifier).get().getInputStream()) {
-                    Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                } catch (Exception e) {
-                    Constants.LOGGER.error("Error copying Discord game SDK file: {}", file.getPath(), e);
+        try (InputStream in = new URL(url).openStream()) {
+            Files.copy(in, tempZipPath, StandardCopyOption.REPLACE_EXISTING);
+            Constants.LOGGER.info("Downloaded Discord SDK ZIP.");
+        }
+
+        boolean extracted = false;
+
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(tempZipPath.toFile()))) {
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                if (entry.getName().equals("lib/x86_64/discord_game_sdk.dll")) {
+                    if (!targetDir.exists()) targetDir.mkdirs();
+                    Files.copy(zis, outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    Constants.LOGGER.info("Extracted Discord SDK DLL to {}", outputFile.getAbsolutePath());
+                    extracted = true;
+                    break;
                 }
+                zis.closeEntry();
             }
-        } catch (Exception e) {
-            Constants.LOGGER.error("Error creating directory: {}", filePath, e);
+        }
+
+        Files.deleteIfExists(tempZipPath);
+
+        if (!extracted) {
+            throw new FileNotFoundException("DLL not found inside Discord SDK ZIP");
         }
     }
 }

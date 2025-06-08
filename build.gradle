@@ -16,10 +16,6 @@ repositories {
 
     maven {
         url 'https://jitpack.io'
-
-        content {
-            includeGroup "com.github.Oryxel"
-        }
     }
 
     maven {
@@ -60,7 +56,7 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     implementation 'org.apiguardian:apiguardian-api:1.1.2'
-//    implementation 'com.github.JnCrMx:discord-game-sdk4j:v0.5.5'
+    implementation 'com.github.JnCrMx:discord-game-sdk4j:v0.5.5'
     shadow(implementation 'io.github.spigotrce.eventbus:EventBus:1.0-SNAPSHOT')
     shadow(implementation 'net.md_5.bungee:BungeeCord')
     shadow(implementation("net.dv8tion:JDA:${jda_version}"))
