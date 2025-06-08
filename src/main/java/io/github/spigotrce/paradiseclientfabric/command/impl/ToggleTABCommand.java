@@ -17,21 +17,17 @@ public class ToggleTABCommand extends Command {
 
     /**
      * Constructs a new instance of {@link ToggleTABCommand}.
-     *
-     * @param minecraftClient The Minecraft client instance.
      */
-    public ToggleTABCommand(MinecraftClient minecraftClient) {
-        super("toggletab", "Toggles IP displayed on HUD", minecraftClient);
+    public ToggleTABCommand() {
+        super("toggletab", "Toggles IP displayed on HUD");
     }
 
     /**
      * Builds the command structure using Brigadier's {@link LiteralArgumentBuilder}.
-     *
-     * @return The built command structure.
      */
     @Override
-    public LiteralArgumentBuilder<CommandSource> build() {
-        return literal(getName()).executes((context -> {
+    public void build(LiteralArgumentBuilder<CommandSource> root) {
+        root.executes((context -> {
             ParadiseClient_Fabric.HUD_MOD.showPlayerList = !ParadiseClient_Fabric.HUD_MOD.showPlayerList;
             Helper.printChatMessage(ParadiseClient_Fabric.HUD_MOD.showPlayerList ? "TAB shown" : "TAB hidden");
             return SINGLE_SUCCESS;

@@ -12,7 +12,6 @@ import net.minecraft.command.CommandSource;
  */
 public abstract class Command {
     protected static final int SINGLE_SUCCESS = com.mojang.brigadier.Command.SINGLE_SUCCESS;
-    private final MinecraftClient minecraftClient;
 
     private final String name;
     private final String description;
@@ -23,10 +22,9 @@ public abstract class Command {
      *
      * @param name            The name of the command.
      * @param description     The description of the command.
-     * @param minecraftClient The Minecraft client instance.
      */
-    public Command(String name, String description, MinecraftClient minecraftClient) {
-        this(name, description, minecraftClient, false);
+    public Command(String name, String description) {
+        this(name, description, false);
     }
 
     /**
@@ -34,13 +32,11 @@ public abstract class Command {
      *
      * @param name            The name of the command.
      * @param description     The description of the command.
-     * @param minecraftClient The Minecraft client instance.
      * @param async           Whether the command should be run inside a background thread
      */
-    public Command(String name, String description, MinecraftClient minecraftClient, boolean async) {
+    public Command(String name, String description, boolean async) {
         this.name = name;
         this.description = description;
-        this.minecraftClient = minecraftClient;
         this.async = async;
     }
 
@@ -67,10 +63,8 @@ public abstract class Command {
 
     /**
      * Abstract method to build the command using Brigadier's argument builder.
-     *
-     * @return A Brigadier literal argument builder for the command.
      */
-    abstract public LiteralArgumentBuilder<CommandSource> build();
+    abstract public void build(LiteralArgumentBuilder<CommandSource> root);
 
     /**
      * Getter for the command name.
@@ -96,7 +90,7 @@ public abstract class Command {
      * @return The Minecraft client instance.
      */
     public MinecraftClient getMinecraftClient() {
-        return minecraftClient;
+        return MinecraftClient.getInstance();
     }
 
     /**

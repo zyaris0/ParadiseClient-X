@@ -20,21 +20,17 @@ public class PlayersCommand extends Command {
 
     /**
      * Constructs a new instance of PlayersCommand.
-     *
-     * @param minecraftClient The Minecraft client instance.
      */
-    public PlayersCommand(MinecraftClient minecraftClient) {
-        super("players", "Gets info about players online on the server", minecraftClient);
+    public PlayersCommand() {
+        super("players", "Gets info about players online on the server");
     }
 
     /**
      * Builds the command using Brigadier library.
-     *
-     * @return The built command.
      */
     @Override
-    public LiteralArgumentBuilder<CommandSource> build() {
-        return literal(getName())
+    public void build(LiteralArgumentBuilder<CommandSource> root) {
+        root
                 .executes((context) -> {
                     Map<String, PlayerData> playerDataMap = new HashMap<>();
 

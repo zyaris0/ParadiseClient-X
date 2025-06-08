@@ -9,33 +9,21 @@ import net.minecraft.command.CommandSource;
 
 import java.util.Objects;
 
-/**
- * This class represents a command for griefing actions in a Minecraft client.
- * It extends the {@link Command} class and overrides the {@link #build()} method to define the command structure.
- *
- * @author SpigotRCE
- * @since 1.4
- */
 public class GriefCommand extends Command {
 
     /**
      * Constructs a new instance of {@link GriefCommand}.
-     *
-     * @param minecraftClient The Minecraft client instance
      */
-    public GriefCommand(MinecraftClient minecraftClient) {
-        super("grief", "Multiple grief commands", minecraftClient);
+    public GriefCommand() {
+        super("grief", "Multiple grief commands");
     }
 
     /**
      * Builds the command structure using Brigadier's {@link LiteralArgumentBuilder}.
-     *
-     * @return The root command node
      */
     @Override
-    public LiteralArgumentBuilder<CommandSource> build() {
-        return literal(getName())
-                .then(literal("tpall")
+    public void build(LiteralArgumentBuilder<CommandSource> root) {
+        root.then(literal("tpall")
                         .executes((context) -> {
                             ClientPlayNetworkHandler handler = MinecraftClient.getInstance().getNetworkHandler();
                             handler.sendChatCommand("tpall");

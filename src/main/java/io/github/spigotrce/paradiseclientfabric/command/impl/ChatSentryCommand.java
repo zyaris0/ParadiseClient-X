@@ -12,14 +12,13 @@ import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
 import java.util.Random;
 
 public class ChatSentryCommand extends Command {
-    public ChatSentryCommand(MinecraftClient minecraftClient) {
-        super("chatsentry", "Executes bungee command through console!", minecraftClient);
+    public ChatSentryCommand() {
+        super("chatsentry", "Executes bungee command through console!");
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSource> build() {
-        return literal(getName())
-                .executes(context -> {
+    public void build(LiteralArgumentBuilder<CommandSource> root) {
+        root.executes(context -> {
                     Helper.printChatMessage("Incomplete command!");
                     return SINGLE_SUCCESS;
                 })

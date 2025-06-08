@@ -1,5 +1,6 @@
 package io.github.spigotrce.paradiseclientfabric.command.impl;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.github.spigotrce.paradiseclientfabric.Helper;
 import io.github.spigotrce.paradiseclientfabric.ParadiseClient_Fabric;
@@ -17,44 +18,72 @@ public class HelpCommand extends Command {
 
     /**
      * Constructs a new instance of {@link HelpCommand}.
-     *
-     * @param minecraftClient The Minecraft client instance.
      */
-    public HelpCommand(MinecraftClient minecraftClient) {
-        super("help", "Shows help page", minecraftClient);
+    public HelpCommand() {
+        super("help", "Shows help page");
     }
 
     /**
      * Builds the command structure using Brigadier's {@link LiteralArgumentBuilder}.
-     *
-     * @return The built command structure.
      */
     @Override
-    public LiteralArgumentBuilder<CommandSource> build() {
-        LiteralArgumentBuilder<CommandSource> node = literal(getName());
+    public void build(LiteralArgumentBuilder<CommandSource> root) {
+        root.executes((context -> {
+                    printDash();
+                    for (Command command : ParadiseClient_Fabric.COMMAND_MANAGER.getCommands()) {
+                        Helper.printChatMessage("§a" + command.getName() + " §b" + command.getDescription(), false);
+                    }
+                    printDash();
+                    Helper.printChatMessage("§aThere are currently §b" +
+                                    ParadiseClient_Fabric.COMMAND_MANAGER.getCommands().size() +
+                                    "§a registered commands.",
+                            false
+                    );
+                    printDash();
+                    return SINGLE_SUCCESS;
+                }))
+                .then(argument("command", StringArgumentType.word())
+                        .executes(context -> {
+                            String name = context.getArgument("command", String.class);
+                            Command command = ParadiseClient_Fabric.COMMAND_MANAGER.getCommand(name);
 
-        // Adds sub-commands for each registered command
-        ParadiseClient_Fabric.COMMAND_MANAGER.getCommands().forEach(command -> node.then(literal(command.getName()).executes((context) -> {
-            Command c = ParadiseClient_Fabric.COMMAND_MANAGER.getCommand(command.getName());
-            printDash();
-            Helper.printChatMessage("§a" + c.getName() + " §b" + c.getDescription());
-            printDash();
-            return SINGLE_SUCCESS;
-        })));
+                            if (command == null) {
+                                Helper.printChatMessage("§4Command not found!");
+                                return SINGLE_SUCCESS;
+                            }
 
-        // Adds a command to display all registered commands
-        node.executes((context -> {
-            printDash();
-            for (Command command : ParadiseClient_Fabric.COMMAND_MANAGER.getCommands())
-                Helper.printChatMessage("§a" + command.getName() + " §b" + command.getDescription());
-            printDash();
-            Helper.printChatMessage("§aThere are currently §b" + ParadiseClient_Fabric.COMMAND_MANAGER.getCommands().size() + "§a registered commands.");
-            printDash();
+                            printDash();
+                            Helper.printChatMessage("§a" + command.getName() + " §b" + command.getDescription(), false);
+                            printDash();
+                            return SINGLE_SUCCESS;
+                        })
+                        .suggests((context, builder) -> {
+                            String partialName;
+                            try {
+                                partialName = context.getArgument("command", String.class);
+                            } catch (IllegalArgumentException e) {
+                                partialName = "";
+                            }
 
-            return SINGLE_SUCCESS;
-        }));
+                            if (partialName.isEmpty()) {
+                                ParadiseClient_Fabric.COMMAND_MANAGER.getCommands()
+                                        .stream()
+                                        .map(Command::getName)
+                                        .forEach(builder::suggest);
+                                return builder.buildFuture();
+                            }
 
-        return node;
+                            String finalPartialName = partialName;
+                            ParadiseClient_Fabric.COMMAND_MANAGER.getCommands()
+                                    .stream()
+                                    .map(Command::getName)
+                                    .filter(name -> name.toLowerCase().startsWith(finalPartialName))
+                                    .forEach(builder::suggest);
+
+                            return builder.buildFuture();
+
+                        })
+                );
     }
 
     private void printDash() {

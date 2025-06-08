@@ -11,14 +11,13 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
 
 public class SignedVelocityCommand extends Command {
-    public SignedVelocityCommand(MinecraftClient minecraftClient) {
-        super("signedvelocity", "Spoofs player sent commands", minecraftClient);
+    public SignedVelocityCommand() {
+        super("signedvelocity", "Spoofs player sent commands");
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSource> build() {
-        return literal(getName())
-                .executes(context -> {
+    public void build(LiteralArgumentBuilder<CommandSource> root) {
+        root.executes(context -> {
                     Helper.printChatMessage("Incomplete command!");
                     return SINGLE_SUCCESS;
                 })

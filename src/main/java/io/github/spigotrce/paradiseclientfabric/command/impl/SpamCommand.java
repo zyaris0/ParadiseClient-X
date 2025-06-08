@@ -29,21 +29,17 @@ public class SpamCommand extends Command {
 
     /**
      * Constructs a new SpamCommand instance.
-     *
-     * @param minecraftClient The Minecraft client instance.
      */
-    public SpamCommand(MinecraftClient minecraftClient) {
-        super("spam", "Spams the specified command", minecraftClient);
+    public SpamCommand() {
+        super("spam", "Spams the specified command");
     }
 
     /**
      * Builds the command structure using Brigadier's LiteralArgumentBuilder.
-     *
-     * @return The built command structure.
      */
     @Override
-    public LiteralArgumentBuilder<CommandSource> build() {
-        return literal(getName())
+    public void build(LiteralArgumentBuilder<CommandSource> root) {
+        root
                 .then(literal("stop")
                         .executes((context) -> {
                             if (!isRunning) {

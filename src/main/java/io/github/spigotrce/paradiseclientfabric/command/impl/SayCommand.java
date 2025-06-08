@@ -8,21 +8,20 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandSource;
 
 public class SayCommand extends Command {
-    public SayCommand(MinecraftClient minecraftClient) {
-        super("say", "Sends a chat message to the server", minecraftClient);
+    public SayCommand() {
+        super("say", "Sends a chat message to the server");
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSource> build() {
-        return literal(getName())
-                .then(argument("message", StringArgumentType.greedyString())
-                        .executes(context -> {
-                                    String message = context.getArgument("message", String.class);
-                                    ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler())
-                                            .paradiseClient_Fabric$sendChatMessage(message);
-                                    return SINGLE_SUCCESS;
-                                }
-                        )
-                );
+    public void build(LiteralArgumentBuilder<CommandSource> root) {
+        root.then(argument("message", StringArgumentType.greedyString())
+                .executes(context -> {
+                            String message = context.getArgument("message", String.class);
+                            ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler())
+                                    .paradiseClient_Fabric$sendChatMessage(message);
+                            return SINGLE_SUCCESS;
+                        }
+                )
+        );
     }
 }

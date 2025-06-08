@@ -1,6 +1,7 @@
 package io.github.spigotrce.paradiseclientfabric.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.spigotrce.eventbus.event.EventHandler;
 import io.github.spigotrce.eventbus.event.listener.Listener;
@@ -45,26 +46,23 @@ public class CommandManager implements Listener {
     }
 
     public void init() {
-        register(new CopyCommand(minecraftClient));
-        register(new ExploitCommand(minecraftClient));
-        register(new ForceOPCommand(minecraftClient));
-        register(new GriefCommand(minecraftClient));
-        register(new ScreenShareCommand(minecraftClient));
-        register(new SpamCommand(minecraftClient));
-        register(new PlayersCommand(minecraftClient));
-        register(new ToggleTABCommand(minecraftClient));
-        register(new PurpurExploitCommand(minecraftClient));
-        register(new AuthMeVelocityBypassCommand(minecraftClient));
-        register(new SayCommand(minecraftClient));
-        register(new ChatSentryCommand(minecraftClient));
-        register(new ECBCommand(minecraftClient));
-        register(new SignedVelocityCommand(minecraftClient));
-        register(new DumpCommand(minecraftClient));
-        register(new ChatRoomCommand(minecraftClient));
-
-
-        // Register this command at the very end so it registers all commands in it
-        register(new HelpCommand(minecraftClient));
+        register(new CopyCommand());
+        register(new ExploitCommand());
+        register(new ForceOPCommand());
+        register(new GriefCommand());
+        register(new ScreenShareCommand());
+        register(new SpamCommand());
+        register(new PlayersCommand());
+        register(new ToggleTABCommand());
+        register(new PurpurExploitCommand());
+        register(new AuthMeVelocityBypassCommand());
+        register(new SayCommand());
+        register(new ChatSentryCommand());
+        register(new ECBCommand());
+        register(new SignedVelocityCommand());
+        register(new DumpCommand());
+        register(new HelpCommand());
+        register(new ChatRoomCommand());
     }
 
     /**
@@ -74,7 +72,9 @@ public class CommandManager implements Listener {
      */
     public void register(Command command) {
         this.commands.add(command);
-        DISPATCHER.register(command.build());
+        LiteralArgumentBuilder<CommandSource> node = Command.literal(command.getName());
+        command.build(node);
+        DISPATCHER.register(node);
         Constants.LOGGER.info("Registered command: {}", command.getName());
     }
 
@@ -94,9 +94,11 @@ public class CommandManager implements Listener {
      * @return The command with the specified alias, or null if not found.
      */
     public Command getCommand(String alias) {
-        for (Command command : commands)
-            if (command.getName().equals(alias))
+        for (Command command : commands) {
+            if (command.getName().equals(alias)) {
                 return command;
+            }
+        }
         return null;
     }
 
@@ -106,11 +108,12 @@ public class CommandManager implements Listener {
      * @param message The input message.
      */
     public void dispatch(String message) {
-        if (getCommand(message) != null)
+        if (getCommand(message) != null) {
             if (getCommand(message).isAsync()) {
                 Helper.runAsync(() -> dispatchCommand(message));
                 return;
             }
+        }
         Helper.runAsync(() -> dispatchCommand(message));
     }
 

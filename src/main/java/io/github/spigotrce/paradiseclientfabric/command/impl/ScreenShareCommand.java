@@ -17,21 +17,17 @@ public class ScreenShareCommand extends Command {
 
     /**
      * Constructs a new instance of {@link ScreenShareCommand}.
-     *
-     * @param minecraftClient The Minecraft client instance.
      */
-    public ScreenShareCommand(MinecraftClient minecraftClient) {
-        super("screenshare", "Toggles IP displayed on HUD", minecraftClient);
+    public ScreenShareCommand() {
+        super("screenshare", "Toggles IP displayed on HUD");
     }
 
     /**
      * Builds the command structure using Brigadier's {@link LiteralArgumentBuilder}.
-     *
-     * @return The built command structure.
      */
     @Override
-    public LiteralArgumentBuilder<CommandSource> build() {
-        return literal(getName()).executes((context -> {
+    public void build(LiteralArgumentBuilder<CommandSource> root) {
+        root.executes((context -> {
             ParadiseClient_Fabric.HUD_MOD.showServerIP = !ParadiseClient_Fabric.HUD_MOD.showServerIP;
             Helper.printChatMessage(ParadiseClient_Fabric.HUD_MOD.showServerIP ? "Server IP shown" : "Server IP hidden");
             return SINGLE_SUCCESS;

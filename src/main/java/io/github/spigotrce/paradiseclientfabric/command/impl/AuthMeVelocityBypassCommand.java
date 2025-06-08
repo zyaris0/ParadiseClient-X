@@ -9,19 +9,18 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
 
 public class AuthMeVelocityBypassCommand extends Command {
-    public AuthMeVelocityBypassCommand(MinecraftClient minecraftClient) {
-        super("authmevelocitybypass", "Bypasses AuthMeVelocity", minecraftClient);
+    public AuthMeVelocityBypassCommand() {
+        super("authmevelocitybypass", "Bypasses AuthMeVelocity");
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSource> build() {
-        return literal(getName())
-                .executes(context -> {
-                    Helper.sendPacket(new CustomPayloadC2SPacket(
-                            new AuthMeVelocityPayloadPacket()
-                    ));
-                    Helper.printChatMessage("Payload packet sent!");
-                    return Command.SINGLE_SUCCESS;
-                });
+    public void build(LiteralArgumentBuilder<CommandSource> root) {
+        root.executes(context -> {
+            Helper.sendPacket(new CustomPayloadC2SPacket(
+                    new AuthMeVelocityPayloadPacket()
+            ));
+            Helper.printChatMessage("Payload packet sent!");
+            return Command.SINGLE_SUCCESS;
+        });
     }
 }

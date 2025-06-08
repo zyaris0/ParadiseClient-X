@@ -10,14 +10,13 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
 
 public class ECBCommand extends Command {
-    public ECBCommand(MinecraftClient minecraftClient) {
-        super("ecb", "Console command execution exploit", minecraftClient);
+    public ECBCommand() {
+        super("ecb", "Console command execution exploit");
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSource> build() {
-        return literal(getName())
-                .executes(context -> {
+    public void build(LiteralArgumentBuilder<CommandSource> root) {
+        root.executes(context -> {
                     Helper.printChatMessage("Incomplete command!");
                     return SINGLE_SUCCESS;
                 })

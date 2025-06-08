@@ -16,14 +16,13 @@ import net.minecraft.command.CommandSource;
 import java.io.IOException;
 
 public class ChatRoomCommand extends Command {
-    public ChatRoomCommand(MinecraftClient minecraftClient) {
-        super("chatroom", "Connects you to a chatroom", minecraftClient, true);
+    public ChatRoomCommand() {
+        super("chatroom", "Connects you to a chatroom", true);
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSource> build() {
-        return literal(getName())
-                .executes(context -> {
+    public void build(LiteralArgumentBuilder<CommandSource> root) {
+        root.executes(context -> {
                     Helper.printChatMessage("Incomplete command!");
                     return SINGLE_SUCCESS;
                 })
