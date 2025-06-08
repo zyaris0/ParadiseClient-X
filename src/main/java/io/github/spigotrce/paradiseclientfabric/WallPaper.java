@@ -2,6 +2,9 @@ package io.github.spigotrce.paradiseclientfabric;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.ColorHelper;
 
 import java.util.Random;
 
@@ -32,7 +35,8 @@ public class WallPaper {
         switch (theme) {
             case "ParadiseHack" -> renderMatrix(context, width, height);
             case "ParadiseParticle" -> renderElegantBackground(context, width, height);
-            default -> renderMatrix(context, width, height); // Default to "Hack" theme
+            case "ParadiseLegacy" -> renderLegacy(context, width, height);
+            default -> renderLegacy(context, width, height); // Default to "Legacy" theme
         }
     }
 
@@ -73,6 +77,18 @@ public class WallPaper {
             particle.update(width, height);
             context.fill(particle.x, particle.y, particle.x + 2, particle.y + 2, 0x80FFFFFF);
         }
+    }
+
+    public static void renderLegacy(DrawContext context, int width, int height) {
+        context.drawTexture(
+                RenderLayer::getGuiTextured,
+                Identifier.of(Constants.MOD_ID, "textures/wallpaper.png"),
+                0, 0,
+                0.0F, 0.0F,
+                width, height,
+                width, height,
+                ColorHelper.getWhite(1.0F)
+        );
     }
 
     /**

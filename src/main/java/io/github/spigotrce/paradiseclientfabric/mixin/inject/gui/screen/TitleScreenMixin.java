@@ -125,6 +125,7 @@ public abstract class TitleScreenMixin extends Screen {
                             // Switch between available themes
                             String newTheme = switch (WallPaper.getTheme()) {
                                 case "ParadiseHack" -> "ParadiseParticle";
+                                case "ParadiseParticle" -> "ParadiseLegacy";
                                 default -> "ParadiseHack";
                             };
 
