@@ -49,17 +49,33 @@ repositories {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    implementation "com.github.JnCrMx:discord-game-sdk4j:${project.discord_rpc}"
-    shadow(implementation "io.github.spigotrce.eventbus:EventBus:1.0-SNAPSHOT")
-    shadow(implementation "net.md_5.bungee:BungeeCord")
-    shadow(implementation("net.dv8tion:JDA:${jda_version}"))
-    shadow(implementation("dev.dejvokep:boosted-yaml:${boosted_yaml_version}"))
-    shadow(implementation("io.netty:netty-all:${project.netty}"))
-    shadow(implementation("mysql:mysql-connector-java:${project.mysql}"))
+    minecraft(
+            "com.mojang:minecraft:${project.minecraft_version}"
+    )
+    mappings(
+            "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    )
+    modImplementation(
+            "net.fabricmc:fabric-loader:${project.loader_version}"
+    )
+    modImplementation(
+            "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    )
+    implementation(
+            "com.github.JnCrMx:discord-game-sdk4j:${project.discord_rpc}"
+    )
+
+    def shadowLibs = [
+            "io.github.spigotrce.eventbus:EventBus:1.0-SNAPSHOT",
+            "net.md_5.bungee:BungeeCord",
+            "net.dv8tion:JDA:${jda_version}",
+            "dev.dejvokep:boosted-yaml:${boosted_yaml_version}",
+            "io.netty:netty-all:${project.netty}",
+            "mysql:mysql-connector-java:${project.mysql}"
+    ]
+    shadowLibs.each {
+        shadow(implementation(it))
+    }
 }
 
 processResources {
@@ -97,6 +113,7 @@ jar {
     }
     archiveClassifier.set("dev")
 }
+
 shadowJar {
     configurations = [project.configurations.shadow]
     archiveClassifier.set("dev")
@@ -105,14 +122,4 @@ shadowJar {
 remapJar {
     dependsOn(shadowJar)
     inputFile = tasks.shadowJar.archiveFile
-}
-
-// configure the maven publication
-publishing {
-    publications {
-        create("mavenJava", MavenPublication) {
-            artifactId = project.archives_base_name
-            from components.java
-        }
-    }
 }
