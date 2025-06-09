@@ -61,6 +61,9 @@ dependencies {
     modImplementation(
             "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     )
+    modImplementation(
+            "com.viaversion:viafabricplus:${project.viafabricplus_version}"
+    )
     implementation(
             "com.github.JnCrMx:discord-game-sdk4j:${project.discord_rpc}"
     )
