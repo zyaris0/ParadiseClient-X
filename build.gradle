@@ -49,27 +49,17 @@ repositories {
 }
 
 dependencies {
-    // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    implementation 'org.apiguardian:apiguardian-api:1.1.2'
-    implementation 'com.github.JnCrMx:discord-game-sdk4j:v0.5.5'
-    shadow(implementation 'io.github.spigotrce.eventbus:EventBus:1.0-SNAPSHOT')
-    shadow(implementation 'net.md_5.bungee:BungeeCord')
+    implementation "com.github.JnCrMx:discord-game-sdk4j:${project.discord_rpc}"
+    shadow(implementation "io.github.spigotrce.eventbus:EventBus:1.0-SNAPSHOT")
+    shadow(implementation "net.md_5.bungee:BungeeCord")
     shadow(implementation("net.dv8tion:JDA:${jda_version}"))
     shadow(implementation("dev.dejvokep:boosted-yaml:${boosted_yaml_version}"))
-    shadow(implementation('io.netty:netty-all:4.1.109.Final'))
-    shadow(implementation("org.bouncycastle:bcpkix-jdk15on:1.70"))
-    shadow(implementation('mysql:mysql-connector-java:8.0.33'))
-
-//    include("org.cloudburstmc.netty:netty-transport-raknet:1.0.0.CR3-SNAPSHOT") {
-//        exclude group: "io.netty"
-//    }
-//
-//    modImplementation "de.florianmichael:ViaFabricPlus:${project.viafabricplus_version}"
+    shadow(implementation("io.netty:netty-all:${project.netty}"))
+    shadow(implementation("mysql:mysql-connector-java:${project.mysql}"))
 }
 
 processResources {
