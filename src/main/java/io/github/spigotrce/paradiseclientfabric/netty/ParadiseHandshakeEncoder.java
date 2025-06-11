@@ -11,7 +11,7 @@ import net.minecraft.network.PacketByteBuf;
 
 import java.util.List;
 
-public class ClientHandshakeEncoder extends MessageToMessageEncoder<ByteBuf> {
+public class ParadiseHandshakeEncoder extends MessageToMessageEncoder<ByteBuf> {
     @Override
     protected void encode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         PacketByteBuf b = Helper.byteBufToPacketBuf(ctx.alloc().buffer().writeBytes(in));

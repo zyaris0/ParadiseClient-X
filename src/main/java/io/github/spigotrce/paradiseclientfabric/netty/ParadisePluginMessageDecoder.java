@@ -15,7 +15,7 @@ import net.minecraft.network.PacketByteBuf;
 
 import java.util.List;
 
-public class ClientPayloadPacketDecoder extends MessageToMessageDecoder<ByteBuf> {
+public class ParadisePluginMessageDecoder extends MessageToMessageDecoder<ByteBuf> {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         PacketByteBuf b = Helper.byteBufToPacketBuf(ctx.alloc().buffer().writeBytes(in));

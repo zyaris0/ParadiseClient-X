@@ -2,8 +2,8 @@ package io.github.spigotrce.paradiseclientfabric.inject.mixin.network.connection
 
 import io.github.spigotrce.paradiseclientfabric.Constants;
 import io.github.spigotrce.paradiseclientfabric.netty.NettyConstants;
-import io.github.spigotrce.paradiseclientfabric.netty.ClientPayloadPacketDecoder;
-import io.github.spigotrce.paradiseclientfabric.netty.ClientHandshakeEncoder;
+import io.github.spigotrce.paradiseclientfabric.netty.ParadisePluginMessageDecoder;
+import io.github.spigotrce.paradiseclientfabric.netty.ParadiseHandshakeEncoder;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import net.minecraft.network.ClientConnection;
@@ -38,11 +38,11 @@ public class ClientConnection_1Mixin {
             pipeline.addBefore(
                     HandlerNames.ENCODER,
                     NettyConstants.PARADISE_HANDLER_ENCODER_NAME,
-                    new ClientHandshakeEncoder()
+                    new ParadiseHandshakeEncoder()
             );
             pipeline.addBefore(HandlerNames.INBOUND_CONFIG,
                     NettyConstants.PARADISE_HANDLER_DECODER_NAME,
-                    new ClientPayloadPacketDecoder()
+                    new ParadisePluginMessageDecoder()
             );
         } else
             Constants.LOGGER.warn("Channel not an instance of netty socket");
