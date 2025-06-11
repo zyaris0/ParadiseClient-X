@@ -2,6 +2,7 @@ package io.github.spigotrce.paradiseclientfabric.netty;
 
 import io.github.spigotrce.paradiseclientfabric.Helper;
 import io.github.spigotrce.paradiseclientfabric.ParadiseClient_Fabric;
+import io.github.spigotrce.paradiseclientfabric.protocol.ProtocolVersion;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;
@@ -23,6 +24,12 @@ public class ClientHandshakeEncoder extends MessageToMessageEncoder<ByteBuf> {
     private void decodeHandshake(PacketByteBuf b) {
         Handshake handshake = new Handshake();
         handshake.read(b.asByteBuf());
-        ParadiseClient_Fabric.NETWORK_CONFIGURATION.protocolVersion = handshake.getProtocolVersion();
+        int protocolVersion = handshake.getProtocolVersion();
+        if (!(ProtocolVersion.isSupported(protocolVersion))) {
+            throw new IllegalArgumentException("Protocol version: " +
+                    protocolVersion +
+                    " is not supported by ParadiseClient!");
+        }
+        ParadiseClient_Fabric.NETWORK_CONFIGURATION.protocolVersion = protocolVersion;
     }
 }
