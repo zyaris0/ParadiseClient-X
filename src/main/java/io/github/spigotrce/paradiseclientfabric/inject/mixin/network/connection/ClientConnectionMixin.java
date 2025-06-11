@@ -160,7 +160,8 @@ public class ClientConnectionMixin {
             T packetListener,
             CallbackInfo ci
     ) throws InvocationTargetException, IllegalAccessException {
-        ParadiseClient_Fabric.NETWORK_CONFIGURATION.set(state.id(), state.side(), SharedConstants.getProtocolVersion());
+        ParadiseClient_Fabric.NETWORK_CONFIGURATION.set(state.id(), state.side(),
+                ParadiseClient_Fabric.NETWORK_CONFIGURATION.protocolVersion);
         ParadiseClient_Fabric.EVENT_MANAGER.fireEvent(new PhaseChangeEvent(state.id()));
     }
 }
