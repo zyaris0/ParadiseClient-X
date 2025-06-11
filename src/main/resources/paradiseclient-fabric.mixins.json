@@ -5,8 +5,10 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "api.PayloadTypeRegistryImplMixin",
-    "network.handler.DecoderHandlerMixin",
-    "network.connection.ClientConnection_1Mixin"
+    "bungee.DirectionDataMixin",
+    "network.connection.ClientConnection_1Mixin",
+    "network.connection.ClientConnection_2Mixin",
+    "network.handler.DecoderHandlerMixin"
   ],
   "client": [
     "auth.SessionMixin",

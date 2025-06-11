@@ -2,6 +2,7 @@ package io.github.spigotrce.paradiseclientfabric.inject.mixin.network.connection
 
 import io.github.spigotrce.paradiseclientfabric.Constants;
 import io.github.spigotrce.paradiseclientfabric.netty.NettyConstants;
+import io.github.spigotrce.paradiseclientfabric.netty.ParadiseEncoder;
 import io.github.spigotrce.paradiseclientfabric.netty.ParadiseS2CPluginMessageHandler;
 import io.github.spigotrce.paradiseclientfabric.netty.ParadiseC2SHandshakeHandler;
 import io.netty.channel.ChannelPipeline;
@@ -38,6 +39,9 @@ public class ClientConnection_1Mixin {
             pipeline.addBefore(HandlerNames.INBOUND_CONFIG,
                     NettyConstants.PARADISE_S2C_PLUGIN_MESSAGE_HANDLER,
                     new ParadiseS2CPluginMessageHandler()
+            );
+            pipeline.addLast(NettyConstants.PARADISE_ENCODER,
+                    new ParadiseEncoder()
             );
         } else
             Constants.LOGGER.warn("Channel not an instance of netty socket");

@@ -4,7 +4,9 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import io.github.spigotrce.paradiseclientfabric.inject.accessor.ClientConnectionAccessor;
 import io.netty.buffer.ByteBuf;
+import net.md_5.bungee.protocol.DefinedPacket;
 import net.md_5.bungee.protocol.Protocol;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.toast.SystemToast;
@@ -99,6 +101,19 @@ public class Helper {
      */
     public static void sendPacket(Packet<?> packet) {
         Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(packet);
+    }
+
+    /**
+     * Sends a bungeecord packet to the Minecraft server.
+     *
+     * @param packet The packet to be sent.
+     */
+    public static void sendPacket(DefinedPacket packet) {
+        ((ClientConnectionAccessor)
+                MinecraftClient.getInstance().player.networkHandler
+                        .getConnection())
+                .paradiseClient_Fabric$getChannel()
+                .write(packet);
     }
 
     public static Protocol getBungeeProtocolForPhase(NetworkPhase phase) {
