@@ -11,14 +11,17 @@ import net.minecraft.network.PacketByteBuf;
 
 import java.util.List;
 
-public class ParadiseHandshakeEncoder extends MessageToMessageEncoder<ByteBuf> {
+public class ParadiseC2SHandshakeHandler extends MessageToMessageEncoder<ByteBuf> {
     @Override
     protected void encode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         PacketByteBuf b = Helper.byteBufToPacketBuf(ctx.alloc().buffer().writeBytes(in));
-        b.readVarInt(); // Packet id
-        decodeHandshake(b); // decode handshake
-        out.add(in.resetReaderIndex().retain()); // Forward to the next handler
-        ctx.pipeline().remove(this); // Remove this handler
+
+        b.readVarInt();
+        decodeHandshake(b);
+
+        ctx.pipeline().remove(this);
+
+        out.add(in.resetReaderIndex().retain());
     }
 
     private void decodeHandshake(PacketByteBuf b) {

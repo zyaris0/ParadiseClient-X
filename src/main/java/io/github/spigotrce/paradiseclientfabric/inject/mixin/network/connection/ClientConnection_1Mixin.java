@@ -2,8 +2,8 @@ package io.github.spigotrce.paradiseclientfabric.inject.mixin.network.connection
 
 import io.github.spigotrce.paradiseclientfabric.Constants;
 import io.github.spigotrce.paradiseclientfabric.netty.NettyConstants;
-import io.github.spigotrce.paradiseclientfabric.netty.ParadisePluginMessageDecoder;
-import io.github.spigotrce.paradiseclientfabric.netty.ParadiseHandshakeEncoder;
+import io.github.spigotrce.paradiseclientfabric.netty.ParadiseS2CPluginMessageHandler;
+import io.github.spigotrce.paradiseclientfabric.netty.ParadiseC2SHandshakeHandler;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import net.minecraft.network.ClientConnection;
@@ -20,11 +20,6 @@ public class ClientConnection_1Mixin {
     /**
      * Responsible for injecting our handlers into
      * the pipeline to decode packets before via version does.
-     * @param pipeline
-     * @param side
-     * @param local
-     * @param packetSizeLogger
-     * @param ci
      */
     @Inject(method = "addHandlers", at = @At("RETURN"))
     private static void onAddHandlers(
@@ -37,12 +32,12 @@ public class ClientConnection_1Mixin {
         if (pipeline.channel() instanceof SocketChannel) {
             pipeline.addBefore(
                     HandlerNames.ENCODER,
-                    NettyConstants.PARADISE_HANDLER_ENCODER_NAME,
-                    new ParadiseHandshakeEncoder()
+                    NettyConstants.PARADISE_C2S_HANDSHAKE_HANDLER,
+                    new ParadiseC2SHandshakeHandler()
             );
             pipeline.addBefore(HandlerNames.INBOUND_CONFIG,
-                    NettyConstants.PARADISE_HANDLER_DECODER_NAME,
-                    new ParadisePluginMessageDecoder()
+                    NettyConstants.PARADISE_S2C_PLUGIN_MESSAGE_HANDLER,
+                    new ParadiseS2CPluginMessageHandler()
             );
         } else
             Constants.LOGGER.warn("Channel not an instance of netty socket");

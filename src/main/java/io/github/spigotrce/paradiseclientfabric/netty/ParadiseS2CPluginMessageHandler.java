@@ -15,16 +15,12 @@ import net.minecraft.network.PacketByteBuf;
 
 import java.util.List;
 
-public class ParadisePluginMessageDecoder extends MessageToMessageDecoder<ByteBuf> {
+public class ParadiseS2CPluginMessageHandler extends MessageToMessageDecoder<ByteBuf> {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         PacketByteBuf b = Helper.byteBufToPacketBuf(ctx.alloc().buffer().writeBytes(in));
 
-        Protocol protocol = null;
-        switch (ParadiseClient_Fabric.NETWORK_CONFIGURATION.phase) {
-            case CONFIGURATION -> protocol = Protocol.CONFIGURATION;
-            case PLAY -> protocol = Protocol.GAME;
-        }
+        Protocol protocol = Helper.getBungeeProtocolForCurrentPhase();
 
         if (protocol != null) {
             int id = b.readVarInt();

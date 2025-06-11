@@ -5,9 +5,11 @@ import com.google.common.io.ByteStreams;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.netty.buffer.ByteBuf;
+import net.md_5.bungee.protocol.Protocol;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
+import net.minecraft.network.NetworkPhase;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.text.ClickEvent;
@@ -97,6 +99,31 @@ public class Helper {
      */
     public static void sendPacket(Packet<?> packet) {
         Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(packet);
+    }
+
+    public static Protocol getBungeeProtocolForPhase(NetworkPhase phase) {
+        switch (phase) {
+            case HANDSHAKING -> {
+                return Protocol.HANDSHAKE;
+            }
+            case PLAY -> {
+                return Protocol.GAME;
+            }
+            case STATUS -> {
+                return Protocol.STATUS;
+            }
+            case LOGIN -> {
+                return Protocol.LOGIN;
+            }
+            case CONFIGURATION -> {
+                return Protocol.CONFIGURATION;
+            }
+            default -> throw new IllegalArgumentException("Unknown protocol state: " + phase.getId());
+        }
+    }
+
+    public static Protocol getBungeeProtocolForCurrentPhase() {
+        return getBungeeProtocolForPhase(ParadiseClient_Fabric.NETWORK_CONFIGURATION.phase);
     }
 
     /**

@@ -10,8 +10,11 @@ import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.DisconnectionInfo;
+import net.minecraft.network.NetworkPhase;
 import net.minecraft.network.PacketCallbacks;
+import net.minecraft.network.listener.ClientPacketListener;
 import net.minecraft.network.listener.PacketListener;
+import net.minecraft.network.listener.ServerPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.state.NetworkState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -152,6 +155,22 @@ public class ClientConnectionMixin {
             CallbackInfo ci
     ) {
         ParadiseClient_Fabric.NETWORK_MOD.isConnected = false;
+    }
+
+    @Inject(
+            method = "connect(Ljava/lang/String;ILnet/minecraft/network/state/NetworkState;Lnet/minecraft/network/state/NetworkState;Lnet/minecraft/network/listener/ClientPacketListener;Z)V",
+            at = @At("HEAD")
+    )
+    public <S extends ServerPacketListener, C extends ClientPacketListener> void connect(
+            String address,
+            int port,
+            NetworkState<S> outboundState,
+            NetworkState<C> inboundState,
+            C prePlayStateListener,
+            boolean transfer,
+            CallbackInfo ci
+    ) {
+        ParadiseClient_Fabric.NETWORK_CONFIGURATION.phase = NetworkPhase.HANDSHAKING;
     }
 
     @Inject(method = "transitionInbound", at = @At("HEAD"))
