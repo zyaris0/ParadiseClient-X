@@ -40,9 +40,14 @@ public class DecoderHandlerMixin<T extends PacketListener> {
             Packet<? super T> packet = this.state.codec().decode(buf);
             PacketType<? extends Packet<? super T>> packetType = packet.getPacketType();
             FlightProfiler.INSTANCE.onPacketReceived(this.state.id(), packetType, context.channel().remoteAddress(), i);
-            if (buf.readableBytes() > 0)
-                Helper.printChatMessage("&cError handling packet " + this.state.id().getId() + "/" + packetType + " (" + packet.getClass().getSimpleName() + ") was larger than I expected, found " + buf.readableBytes() + " bytes extra whilst reading packet " + packetType);
-            else {
+            if (buf.readableBytes() > 0) {
+                Helper.printChatMessage("&cError handling packet " + this.state.id().getId() +
+                        "/" + packetType + " (" + packet.getClass().getSimpleName() +
+                        ") was larger than I expected, found " + buf.readableBytes() +
+                        " bytes extra whilst reading packet " + packetType);
+                Helper.printChatMessage("&cThis is a warning, not an error. The client would've disconnect if this" +
+                        "wasn't in place!");
+            } else {
                 objects.add(packet);
                 NetworkStateTransitionHandler.onDecoded(context, packet);
             }
