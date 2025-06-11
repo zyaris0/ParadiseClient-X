@@ -2,6 +2,7 @@ package io.github.spigotrce.paradiseclientfabric.inject.mixin.gui;
 
 import io.github.spigotrce.paradiseclientfabric.Constants;
 import io.github.spigotrce.paradiseclientfabric.ParadiseClient_Fabric;
+import io.github.spigotrce.paradiseclientfabric.protocol.ProtocolVersion;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -82,7 +83,8 @@ public abstract class InGameHudMixin {
         text.add("Server " + ((!Objects.isNull(this.client.getCurrentServerEntry()) && ParadiseClient_Fabric.HUD_MOD.showServerIP) ? this.client.getCurrentServerEntry().address : "Hidden"));
         text.add("Engine " + (Objects.isNull(this.client.player.networkHandler) ? "" : this.client.player.networkHandler.getBrand()));
         text.add("FPS " + this.client.getCurrentFps());
-        text.add("Players: " + this.client.player.networkHandler.getPlayerList().size());
+        text.add("Protocol " + ProtocolVersion.getProtocolVersion(ParadiseClient_Fabric.NETWORK_CONFIGURATION.protocolVersion).getVersionIntroducedIn());
+        text.add("Players " + this.client.player.networkHandler.getPlayerList().size());
 
         int i = 0;
         for (String s : text) {
