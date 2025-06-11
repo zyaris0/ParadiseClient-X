@@ -3,6 +3,7 @@ package io.github.spigotrce.paradiseclientfabric.protocol;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 
+// todo: add a version tab in hud using this
 public class ProtocolConstants {
     public static final int MINECRAFT_1_8 = 47;
     public static final int MINECRAFT_1_8_1 = 47;
