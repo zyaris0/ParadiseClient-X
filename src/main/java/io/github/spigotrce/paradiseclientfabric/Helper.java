@@ -291,7 +291,7 @@ public class Helper {
     }
 
     public static String fetchUUID(String username) throws Exception {
-        URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + username);
+        URL url = new URL("https://api.minecraftservices.com/minecraft/profile/lookup/name/" + username);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         if (connection.getResponseCode() == 200) {
