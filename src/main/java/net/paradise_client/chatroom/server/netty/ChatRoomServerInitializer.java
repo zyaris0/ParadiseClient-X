@@ -1,11 +1,11 @@
 package net.paradise_client.chatroom.server.netty;
 
-import net.paradise_client.chatroom.common.netty.CommonChannelInitializer;
-import net.paradise_client.chatroom.server.Main;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.haproxy.HAProxyMessageDecoder;
+import net.paradise_client.chatroom.common.netty.CommonChannelInitializer;
+import net.paradise_client.chatroom.server.Main;
 
 public class ChatRoomServerInitializer extends ChannelInitializer<SocketChannel> {
     @Override

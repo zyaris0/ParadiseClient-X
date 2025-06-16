@@ -1,5 +1,6 @@
 package net.paradise_client.chatroom.client.handler;
 
+import io.netty.channel.Channel;
 import net.paradise_client.Constants;
 import net.paradise_client.Helper;
 import net.paradise_client.ParadiseClient;
@@ -10,13 +11,12 @@ import net.paradise_client.chatroom.common.packet.impl.DisconnectPacket;
 import net.paradise_client.chatroom.common.packet.impl.HandshakeResponsePacket;
 import net.paradise_client.chatroom.common.packet.impl.KeepAlivePacket;
 import net.paradise_client.chatroom.common.packet.impl.MessagePacket;
-import io.netty.channel.Channel;
 
 public class ClientPacketHandler extends AbstractPacketHandler {
-    private boolean isAuthenticated = false;
-    private UserModel userModel;
     public long timeSinceKeepAlive = 0;
     public int keepAliveViolation = 0;
+    private boolean isAuthenticated = false;
+    private UserModel userModel;
 
     public ClientPacketHandler(Channel channel) {
         super(channel);

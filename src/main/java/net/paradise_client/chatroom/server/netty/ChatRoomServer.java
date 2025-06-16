@@ -1,10 +1,5 @@
 package net.paradise_client.chatroom.server.netty;
 
-import net.paradise_client.chatroom.common.model.ServerModel;
-import net.paradise_client.chatroom.common.model.UserModel;
-import net.paradise_client.chatroom.common.packet.PacketRegistry;
-import net.paradise_client.chatroom.common.packet.impl.MessagePacket;
-import net.paradise_client.chatroom.server.Logging;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.group.ChannelGroup;
@@ -12,6 +7,11 @@ import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import net.paradise_client.chatroom.common.model.ServerModel;
+import net.paradise_client.chatroom.common.model.UserModel;
+import net.paradise_client.chatroom.common.packet.PacketRegistry;
+import net.paradise_client.chatroom.common.packet.impl.MessagePacket;
+import net.paradise_client.chatroom.server.Logging;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,13 +1,6 @@
 package net.paradise_client;
 
 import io.github.spigotrce.eventbus.event.EventManager;
-import net.paradise_client.addon.AddonLoader;
-import net.paradise_client.command.CommandManager;
-import net.paradise_client.exploit.ExploitManager;
-import net.paradise_client.listener.ChannelListener;
-import net.paradise_client.listener.PacketListener;
-import net.paradise_client.mod.*;
-import net.paradise_client.packet.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -17,6 +10,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.paradise_client.addon.AddonLoader;
+import net.paradise_client.command.CommandManager;
+import net.paradise_client.exploit.ExploitManager;
+import net.paradise_client.listener.ChannelListener;
+import net.paradise_client.listener.PacketListener;
 import net.paradise_client.mod.*;
 import net.paradise_client.packet.*;
 import org.lwjgl.glfw.GLFW;
@@ -36,13 +34,10 @@ import java.util.Objects;
  */
 public class ParadiseClient implements ModInitializer, ClientModInitializer {
 
-    public static ParadiseClient INSTANCE;
-
     public static final MinecraftClient MINECRAFT_CLIENT = MinecraftClient.getInstance();
-
     public static final EventManager EVENT_MANAGER = new EventManager();
     public static final NetworkConfiguration NETWORK_CONFIGURATION = new NetworkConfiguration();
-
+    public static ParadiseClient INSTANCE;
     public static BungeeSpoofMod BUNGEE_SPOOF_MOD;
     public static MiscMod MISC_MOD;
     public static HudMod HUD_MOD;

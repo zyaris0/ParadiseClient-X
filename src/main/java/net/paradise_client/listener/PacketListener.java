@@ -2,12 +2,12 @@ package net.paradise_client.listener;
 
 import io.github.spigotrce.eventbus.event.EventHandler;
 import io.github.spigotrce.eventbus.event.listener.Listener;
-import net.paradise_client.Helper;
-import net.paradise_client.event.packet.incoming.PacketIncomingPreEvent;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.packet.s2c.common.ResourcePackSendS2CPacket;
 import net.minecraft.network.packet.s2c.play.CommandSuggestionsS2CPacket;
 import net.minecraft.text.Text;
+import net.paradise_client.Helper;
+import net.paradise_client.event.packet.incoming.PacketIncomingPreEvent;
 
 import java.util.List;
 
@@ -31,6 +31,7 @@ public class PacketListener implements Listener {
     /**
      * Responsible for sending bungeecord ip commands
      * when the server sends a tab completion packet.
+     *
      * @param event
      */
     @EventHandler

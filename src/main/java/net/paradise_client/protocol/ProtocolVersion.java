@@ -3,7 +3,9 @@ package net.paradise_client.protocol;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public enum ProtocolVersion {
     UNKNOWN(-1, "Unknown"),
@@ -54,13 +56,8 @@ public enum ProtocolVersion {
     MINECRAFT_1_21_5(770, "1.21.5");
 
 
-    private final int protocol;
-    private final String[] names;
-
     public static final ProtocolVersion MINIMUM_VERSION = MINECRAFT_1_8;
-
     public static final ProtocolVersion MAXIMUM_VERSION = values()[values().length - 1];
-
     public static final ImmutableMap<Integer, ProtocolVersion> ID_TO_PROTOCOL_CONSTANT;
 
     static {
@@ -72,6 +69,14 @@ public enum ProtocolVersion {
         ID_TO_PROTOCOL_CONSTANT = ImmutableMap.copyOf(versions);
     }
 
+    private final int protocol;
+    private final String[] names;
+
+    ProtocolVersion(int protocol, String... names) {
+        this.protocol = protocol;
+        this.names = names;
+    }
+
     public static boolean isSupported(ProtocolVersion protocolVersion) {
         return isSupported(protocolVersion.getProtocol());
     }
@@ -80,9 +85,8 @@ public enum ProtocolVersion {
         return protocol >= MINIMUM_VERSION.getProtocol() && protocol <= MAXIMUM_VERSION.getProtocol();
     }
 
-    ProtocolVersion(int protocol, String... names) {
-        this.protocol = protocol;
-        this.names = names;
+    public static ProtocolVersion getProtocolVersion(int protocol) {
+        return ID_TO_PROTOCOL_CONSTANT.getOrDefault(protocol, UNKNOWN);
     }
 
     public int getProtocol() {
@@ -99,10 +103,6 @@ public enum ProtocolVersion {
 
     public List<String> getVersionsSupportedBy() {
         return ImmutableList.copyOf(names);
-    }
-
-    public static ProtocolVersion getProtocolVersion(int protocol) {
-        return ID_TO_PROTOCOL_CONSTANT.getOrDefault(protocol, UNKNOWN);
     }
 
     @Override

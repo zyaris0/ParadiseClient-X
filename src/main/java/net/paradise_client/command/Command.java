@@ -20,8 +20,8 @@ public abstract class Command {
     /**
      * Constructor for the Command class.
      *
-     * @param name            The name of the command.
-     * @param description     The description of the command.
+     * @param name        The name of the command.
+     * @param description The description of the command.
      */
     public Command(String name, String description) {
         this(name, description, false);
@@ -30,9 +30,9 @@ public abstract class Command {
     /**
      * Constructor for the Command class.
      *
-     * @param name            The name of the command.
-     * @param description     The description of the command.
-     * @param async           Whether the command should be run inside a background thread
+     * @param name        The name of the command.
+     * @param description The description of the command.
+     * @param async       Whether the command should be run inside a background thread
      */
     public Command(String name, String description, boolean async) {
         this.name = name;

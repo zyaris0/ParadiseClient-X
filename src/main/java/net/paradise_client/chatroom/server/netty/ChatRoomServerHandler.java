@@ -1,15 +1,15 @@
 package net.paradise_client.chatroom.server.netty;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.util.AttributeKey;
 import net.paradise_client.chatroom.common.exception.BadPacketException;
 import net.paradise_client.chatroom.common.packet.Packet;
 import net.paradise_client.chatroom.common.packet.PacketRegistry;
 import net.paradise_client.chatroom.common.packet.impl.DisconnectPacket;
 import net.paradise_client.chatroom.server.Logging;
 import net.paradise_client.chatroom.server.handler.ServerPacketHandler;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.util.AttributeKey;
 
 public class ChatRoomServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
     private ServerPacketHandler packetHandler;

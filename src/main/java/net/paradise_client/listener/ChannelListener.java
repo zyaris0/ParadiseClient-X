@@ -2,11 +2,11 @@ package net.paradise_client.listener;
 
 import io.github.spigotrce.eventbus.event.EventHandler;
 import io.github.spigotrce.eventbus.event.listener.Listener;
+import net.minecraft.network.PacketByteBuf;
 import net.paradise_client.Constants;
 import net.paradise_client.Helper;
 import net.paradise_client.ParadiseClient;
 import net.paradise_client.event.channel.PluginMessageEvent;
-import net.minecraft.network.PacketByteBuf;
 
 import java.nio.charset.Charset;
 import java.util.Objects;

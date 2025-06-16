@@ -1,8 +1,8 @@
 package net.paradise_client.chatroom.common.packet.impl;
 
+import io.netty.buffer.ByteBuf;
 import net.paradise_client.chatroom.common.packet.Packet;
 import net.paradise_client.chatroom.common.packet.handler.AbstractPacketHandler;
-import io.netty.buffer.ByteBuf;
 
 public class DisconnectPacket extends Packet {
     private String message = "";

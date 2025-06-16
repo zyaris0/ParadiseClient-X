@@ -5,13 +5,12 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.spigotrce.eventbus.event.EventHandler;
 import io.github.spigotrce.eventbus.event.listener.Listener;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.command.CommandSource;
 import net.paradise_client.Constants;
 import net.paradise_client.Helper;
 import net.paradise_client.command.impl.*;
-import net.paradise_client.command.impl.*;
 import net.paradise_client.event.chat.ChatPreEvent;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.command.CommandSource;
 
 import java.util.ArrayList;
 

@@ -3,13 +3,15 @@ package net.paradise_client.discord;
 import de.jcm.discordgamesdk.Core;
 import de.jcm.discordgamesdk.CreateParams;
 import de.jcm.discordgamesdk.activity.Activity;
+import net.minecraft.client.MinecraftClient;
 import net.paradise_client.Constants;
 import net.paradise_client.ParadiseClient;
-import net.minecraft.client.MinecraftClient;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
@@ -24,6 +26,48 @@ import java.util.zip.ZipInputStream;
  */
 @SuppressWarnings("BusyWait")
 public class RPC implements Runnable {
+
+    /**
+     * Downloads and installs the Discord Game SDK DLL.
+     */
+    public static void installDiscordSDK() throws IOException {
+        File targetDir = new File(MinecraftClient.getInstance().runDirectory, "paradise/discord");
+        File outputFile = new File(targetDir, "discord_game_sdk.dll");
+
+        if (outputFile.exists()) {
+            return;
+        }
+
+        String url = "https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip";
+        Path tempZipPath = Files.createTempFile("discord_sdk", ".zip");
+
+        try (InputStream in = new URL(url).openStream()) {
+            Files.copy(in, tempZipPath, StandardCopyOption.REPLACE_EXISTING);
+            Constants.LOGGER.info("Downloaded Discord SDK ZIP.");
+        }
+
+        boolean extracted = false;
+
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(tempZipPath.toFile()))) {
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                if (entry.getName().equals("lib/x86_64/discord_game_sdk.dll")) {
+                    if (!targetDir.exists()) targetDir.mkdirs();
+                    Files.copy(zis, outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    Constants.LOGGER.info("Extracted Discord SDK DLL to {}", outputFile.getAbsolutePath());
+                    extracted = true;
+                    break;
+                }
+                zis.closeEntry();
+            }
+        }
+
+        Files.deleteIfExists(tempZipPath);
+
+        if (!extracted) {
+            throw new FileNotFoundException("DLL not found inside Discord SDK ZIP");
+        }
+    }
 
     @Override
     public void run() {
@@ -80,48 +124,6 @@ public class RPC implements Runnable {
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * Downloads and installs the Discord Game SDK DLL.
-     */
-    public static void installDiscordSDK() throws IOException {
-        File targetDir = new File(MinecraftClient.getInstance().runDirectory, "paradise/discord");
-        File outputFile = new File(targetDir, "discord_game_sdk.dll");
-
-        if (outputFile.exists()) {
-            return;
-        }
-
-        String url = "https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip";
-        Path tempZipPath = Files.createTempFile("discord_sdk", ".zip");
-
-        try (InputStream in = new URL(url).openStream()) {
-            Files.copy(in, tempZipPath, StandardCopyOption.REPLACE_EXISTING);
-            Constants.LOGGER.info("Downloaded Discord SDK ZIP.");
-        }
-
-        boolean extracted = false;
-
-        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(tempZipPath.toFile()))) {
-            ZipEntry entry;
-            while ((entry = zis.getNextEntry()) != null) {
-                if (entry.getName().equals("lib/x86_64/discord_game_sdk.dll")) {
-                    if (!targetDir.exists()) targetDir.mkdirs();
-                    Files.copy(zis, outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    Constants.LOGGER.info("Extracted Discord SDK DLL to {}", outputFile.getAbsolutePath());
-                    extracted = true;
-                    break;
-                }
-                zis.closeEntry();
-            }
-        }
-
-        Files.deleteIfExists(tempZipPath);
-
-        if (!extracted) {
-            throw new FileNotFoundException("DLL not found inside Discord SDK ZIP");
         }
     }
 }

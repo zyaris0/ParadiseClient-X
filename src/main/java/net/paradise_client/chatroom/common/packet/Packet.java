@@ -1,7 +1,7 @@
 package net.paradise_client.chatroom.common.packet;
 
-import net.paradise_client.chatroom.common.packet.handler.AbstractPacketHandler;
 import io.netty.buffer.ByteBuf;
+import net.paradise_client.chatroom.common.packet.handler.AbstractPacketHandler;
 
 import java.nio.charset.Charset;
 import java.util.UUID;

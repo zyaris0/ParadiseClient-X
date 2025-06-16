@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class MySQLDatabase {
-    private Connection connection;
     private final DatabaseModel model;
+    private Connection connection;
 
     public MySQLDatabase() throws SQLException {
         model = Main.CONFIG.getDatabase();

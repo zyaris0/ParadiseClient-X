@@ -1,16 +1,15 @@
 package net.paradise_client.chatroom.server.handler;
 
+import io.netty.channel.Channel;
+import io.netty.util.AttributeKey;
 import net.paradise_client.chatroom.common.Version;
 import net.paradise_client.chatroom.common.model.UserModel;
 import net.paradise_client.chatroom.common.packet.PacketRegistry;
 import net.paradise_client.chatroom.common.packet.handler.AbstractPacketHandler;
 import net.paradise_client.chatroom.common.packet.impl.*;
-import net.paradise_client.chatroom.common.packet.impl.*;
 import net.paradise_client.chatroom.server.Logging;
 import net.paradise_client.chatroom.server.Main;
 import net.paradise_client.chatroom.server.netty.ChatRoomServer;
-import io.netty.channel.Channel;
-import io.netty.util.AttributeKey;
 
 import java.net.InetSocketAddress;
 import java.util.Arrays;

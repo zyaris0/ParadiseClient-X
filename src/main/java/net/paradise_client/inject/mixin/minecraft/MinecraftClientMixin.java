@@ -1,9 +1,7 @@
 package net.paradise_client.inject.mixin.minecraft;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.paradise_client.Constants;
-import net.paradise_client.ParadiseClient;
 import net.paradise_client.chatroom.client.Client;
 import net.paradise_client.discord.RPC;
 import org.spongepowered.asm.mixin.Mixin;

@@ -7,13 +7,12 @@ import net.paradise_client.chatroom.common.model.ServerModel;
 import java.nio.file.Path;
 
 public class Config extends ConfigProvider {
-    public Config(Path dataDirectory) {
-        super("config.yml", "file-version", dataDirectory.toFile());
-    }
-
     private DiscordModel discordModel;
     private ServerModel serverModel;
     private DatabaseModel databaseModel;
+    public Config(Path dataDirectory) {
+        super("config.yml", "file-version", dataDirectory.toFile());
+    }
 
     public DiscordModel getDiscord() {
         return discordModel;

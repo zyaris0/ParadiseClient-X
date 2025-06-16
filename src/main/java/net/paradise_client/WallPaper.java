@@ -12,6 +12,11 @@ public class WallPaper {
     private static final Random random = new Random();
     private static final int[] drops = new int[300];
     private static final Particle[] particles = new Particle[100];
+    /**
+     * Renders the particle-based elegant background theme.
+     */
+    private static int lastWidth = -1;
+    private static int lastHeight = -1;
 
     static {
         for (int i = 0; i < particles.length; i++)
@@ -54,12 +59,6 @@ public class WallPaper {
             drops[i]++;
         }
     }
-
-    /**
-     * Renders the particle-based elegant background theme.
-     */
-    private static int lastWidth = -1;
-    private static int lastHeight = -1;
 
     public static void renderElegantBackground(DrawContext context, int width, int height) {
         // Check if the window size has changed

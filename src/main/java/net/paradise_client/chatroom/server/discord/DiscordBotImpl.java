@@ -1,11 +1,5 @@
 package net.paradise_client.chatroom.server.discord;
 
-import net.paradise_client.chatroom.common.model.UserModel;
-import net.paradise_client.chatroom.server.DiscordWebhookSender;
-import net.paradise_client.chatroom.server.Logging;
-import net.paradise_client.chatroom.server.Main;
-import net.paradise_client.chatroom.server.exception.UserAlreadyRegisteredException;
-import net.paradise_client.chatroom.server.exception.UserAlreadyVerifiedException;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -16,6 +10,12 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+import net.paradise_client.chatroom.common.model.UserModel;
+import net.paradise_client.chatroom.server.DiscordWebhookSender;
+import net.paradise_client.chatroom.server.Logging;
+import net.paradise_client.chatroom.server.Main;
+import net.paradise_client.chatroom.server.exception.UserAlreadyRegisteredException;
+import net.paradise_client.chatroom.server.exception.UserAlreadyVerifiedException;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

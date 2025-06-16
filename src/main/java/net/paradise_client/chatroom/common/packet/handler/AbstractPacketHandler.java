@@ -1,8 +1,7 @@
 package net.paradise_client.chatroom.common.packet.handler;
 
-import net.paradise_client.chatroom.common.packet.Packet;
-import net.paradise_client.chatroom.common.packet.impl.*;
 import io.netty.channel.Channel;
+import net.paradise_client.chatroom.common.packet.Packet;
 import net.paradise_client.chatroom.common.packet.impl.*;
 
 public abstract class AbstractPacketHandler {
