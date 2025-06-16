@@ -14,10 +14,5 @@ public abstract class ParadiseAddon {
      */
     public String[] authors;
 
-    /**
-     * Automatically assigned from fabric.mod.json file.
-     */
-    public String basePackage;
-
     public abstract void onInitialize();
 }
