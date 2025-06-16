@@ -14,7 +14,8 @@
   ],
   "icon": "assets/paradiseclient/icon.png",
   "contact": {
-    "repo": "https://github.com/Hydrogen-Developments/ParadiseClient-X/"
+    "repo": "https://github.com/Hydrogen-Developments/ParadiseClient-X/",
+    "homepage": "https://paradise-client.net"
   },
   "license": "All-Rights-Reserved",
   "environment": "client",
