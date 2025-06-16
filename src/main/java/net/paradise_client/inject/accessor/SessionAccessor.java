@@ -15,5 +15,5 @@ public interface SessionAccessor {
      * @param username The new username to be set. This parameter should not be null or empty.
      *                 The username should be a valid string according to Minecraft's username requirements.
      */
-    void paradiseClient_Fabric$setUsername(String username);
+    void paradiseClient$setUsername(String username);
 }

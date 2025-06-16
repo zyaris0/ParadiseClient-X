@@ -92,7 +92,7 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientPlayNetwork
      * @param message The message to be sent.
      */
     @Override
-    public void paradiseClient_Fabric$sendChatMessage(String message) {
+    public void paradiseClient$sendChatMessage(String message) {
         Instant instant = Instant.now();
         long l = NetworkEncryptionUtils.SecureRandomUtil.nextLong();
         LastSeenMessagesCollector.LastSeenMessages lastSeenMessages = this.lastSeenMessagesCollector.collect();

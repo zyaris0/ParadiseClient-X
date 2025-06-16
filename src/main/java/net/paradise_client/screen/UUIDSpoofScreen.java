@@ -79,7 +79,7 @@ public class UUIDSpoofScreen extends Screen {
     }
 
     private void spoof() {
-        this.bungeeSpoofMod.sessionAccessor.paradiseClient_Fabric$setUsername(this.bungeeSpoofMod.usernameReal);
+        this.bungeeSpoofMod.sessionAccessor.paradiseClient$setUsername(this.bungeeSpoofMod.usernameReal);
         if (this.bungeeSpoofMod.isUUIDOnline) {
             try {
                 this.bungeeSpoofMod.uuid = Helper.fetchUUID(this.bungeeSpoofMod.usernameFake);

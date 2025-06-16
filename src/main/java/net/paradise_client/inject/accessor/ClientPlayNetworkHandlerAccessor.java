@@ -9,5 +9,5 @@ public interface ClientPlayNetworkHandlerAccessor {
      *
      * @param message The message to be sent.
      */
-    void paradiseClient_Fabric$sendChatMessage(String message);
+    void paradiseClient$sendChatMessage(String message);
 }

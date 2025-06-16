@@ -15,7 +15,7 @@ public class ParadiseEncoder extends MessageToByteEncoder<DefinedPacket> {
         int protocolVersion = ParadiseClient.NETWORK_CONFIGURATION.protocolVersion;
 
         int packetId = ((DirectionDataAccessor) (Object) protocol.TO_SERVER)
-                .paradiseClient_Fabric$getId(msg.getClass(), protocolVersion);
+                .paradiseClient$getId(msg.getClass(), protocolVersion);
 
         DefinedPacket.writeVarInt(packetId, out);
         msg.write(out, protocol, protocol.TO_SERVER.getDirection(), protocolVersion);

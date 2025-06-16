@@ -12,7 +12,7 @@ public class ClientConnection_2Mixin implements ClientConnectionAccessor {
     private Channel channel;
 
     @Override
-    public Channel paradiseClient_Fabric$getChannel() {
+    public Channel paradiseClient$getChannel() {
         return channel;
     }
 }

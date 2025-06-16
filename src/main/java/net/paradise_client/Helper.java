@@ -110,7 +110,7 @@ public class Helper {
         ((ClientConnectionAccessor)
                 MinecraftClient.getInstance().player.networkHandler
                         .getConnection())
-                .paradiseClient_Fabric$getChannel()
+                .paradiseClient$getChannel()
                 .write(packet);
     }
 

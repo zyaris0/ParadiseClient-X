@@ -36,7 +36,7 @@ public class SessionMixin implements SessionAccessor {
      * @param username The new username to set.
      */
     @Override
-    public void paradiseClient_Fabric$setUsername(String username) {
+    public void paradiseClient$setUsername(String username) {
         this.username = username;
     }
 }

@@ -30,6 +30,6 @@ public class NetworkMod {
      * The registered channels by their names.
      */
     public ArrayList<String> getRegisteredChannelsByName() {
-        return ((PayloadTypeRegistryImplAccessor) PayloadTypeRegistry.playC2S()).paradiseClient_Fabric$getRegisteredChannelsByName();
+        return ((PayloadTypeRegistryImplAccessor) PayloadTypeRegistry.playC2S()).paradiseClient$getRegisteredChannelsByName();
     }
 }

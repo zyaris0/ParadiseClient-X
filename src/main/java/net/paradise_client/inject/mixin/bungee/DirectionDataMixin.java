@@ -13,7 +13,7 @@ public abstract class DirectionDataMixin implements DirectionDataAccessor {
     abstract int getId(Class<? extends DefinedPacket> packet, int version);
 
     @Override
-    public int paradiseClient_Fabric$getId(Class<? extends DefinedPacket> packet, int version) {
+    public int paradiseClient$getId(Class<? extends DefinedPacket> packet, int version) {
         return getId(packet, version);
     }
 }

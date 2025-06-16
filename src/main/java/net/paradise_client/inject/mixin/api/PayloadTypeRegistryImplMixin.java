@@ -28,7 +28,7 @@ public abstract class PayloadTypeRegistryImplMixin<B extends PacketByteBuf> impl
     }
 
     @Override
-    public ArrayList<String> paradiseClient_Fabric$getRegisteredChannelsByName() {
+    public ArrayList<String> paradiseClient$getRegisteredChannelsByName() {
         return packetTypes.keySet().stream()
                 .map(Identifier::toString)
                 .collect(Collectors.toCollection(ArrayList::new));

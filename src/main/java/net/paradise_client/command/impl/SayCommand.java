@@ -18,7 +18,7 @@ public class SayCommand extends Command {
                 .executes(context -> {
                             String message = context.getArgument("message", String.class);
                             ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler())
-                                    .paradiseClient_Fabric$sendChatMessage(message);
+                                    .paradiseClient$sendChatMessage(message);
                             return SINGLE_SUCCESS;
                         }
                 )
