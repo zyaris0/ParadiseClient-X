@@ -1,6 +1,6 @@
-# **ParadiseClient-Fabric v1.21.5 g4 b5**
+# **ParadiseClient v1.21.5 g4 b5**
 
-**ParadiseClient-Fabric** is a Minecraft Fabric mod specifically designed for penetration testing Minecraft servers and networks.
+**ParadiseClient** is a Minecraft Fabric mod specifically designed for penetration testing Minecraft servers and networks.
 
 ## **License and Contribution**
 

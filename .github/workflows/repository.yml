@@ -39,8 +39,8 @@ jobs:
       - name: Find JAR file
         id: find-jar
         run: |
-          # Find JAR files that start with 'ParadiseClient-Fabric-' and do not end with '-dev.jar' or '-sources.jar'
-          JAR_FILES=(build/libs/ParadiseClient-Fabric-*.jar)
+          # Find JAR files that start with 'ParadiseClient-' and do not end with '-dev.jar' or '-sources.jar'
+          JAR_FILES=(build/libs/ParadiseClient-*.jar)
           
           # Filter to get the base version JAR (exclude -dev and -sources)
           BASE_JAR_FILES=()

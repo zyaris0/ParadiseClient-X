@@ -1,25 +1,25 @@
 {
   "schemaVersion": 1,
-  "id": "paradiseclient-fabric",
+  "id": "paradiseclient",
   "version": "${version}",
-  "name": "ParadiseClient-Fabric",
+  "name": "ParadiseClient",
   "description": "",
   "authors": [],
   "contact": {
-    "repo": "https://github.com/SpigotRCE/ParadiseClient-Fabric"
+    "repo": "https://github.com/Hydrogen-Developments/ParadiseClient-X/"
   },
   "license": "All-Rights-Reserved",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "io.github.spigotrce.paradiseclientfabric.ParadiseClient_Fabric"
+      "net.paradise_client.ParadiseClient"
     ],
     "main": [
-      "io.github.spigotrce.paradiseclientfabric.ParadiseClient_Fabric"
+      "net.paradise_client.ParadiseClient"
     ]
   },
   "mixins": [
-    "paradiseclient-fabric.mixins.json"
+    "paradiseclient.mixins.json"
   ],
   "depends": {
     "fabricloader": "${loader_version}",

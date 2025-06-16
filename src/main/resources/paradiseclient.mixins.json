@@ -1,0 +1,31 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.paradise_client.inject.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "api.PayloadTypeRegistryImplMixin",
+    "bungee.DirectionDataMixin",
+    "network.connection.ClientConnection_1Mixin",
+    "network.connection.ClientConnection_2Mixin",
+    "network.handler.DecoderHandlerMixin"
+  ],
+  "client": [
+    "auth.SessionMixin",
+    "chat.ChatInputSuggestorMixin",
+    "etc.ClientPlayerEntityMixin",
+    "gui.InGameHudMixin",
+    "gui.RotatingCubeMapRendererMixin",
+    "gui.screen.MultiplayerScreenMixin",
+    "gui.screen.ScreenMixin",
+    "gui.screen.TitleScreenMixin",
+    "minecraft.MainMixin",
+    "minecraft.MinecraftClientMixin",
+    "network.connection.ClientConnectionMixin",
+    "network.connection.ClientPlayNetworkHandlerMixin",
+    "network.packet.HandshakeC2SPacketMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
