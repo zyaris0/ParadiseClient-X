@@ -4,10 +4,8 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.command.CommandSource;
-import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
 import net.paradise_client.Helper;
 import net.paradise_client.command.Command;
-import net.paradise_client.packet.SignedVelocityPayloadPacket;
 
 public class SignedVelocityCommand extends Command {
     public SignedVelocityCommand() {
@@ -52,9 +50,14 @@ public class SignedVelocityCommand extends Command {
                                     String user = context.getArgument("user", String.class);
                                     for (PlayerListEntry p : getMinecraftClient().getNetworkHandler().getPlayerList())
                                         if (p.getProfile().getName().equalsIgnoreCase(user)) {
-                                            Helper.sendPacket(new CustomPayloadC2SPacket(new SignedVelocityPayloadPacket(
-                                                    p.getProfile().getId().toString(), context.getArgument("command", String.class)
-                                            )));
+                                            String command = context.getArgument("command", String.class);
+                                            String uuid = p.getProfile().getId().toString();
+                                            Helper.sendPluginMessage("signedvelocity:main", out -> {
+                                                out.writeUTF(uuid);
+                                                out.writeUTF("COMMAND_RESULT");
+                                                out.writeUTF("MODIFY");
+                                                out.writeUTF("/" + command);
+                                            });
                                             Helper.printChatMessage("Payload sent!");
                                             return SINGLE_SUCCESS;
                                         }

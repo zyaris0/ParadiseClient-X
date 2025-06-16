@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import io.netty.buffer.ByteBuf;
 import net.md_5.bungee.protocol.DefinedPacket;
 import net.md_5.bungee.protocol.Protocol;
+import net.md_5.bungee.protocol.packet.PluginMessage;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
@@ -112,6 +113,15 @@ public class Helper {
                         .getConnection())
                 .paradiseClient$getChannel()
                 .write(packet);
+    }
+
+    public static void sendPluginMessage(String channel, PluginMessageEncoder encoder) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        encoder.encode(out);
+        PluginMessage message = new PluginMessage();
+        message.setTag(channel);
+        message.setData(out.toByteArray());
+        sendPacket(message);
     }
 
     public static Protocol getBungeeProtocolForPhase(NetworkPhase phase) {
@@ -325,5 +335,10 @@ public class Helper {
         public byte[] toByteArray() {
             return out.toByteArray();
         }
+    }
+
+    @FunctionalInterface
+    public static interface PluginMessageEncoder {
+        void encode(ByteArrayDataOutput out);
     }
 }

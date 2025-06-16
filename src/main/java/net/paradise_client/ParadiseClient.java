@@ -10,6 +10,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.util.Identifier;
 import net.paradise_client.addon.AddonLoader;
 import net.paradise_client.command.CommandManager;
 import net.paradise_client.exploit.ExploitManager;
@@ -64,12 +66,18 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
     }
 
     private void registerChannels() {
-        PayloadTypeRegistry.playC2S().register(VelocityReportPayloadPacket.ID, VelocityReportPayloadPacket.CODEC);
-        PayloadTypeRegistry.playC2S().register(PurpurExploitPayloadPacket.ID, PurpurExploitPayloadPacket.CODEC);
-        PayloadTypeRegistry.playC2S().register(AuthMeVelocityPayloadPacket.ID, AuthMeVelocityPayloadPacket.CODEC);
-        PayloadTypeRegistry.playC2S().register(ChatSentryPayloadPacket.ID, ChatSentryPayloadPacket.CODEC);
-        PayloadTypeRegistry.playC2S().register(ECBPayloadPacket.ID, ECBPayloadPacket.CODEC);
-        PayloadTypeRegistry.playC2S().register(SignedVelocityPayloadPacket.ID, SignedVelocityPayloadPacket.CODEC);
+        registerChannel("velocityreport:main");
+        registerChannel("purpur:beehive_c2s");
+        registerChannel("authmevelocity:main");
+        registerChannel("chatsentry:data_sync");
+        registerChannel("ecb:channel");
+        registerChannel("signedvelocity:main");
+    }
+
+    public void registerChannel(String channelName) {
+        String nameSpace = channelName.split(":")[0];
+        String id = channelName.split(":")[1];
+        PayloadTypeRegistry.playC2S().register(new CustomPayload.Id<>(Identifier.of(nameSpace, id)), DummyPacket.CODEC);
     }
 
     private void initializeMods() {
