@@ -2,6 +2,7 @@ package net.paradise_client.command.impl;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.minecraft.command.CommandSource;
 import net.paradise_client.Constants;
 import net.paradise_client.Helper;
 import net.paradise_client.ParadiseClient;
@@ -10,7 +11,6 @@ import net.paradise_client.chatroom.client.TokenStore;
 import net.paradise_client.chatroom.common.packet.PacketRegistry;
 import net.paradise_client.chatroom.common.packet.impl.MessagePacket;
 import net.paradise_client.command.Command;
-import net.minecraft.command.CommandSource;
 
 import java.io.IOException;
 

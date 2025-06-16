@@ -1,7 +1,7 @@
 package net.paradise_client.mod;
 
-import net.paradise_client.chatroom.common.model.UserModel;
 import io.netty.channel.Channel;
+import net.paradise_client.chatroom.common.model.UserModel;
 
 public class ChatRoomMod {
     public boolean isConnected = false;

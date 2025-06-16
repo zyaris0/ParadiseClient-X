@@ -1,11 +1,11 @@
 package net.paradise_client.command.impl;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.paradise_client.Helper;
-import net.paradise_client.command.Command;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.command.CommandSource;
+import net.paradise_client.Helper;
+import net.paradise_client.command.Command;
 
 import java.util.Objects;
 

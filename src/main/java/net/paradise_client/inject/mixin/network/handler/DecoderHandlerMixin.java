@@ -1,6 +1,5 @@
 package net.paradise_client.inject.mixin.network.handler;
 
-import net.paradise_client.Helper;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.network.handler.DecoderHandler;
@@ -10,6 +9,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.PacketType;
 import net.minecraft.network.state.NetworkState;
 import net.minecraft.util.profiling.jfr.FlightProfiler;
+import net.paradise_client.Helper;
 import org.spongepowered.asm.mixin.*;
 
 import java.util.List;

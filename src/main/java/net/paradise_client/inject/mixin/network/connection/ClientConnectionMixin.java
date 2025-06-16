@@ -1,11 +1,5 @@
 package net.paradise_client.inject.mixin.network.connection;
 
-import net.paradise_client.ParadiseClient;
-import net.paradise_client.event.network.PhaseChangeEvent;
-import net.paradise_client.event.packet.incoming.PacketIncomingPostEvent;
-import net.paradise_client.event.packet.incoming.PacketIncomingPreEvent;
-import net.paradise_client.event.packet.outgoing.PacketOutgoingPostEvent;
-import net.paradise_client.event.packet.outgoing.PacketOutgoingPreEvent;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.DisconnectionInfo;
@@ -16,6 +10,12 @@ import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.listener.ServerPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.state.NetworkState;
+import net.paradise_client.ParadiseClient;
+import net.paradise_client.event.network.PhaseChangeEvent;
+import net.paradise_client.event.packet.incoming.PacketIncomingPostEvent;
+import net.paradise_client.event.packet.incoming.PacketIncomingPreEvent;
+import net.paradise_client.event.packet.outgoing.PacketOutgoingPostEvent;
+import net.paradise_client.event.packet.outgoing.PacketOutgoingPreEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

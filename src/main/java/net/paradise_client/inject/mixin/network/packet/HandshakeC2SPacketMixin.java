@@ -1,9 +1,9 @@
 package net.paradise_client.inject.mixin.network.packet;
 
-import net.paradise_client.ParadiseClient;
-import net.paradise_client.mod.BungeeSpoofMod;
 import net.minecraft.network.packet.c2s.handshake.ConnectionIntent;
 import net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket;
+import net.paradise_client.ParadiseClient;
+import net.paradise_client.mod.BungeeSpoofMod;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;

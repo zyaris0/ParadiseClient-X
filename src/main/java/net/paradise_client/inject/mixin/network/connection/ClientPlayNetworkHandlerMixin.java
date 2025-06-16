@@ -1,10 +1,5 @@
 package net.paradise_client.inject.mixin.network.connection;
 
-import net.paradise_client.Helper;
-import net.paradise_client.ParadiseClient;
-import net.paradise_client.event.chat.ChatPostEvent;
-import net.paradise_client.event.chat.ChatPreEvent;
-import net.paradise_client.inject.accessor.ClientPlayNetworkHandlerAccessor;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.encryption.NetworkEncryptionUtils;
 import net.minecraft.network.message.LastSeenMessagesCollector;
@@ -13,6 +8,11 @@ import net.minecraft.network.message.MessageChain;
 import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
+import net.paradise_client.Helper;
+import net.paradise_client.ParadiseClient;
+import net.paradise_client.event.chat.ChatPostEvent;
+import net.paradise_client.event.chat.ChatPreEvent;
+import net.paradise_client.inject.accessor.ClientPlayNetworkHandlerAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

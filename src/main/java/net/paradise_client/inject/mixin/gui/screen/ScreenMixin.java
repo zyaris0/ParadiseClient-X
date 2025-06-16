@@ -21,7 +21,8 @@ public abstract class ScreenMixin {
     @Shadow
     protected MinecraftClient client;
 
-    @Shadow protected abstract void renderPanoramaBackground(DrawContext context, float deltaTicks);
+    @Shadow
+    protected abstract void renderPanoramaBackground(DrawContext context, float deltaTicks);
 
     /**
      * Injects custom background rendering into the renderBackground method.

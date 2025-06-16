@@ -1,9 +1,9 @@
 package net.paradise_client.command.impl;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.minecraft.command.CommandSource;
 import net.paradise_client.Helper;
 import net.paradise_client.command.Command;
-import net.minecraft.command.CommandSource;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;

@@ -1,8 +1,8 @@
 package net.paradise_client.mod;
 
-import net.paradise_client.inject.accessor.SessionAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.session.Session;
+import net.paradise_client.inject.accessor.SessionAccessor;
 
 /**
  * Handles BungeeCord spoofing operations.

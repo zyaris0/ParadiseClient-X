@@ -1,7 +1,7 @@
 package net.paradise_client.mod;
 
-import net.paradise_client.inject.accessor.PayloadTypeRegistryImplAccessor;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.paradise_client.inject.accessor.PayloadTypeRegistryImplAccessor;
 
 import java.util.ArrayList;
 

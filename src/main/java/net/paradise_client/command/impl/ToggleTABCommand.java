@@ -1,10 +1,10 @@
 package net.paradise_client.command.impl;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.minecraft.command.CommandSource;
 import net.paradise_client.Helper;
 import net.paradise_client.ParadiseClient;
 import net.paradise_client.command.Command;
-import net.minecraft.command.CommandSource;
 
 /**
  * Represents a command that toggles the display of server IP on the HUD.

@@ -1,16 +1,16 @@
 package net.paradise_client.inject.mixin.network.connection;
 
-import net.paradise_client.Constants;
-import net.paradise_client.netty.NettyConstants;
-import net.paradise_client.netty.ParadiseEncoder;
-import net.paradise_client.netty.ParadiseS2CPluginMessageHandler;
-import net.paradise_client.netty.ParadiseC2SHandshakeHandler;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.NetworkSide;
 import net.minecraft.network.handler.HandlerNames;
 import net.minecraft.network.handler.PacketSizeLogger;
+import net.paradise_client.Constants;
+import net.paradise_client.netty.NettyConstants;
+import net.paradise_client.netty.ParadiseC2SHandshakeHandler;
+import net.paradise_client.netty.ParadiseEncoder;
+import net.paradise_client.netty.ParadiseS2CPluginMessageHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -1,8 +1,5 @@
 package net.paradise_client.inject.mixin.gui.screen;
 
-import net.paradise_client.ParadiseClient;
-import net.paradise_client.mod.BungeeSpoofMod;
-import net.paradise_client.screen.UUIDSpoofScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.ConfirmScreen;
@@ -18,6 +15,9 @@ import net.minecraft.client.option.ServerList;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
+import net.paradise_client.ParadiseClient;
+import net.paradise_client.mod.BungeeSpoofMod;
+import net.paradise_client.screen.UUIDSpoofScreen;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.*;

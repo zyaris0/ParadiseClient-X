@@ -1,13 +1,13 @@
 package net.paradise_client.netty;
 
-import net.paradise_client.Helper;
-import net.paradise_client.ParadiseClient;
-import net.paradise_client.protocol.ProtocolVersion;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;
 import net.md_5.bungee.protocol.packet.Handshake;
 import net.minecraft.network.PacketByteBuf;
+import net.paradise_client.Helper;
+import net.paradise_client.ParadiseClient;
+import net.paradise_client.protocol.ProtocolVersion;
 
 import java.util.List;
 

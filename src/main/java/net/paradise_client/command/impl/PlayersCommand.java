@@ -1,10 +1,10 @@
 package net.paradise_client.command.impl;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.paradise_client.Helper;
-import net.paradise_client.command.Command;
 import net.minecraft.command.CommandSource;
 import net.minecraft.text.Text;
+import net.paradise_client.Helper;
+import net.paradise_client.command.Command;
 
 import java.util.HashMap;
 import java.util.Map;

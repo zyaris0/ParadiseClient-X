@@ -2,11 +2,11 @@ package net.paradise_client.command.impl;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.command.CommandSource;
 import net.paradise_client.Helper;
 import net.paradise_client.ParadiseClient;
 import net.paradise_client.command.Command;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.command.CommandSource;
 
 /**
  * Represents a command that displays help information for other commands.

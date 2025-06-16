@@ -1,11 +1,11 @@
 package net.paradise_client.inject.mixin.api;
 
-import net.paradise_client.inject.accessor.PayloadTypeRegistryImplAccessor;
 import net.fabricmc.fabric.impl.networking.PayloadTypeRegistryImpl;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
+import net.paradise_client.inject.accessor.PayloadTypeRegistryImplAccessor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

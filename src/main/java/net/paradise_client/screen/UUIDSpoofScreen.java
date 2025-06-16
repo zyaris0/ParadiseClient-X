@@ -1,8 +1,5 @@
 package net.paradise_client.screen;
 
-import net.paradise_client.Helper;
-import net.paradise_client.ParadiseClient;
-import net.paradise_client.mod.BungeeSpoofMod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -10,6 +7,9 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.text.Text;
+import net.paradise_client.Helper;
+import net.paradise_client.ParadiseClient;
+import net.paradise_client.mod.BungeeSpoofMod;
 
 import java.util.UUID;
 

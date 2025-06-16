@@ -1,7 +1,7 @@
 package net.paradise_client.inject.mixin.auth;
 
-import net.paradise_client.inject.accessor.SessionAccessor;
 import net.minecraft.client.session.Session;
+import net.paradise_client.inject.accessor.SessionAccessor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;

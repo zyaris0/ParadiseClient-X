@@ -1,8 +1,8 @@
 package net.paradise_client.inject.mixin.gui;
 
-import net.paradise_client.WallPaper;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
+import net.paradise_client.WallPaper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -2,10 +2,10 @@ package net.paradise_client.command.impl;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.paradise_client.command.Command;
-import net.paradise_client.inject.accessor.ClientPlayNetworkHandlerAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandSource;
+import net.paradise_client.command.Command;
+import net.paradise_client.inject.accessor.ClientPlayNetworkHandlerAccessor;
 
 public class SayCommand extends Command {
     public SayCommand() {

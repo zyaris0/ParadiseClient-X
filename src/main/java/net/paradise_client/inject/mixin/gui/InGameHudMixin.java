@@ -1,8 +1,5 @@
 package net.paradise_client.inject.mixin.gui;
 
-import net.paradise_client.Constants;
-import net.paradise_client.ParadiseClient;
-import net.paradise_client.protocol.ProtocolVersion;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -12,6 +9,9 @@ import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardDisplaySlot;
 import net.minecraft.scoreboard.ScoreboardObjective;
+import net.paradise_client.Constants;
+import net.paradise_client.ParadiseClient;
+import net.paradise_client.protocol.ProtocolVersion;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

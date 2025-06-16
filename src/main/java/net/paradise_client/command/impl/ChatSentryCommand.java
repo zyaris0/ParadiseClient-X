@@ -2,11 +2,11 @@ package net.paradise_client.command.impl;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.minecraft.command.CommandSource;
+import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
 import net.paradise_client.Helper;
 import net.paradise_client.command.Command;
 import net.paradise_client.packet.ChatSentryPayloadPacket;
-import net.minecraft.command.CommandSource;
-import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
 
 import java.util.Random;
 
