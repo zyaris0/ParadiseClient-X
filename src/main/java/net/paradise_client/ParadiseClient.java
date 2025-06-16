@@ -20,8 +20,14 @@ import net.paradise_client.listener.PacketListener;
 import net.paradise_client.mod.*;
 import net.paradise_client.packet.*;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWImage;
+import org.lwjgl.system.MemoryStack;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -52,6 +58,7 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
     @Override
     public void onInitializeClient() {
         INSTANCE = this;
+        updateIcon();
         registerChannels();
         initializeMods();
         initializeManagers();
@@ -116,6 +123,52 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
                 client.setScreen(new ChatScreen(COMMAND_MANAGER.prefix));
             }
         });
+    }
+
+    // todo: perhaps move this to a mixin?
+    private void updateIcon() {
+        MINECRAFT_CLIENT.execute(() -> {
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                long windowHandle = MINECRAFT_CLIENT.getWindow().getHandle();
+
+                GLFWImage.Buffer icons = GLFWImage.malloc(2, stack);
+
+                icons.put(0, loadIcon("/assets/paradiseclient/textures/icon/icon_16.png", stack));
+                icons.put(1, loadIcon("/assets/paradiseclient/textures/icon/icon_32.png", stack));
+
+                GLFW.glfwSetWindowIcon(windowHandle, icons);
+            } catch (Exception e) {
+                Constants.LOGGER.error("Failed to set window icon", e);
+            }
+        });
+    }
+
+    private GLFWImage loadIcon(String path, MemoryStack stack) throws IOException {
+        InputStream input = getClass().getResourceAsStream(path);
+        if (input == null) throw new IOException("Icon not found: " + path);
+
+        BufferedImage image = ImageIO.read(input);
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int[] pixelsRaw = new int[width * height];
+        image.getRGB(0, 0, width, height, pixelsRaw, 0, width);
+
+        ByteBuffer pixels = stack.malloc(width * height * 4);
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int pixel = pixelsRaw[y * width + x];
+                pixels.put((byte) ((pixel >> 16) & 0xFF)); // Red
+                pixels.put((byte) ((pixel >> 8) & 0xFF));  // Green
+                pixels.put((byte) (pixel & 0xFF));         // Blue
+                pixels.put((byte) ((pixel >> 24) & 0xFF)); // Alpha
+            }
+        }
+        pixels.flip();
+
+        GLFWImage icon = GLFWImage.malloc(stack);
+        icon.set(width, height, pixels);
+        return icon;
     }
 
     private void checkForUpdates() {

@@ -12,7 +12,7 @@
     "zalgodev",
     "hydrojava"
   ],
-  "icon": "assets/paradiseclient/icon.png",
+  "icon": "icon.png",
   "contact": {
     "repo": "https://github.com/Hydrogen-Developments/ParadiseClient-X/",
     "homepage": "https://paradise-client.net"
