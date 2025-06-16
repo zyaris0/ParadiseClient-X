@@ -70,18 +70,4 @@ public class MinecraftClientMixin {
     private void onInit(CallbackInfo info) {
         new Thread(new RPC()).start();
     }
-
-    /**
-     * Injects code at the start of the setScreen method to track the currently displayed screen.
-     * <p>
-     * This method updates the current screen in the miscellaneous mod when a new screen is set.
-     * </p>
-     *
-     * @param screen The screen being set.
-     * @param ci     Callback information.
-     */
-    @Inject(method = "setScreen", at = @At(value = "HEAD"))
-    private void setScreenHead(Screen screen, CallbackInfo ci) {
-        ParadiseClient.MISC_MOD.currentScreen = screen;
-    }
 }

@@ -56,7 +56,6 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientPlayNetwork
             CallbackInfo info
     ) {
         ParadiseClient.NETWORK_MOD.isConnected = true;
-        ParadiseClient.NETWORK_MOD.serverIP = ((ClientPlayNetworkHandler) (Object) this).getConnection().getAddress().toString().split("/")[0];
         if (ParadiseClient.MISC_MOD.isClientOutdated)
             Helper.printChatMessage("&4Client is outdated! Latest version: &2" + ParadiseClient.MISC_MOD.latestVersion);
     }

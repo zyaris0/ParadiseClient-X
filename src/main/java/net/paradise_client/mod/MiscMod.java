@@ -1,6 +1,5 @@
 package net.paradise_client.mod;
 
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
@@ -19,10 +18,6 @@ public class MiscMod {
      * Message which needs to be delayed before sending.
      */
     public final ArrayList<Text> delayedMessages = new ArrayList<>();
-    /**
-     * The current screen being displayed in the client.
-     */
-    public Screen currentScreen;
 
     /**
      * Weather the client is outdated or not.

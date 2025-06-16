@@ -22,11 +22,6 @@ public class NetworkMod {
     public boolean isConnected = false;
 
     /**
-     * The IP address of the server the client is connected to.
-     */
-    public String serverIP = "";
-
-    /**
      * The registered channels by their names.
      */
     public ArrayList<String> getRegisteredChannelsByName() {

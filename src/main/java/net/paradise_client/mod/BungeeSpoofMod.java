@@ -51,7 +51,7 @@ public class BungeeSpoofMod {
     public String hostname;
 
     /**
-     * The token used for BungeeCord spoofing (yet to be implemented).
+     * The token used for BungeeCord spoofing.
      */
     public String token;
 
