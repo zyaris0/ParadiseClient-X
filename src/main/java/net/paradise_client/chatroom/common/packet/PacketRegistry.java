@@ -12,18 +12,20 @@ import java.util.function.Supplier;
 
 public class PacketRegistry {
     private static final Map<Integer, Supplier<Packet>> packetMap = new HashMap<>();
+    private static int nextPacketId = 0;
 
     public static void registerPackets() {
         packetMap.clear();
-        registerPacket(0x00, HandshakePacket::new);
-        registerPacket(0x01, HandshakeResponsePacket::new);
-        registerPacket(0x02, KeepAlivePacket::new);
-        registerPacket(0x03, DisconnectPacket::new);
-        registerPacket(0x04, MessagePacket::new);
+        registerPacket(HandshakePacket::new);
+        registerPacket(HandshakeResponsePacket::new);
+        registerPacket(KeepAlivePacket::new);
+        registerPacket(DisconnectPacket::new);
+        registerPacket(MessagePacket::new);
     }
 
-    private static void registerPacket(int id, Supplier<Packet> supplier) {
-        packetMap.put(id, supplier);
+    private static void registerPacket(Supplier<Packet> supplier) {
+        packetMap.put(nextPacketId, supplier);
+        nextPacketId++;
     }
 
     public static Packet createAndDecode(int id, ByteBuf buf) {
