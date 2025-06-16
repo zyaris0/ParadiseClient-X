@@ -1,6 +1,7 @@
 package net.paradise_client;
 
 import io.github.spigotrce.eventbus.event.EventManager;
+import net.paradise_client.addon.AddonLoader;
 import net.paradise_client.command.CommandManager;
 import net.paradise_client.exploit.ExploitManager;
 import net.paradise_client.listener.ChannelListener;
@@ -60,6 +61,7 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
         initializeListeners();
         setupKeyBindings();
         checkForUpdates();
+        AddonLoader.loadAddons();
     }
 
     @Override
