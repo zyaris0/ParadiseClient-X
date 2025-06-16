@@ -3,8 +3,16 @@
   "id": "paradiseclient",
   "version": "${version}",
   "name": "ParadiseClient",
-  "description": "",
-  "authors": [],
+  "description": "Minecraft pentesting client for Fabric.",
+  "authors": [
+    "SpigotRCE"
+  ],
+  "contributors": [
+    "hectograms",
+    "zalgodev",
+    "hydrojava"
+  ],
+  "icon": "assets/paradiseclient/icon.png",
   "contact": {
     "repo": "https://github.com/Hydrogen-Developments/ParadiseClient-X/"
   },
