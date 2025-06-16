@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "paradiseclient",
-  "version": "${version}",
+  "version": "${git_hash}",
   "name": "ParadiseClient",
   "description": "Minecraft pentesting client for Fabric.",
   "authors": [

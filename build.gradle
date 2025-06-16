@@ -2,9 +2,25 @@ plugins {
     id 'fabric-loom' version '1.10.1'
     id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'com.gorylenko.gradle-git-properties' version '2.4.1'
 }
 
-version = project.mod_version
+def gitHash = {
+    def stdout = new ByteArrayOutputStream()
+    try {
+        exec {
+            commandLine 'git', 'rev-parse', '--short', 'HEAD'
+            standardOutput = stdout
+            ignoreExitValue = true
+        }
+        return stdout.toString().trim()
+    } catch (Exception e) {
+        e.printStackTrace()
+        return "unknown"
+    }
+}.call()
+
+version = gitHash
 group = project.maven_group
 
 base {
@@ -86,7 +102,7 @@ processResources {
     filteringCharset "UTF-8"
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version,
+        expand "git_hash": gitHash,
                 "minecraft_version": project.minecraft_version,
                 "loader_version": project.loader_version
     }

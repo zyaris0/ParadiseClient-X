@@ -7,19 +7,23 @@
  */
 package net.paradise_client;
 
+import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Constants {
     /**
-     * The version of the mod.
-     */
-    public static final String VERSION = "1.21.5-4-6";
-
-    /**
      * The ID of the mod.
      */
     public static final String MOD_ID = "paradiseclient";
+
+    /**
+     * The version of the mod.
+     */
+    // todo: move this to metainf's implementation version?
+    public static final String VERSION = FabricLoader.getInstance().getModContainer(MOD_ID)
+            .orElseThrow(() -> new IllegalStateException("Mod container not found for " + MOD_ID))
+            .getMetadata().getVersion().getFriendlyString();
 
     /**
      * The name of the mod.
