@@ -32,73 +32,39 @@ import java.util.Objects;
  * @since 1.0
  */
 public class ParadiseClient_Fabric implements ModInitializer, ClientModInitializer {
-    /**
-     * The Minecraft client instance.
-     */
-    public static final MinecraftClient MINECRAFT_CLIENT = MinecraftClient.getInstance();
-    /**
-     * The instance of {@link EventManager}, which handles the events being fired and listened.
-     */
-    public static EventManager EVENT_MANAGER;
-    /**
-     * The instance of {@link BungeeSpoofMod}, which handles BungeeCord spoofing functionality.
-     */
-    public static BungeeSpoofMod BUNGEE_SPOOF_MOD;
-    /**
-     * The instance of {@link MiscMod}, which handles miscellaneous functionalities.
-     */
-    public static MiscMod MISC_MOD;
-    /**
-     * The instance of {@link HudMod}, which handles HUD (Heads-Up Display) functionalities.
-     */
-    public static HudMod HUD_MOD;
-    /**
-     * The instance of {@link ChatRoomMod}, which handles chat room functionalities.
-     */
-    public static ChatRoomMod CHAT_ROOM_MOD;
-    /**
-     * The instance of {@link ExploitMod}, which handles various exploit-related functionalities.
-     */
-    public static ExploitMod EXPLOIT_MOD;
-    /**
-     * The instance of {@link CommandManager}, which manages commands in the mod.
-     */
-    public static CommandManager COMMAND_MANAGER;
-    /**
-     * The instance of {@link ExploitManager}, which manages different types of exploits.
-     */
-    public static ExploitManager EXPLOIT_MANAGER;
-    /**
-     * The instance of {@link NetworkMod}, which manages network-related functionalities.
-     */
-    public static NetworkMod NETWORK_MOD;
-    /**
-     * The instance of {@link NetworkConfiguration}, which stores the protocol version selected in VFP.
-     */
-    public static NetworkConfiguration NETWORK_CONFIGURATION = new NetworkConfiguration();
 
-    public static void onClientInitialize() {
+    public static ParadiseClient_Fabric INSTANCE;
+
+    public static final MinecraftClient MINECRAFT_CLIENT = MinecraftClient.getInstance();
+
+    public static final EventManager EVENT_MANAGER = new EventManager();
+    public static final NetworkConfiguration NETWORK_CONFIGURATION = new NetworkConfiguration();
+
+    public static BungeeSpoofMod BUNGEE_SPOOF_MOD;
+    public static MiscMod MISC_MOD;
+    public static HudMod HUD_MOD;
+    public static ChatRoomMod CHAT_ROOM_MOD;
+    public static ExploitMod EXPLOIT_MOD;
+    public static CommandManager COMMAND_MANAGER;
+    public static ExploitManager EXPLOIT_MANAGER;
+    public static NetworkMod NETWORK_MOD;
+
+    @Override
+    public void onInitializeClient() {
+        INSTANCE = this;
         registerChannels();
         initializeMods();
         initializeManagers();
         initializeListeners();
-
-        new Thread(() -> {
-            try {
-                String latestVersion = Helper.getLatestReleaseTag();
-                if (latestVersion == null) return;
-                ParadiseClient_Fabric.MISC_MOD.latestVersion = latestVersion;
-                if (!Objects.equals(ParadiseClient_Fabric.MISC_MOD.latestVersion, Constants.VERSION))
-                    ParadiseClient_Fabric.MISC_MOD.isClientOutdated = true;
-
-                Constants.reloadTitle();
-            } catch (IOException e) {
-                Constants.LOGGER.error("Error getting latest release tag", e);
-            }
-        }).start();
+        setupKeyBindings();
+        checkForUpdates();
     }
 
-    public static void registerChannels() {
+    @Override
+    public void onInitialize() {
+    }
+
+    private void registerChannels() {
         PayloadTypeRegistry.playC2S().register(VelocityReportPayloadPacket.ID, VelocityReportPayloadPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(PurpurExploitPayloadPacket.ID, PurpurExploitPayloadPacket.CODEC);
         PayloadTypeRegistry.playC2S().register(AuthMeVelocityPayloadPacket.ID, AuthMeVelocityPayloadPacket.CODEC);
@@ -107,7 +73,7 @@ public class ParadiseClient_Fabric implements ModInitializer, ClientModInitializ
         PayloadTypeRegistry.playC2S().register(SignedVelocityPayloadPacket.ID, SignedVelocityPayloadPacket.CODEC);
     }
 
-    public static void initializeMods() {
+    private void initializeMods() {
         BUNGEE_SPOOF_MOD = new BungeeSpoofMod();
         MISC_MOD = new MiscMod();
         HUD_MOD = new HudMod();
@@ -116,38 +82,48 @@ public class ParadiseClient_Fabric implements ModInitializer, ClientModInitializ
         NETWORK_MOD = new NetworkMod();
     }
 
-    public static void initializeManagers() {
-        EVENT_MANAGER = new EventManager();
-        EXPLOIT_MANAGER = new ExploitManager(ParadiseClient_Fabric.MINECRAFT_CLIENT);
-        ParadiseClient_Fabric.EXPLOIT_MANAGER.init();
-        COMMAND_MANAGER = new CommandManager(ParadiseClient_Fabric.MINECRAFT_CLIENT);
-        ParadiseClient_Fabric.COMMAND_MANAGER.init();
+    private void initializeManagers() {
+        EXPLOIT_MANAGER = new ExploitManager(MINECRAFT_CLIENT);
+        EXPLOIT_MANAGER.init();
+
+        COMMAND_MANAGER = new CommandManager(MINECRAFT_CLIENT);
+        COMMAND_MANAGER.init();
     }
 
-    public static void initializeListeners() {
-        ParadiseClient_Fabric.EVENT_MANAGER.registerListener(new PacketListener());
-        ParadiseClient_Fabric.EVENT_MANAGER.registerListener(ParadiseClient_Fabric.COMMAND_MANAGER);
-        ParadiseClient_Fabric.EVENT_MANAGER.registerListener(new ChannelListener());
+    private void initializeListeners() {
+        EVENT_MANAGER.registerListener(new PacketListener());
+        EVENT_MANAGER.registerListener(COMMAND_MANAGER);
+        EVENT_MANAGER.registerListener(new ChannelListener());
     }
 
-    @Override
-    public void onInitialize() {
-        KeyBinding paradiseCommandOpener = KeyBindingHelper.registerKeyBinding(
-                new KeyBinding(
-                        "Open paradise command",
-                        InputUtil.Type.KEYSYM,
-                        GLFW.GLFW_KEY_COMMA,
-                        Constants.MOD_NAME
-                )
-        );
+    private void setupKeyBindings() {
+        KeyBinding keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "Open paradise command",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_COMMA,
+                Constants.MOD_NAME
+        ));
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (paradiseCommandOpener.wasPressed())
-                MinecraftClient.getInstance().setScreen(new ChatScreen(ParadiseClient_Fabric.COMMAND_MANAGER.prefix));
+            while (keyBinding.wasPressed()) {
+                client.setScreen(new ChatScreen(COMMAND_MANAGER.prefix));
+            }
         });
     }
 
-    @Override
-    public void onInitializeClient() {
-        onClientInitialize();
+    private void checkForUpdates() {
+        new Thread(() -> {
+            try {
+                String latestVersion = Helper.getLatestReleaseTag();
+                if (latestVersion == null) return;
+
+                MISC_MOD.latestVersion = latestVersion;
+                MISC_MOD.isClientOutdated = !Objects.equals(latestVersion, Constants.VERSION);
+                Constants.reloadTitle();
+
+            } catch (IOException e) {
+                Constants.LOGGER.error("Error checking for latest release tag", e);
+            }
+        }).start();
     }
 }
