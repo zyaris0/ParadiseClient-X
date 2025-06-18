@@ -81,7 +81,7 @@ public class WallPaper {
     public static void renderLegacy(DrawContext context, int width, int height) {
         context.drawTexture(
                 RenderLayer::getGuiTextured,
-                Identifier.of(Constants.MOD_ID, "textures/wallpaper.png"),
+                Identifier.of(Constants.MOD_ID, "textures/wallpaper/wallpaper.png"),
                 0, 0,
                 0.0F, 0.0F,
                 width, height,
