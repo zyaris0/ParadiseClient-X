@@ -26,6 +26,9 @@ import java.util.zip.ZipInputStream;
  */
 @SuppressWarnings("BusyWait")
 public class RPC implements Runnable {
+    public Core CORE;
+    public final String RPC_IMAGE = "af9df3fa19b7374e5e7582865f9fb1e7";
+    public final long RPC_CLIENT = 1164104022265974784L;
 
     /**
      * Downloads and installs the Discord Game SDK DLL.
@@ -88,12 +91,13 @@ public class RPC implements Runnable {
         }
 
         try (CreateParams params = new CreateParams()) {
-            params.setClientID(1164104022265974784L);
+            params.setClientID(RPC_CLIENT);
             params.setFlags(CreateParams.getDefaultFlags());
 
             try (Core core = new Core(params)) {
+                this.CORE = core;
                 try (Activity activity = new Activity()) {
-                    activity.assets().setLargeImage("af9df3fa19b7374e5e7582865f9fb1e7");
+                    activity.assets().setLargeImage(RPC_IMAGE);
                     activity.setDetails("In Menu");
                     activity.timestamps().setStart(Instant.now());
 

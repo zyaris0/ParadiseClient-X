@@ -14,6 +14,7 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import net.paradise_client.addon.AddonLoader;
 import net.paradise_client.command.CommandManager;
+import net.paradise_client.discord.RPC;
 import net.paradise_client.exploit.ExploitManager;
 import net.paradise_client.listener.ChannelListener;
 import net.paradise_client.listener.PacketListener;
@@ -54,6 +55,7 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
     public static CommandManager COMMAND_MANAGER;
     public static ExploitManager EXPLOIT_MANAGER;
     public static NetworkMod NETWORK_MOD;
+    public static RPC RPC;
 
     @Override
     public void onInitializeClient() {
@@ -66,6 +68,9 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
         setupKeyBindings();
         checkForUpdates();
         AddonLoader.loadAddons();
+
+        RPC = new RPC();
+        new Thread(RPC).start();
     }
 
     @Override

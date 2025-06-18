@@ -3,7 +3,6 @@ package net.paradise_client.inject.mixin.minecraft;
 import net.minecraft.client.MinecraftClient;
 import net.paradise_client.Constants;
 import net.paradise_client.chatroom.client.Client;
-import net.paradise_client.discord.RPC;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -53,19 +52,5 @@ public class MinecraftClientMixin {
     @Inject(method = "close", at = @At(value = "HEAD"))
     private void closeHead(CallbackInfo ci) {
         Client.stop();
-    }
-
-    /**
-     * Injects code after the initialization of the MinecraftClient.
-     * <p>
-     * This method starts a new thread for the Discord RPC (Rich Presence Client).
-     * </p>
-     *
-     * @param info Callback information.
-     */
-
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void onInit(CallbackInfo info) {
-        new Thread(new RPC()).start();
     }
 }
