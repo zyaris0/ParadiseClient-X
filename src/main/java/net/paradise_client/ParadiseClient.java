@@ -61,6 +61,7 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
     public void onInitializeClient() {
         INSTANCE = this;
         updateIcon();
+        new Thread(() -> RPC = new RPC()).start();
         registerChannels();
         initializeMods();
         initializeManagers();
@@ -68,9 +69,6 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
         setupKeyBindings();
         checkForUpdates();
         AddonLoader.loadAddons();
-
-        RPC = new RPC();
-        new Thread(RPC).start();
     }
 
     @Override
