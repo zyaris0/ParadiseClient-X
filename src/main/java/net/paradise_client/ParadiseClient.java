@@ -61,7 +61,8 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
     public void onInitializeClient() {
         INSTANCE = this;
         updateIcon();
-        new Thread(() -> RPC = new RPC()).start();
+        RPC = new RPC();
+        new Thread(() -> RPC.run()).start();
         registerChannels();
         initializeMods();
         initializeManagers();

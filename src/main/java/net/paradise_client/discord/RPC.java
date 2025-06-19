@@ -25,10 +25,10 @@ import java.util.zip.ZipInputStream;
  * @since 2.17
  */
 @SuppressWarnings("BusyWait")
-public class RPC implements Runnable {
+public class RPC {
     public Core CORE;
-    public final String RPC_IMAGE = "af9df3fa19b7374e5e7582865f9fb1e7";
-    public final long RPC_CLIENT = 1164104022265974784L;
+    public String RPC_IMAGE = "af9df3fa19b7374e5e7582865f9fb1e7";
+    public long RPC_CLIENT = 1164104022265974784L;
 
     /**
      * Downloads and installs the Discord Game SDK DLL.
@@ -72,7 +72,6 @@ public class RPC implements Runnable {
         }
     }
 
-    @Override
     public void run() {
         try {
             installDiscordSDK();
