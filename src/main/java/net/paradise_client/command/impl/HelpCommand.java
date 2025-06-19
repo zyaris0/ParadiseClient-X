@@ -28,66 +28,47 @@ public class HelpCommand extends Command {
      */
     @Override
     public void build(LiteralArgumentBuilder<CommandSource> root) {
-        root.executes((context -> {
-                    printDash();
-                    for (Command command : ParadiseClient.COMMAND_MANAGER.getCommands()) {
-                        Helper.printChatMessage("§a" + command.getName() + " §b" + command.getDescription(), false);
+        root.executes(context -> {
+            Helper.printChatMessage("&8&m-----------------------------------------------------", false);
+            Helper.printChatMessage("&b&l[Command List]");
+            for (Command command : ParadiseClient.COMMAND_MANAGER.getCommands()) {
+                Helper.printChatMessage("&7 - &a" + command.getName() + " &8| &f" + command.getDescription());
+            }
+            Helper.printChatMessage("&7 - &fTotal Registered: &b" + ParadiseClient.COMMAND_MANAGER.getCommands().size());
+            Helper.printChatMessage("&8&m-----------------------------------------------------", false);
+            return SINGLE_SUCCESS;
+        }).then(argument("command", StringArgumentType.word())
+                .executes(context -> {
+                    String name = context.getArgument("command", String.class);
+                    Command command = ParadiseClient.COMMAND_MANAGER.getCommand(name);
+
+                    if (command == null) {
+                        Helper.printChatMessage("&4&l[Error] &cCommand not found: &f" + name);
+                        return SINGLE_SUCCESS;
                     }
-                    printDash();
-                    Helper.printChatMessage("§aThere are currently §b" +
-                                    ParadiseClient.COMMAND_MANAGER.getCommands().size() +
-                                    "§a registered commands.",
-                            false
-                    );
-                    printDash();
+
+                    Helper.printChatMessage("&8&m-----------------------------------------------------", false);
+                    Helper.printChatMessage("&b&l[Command Info]");
+                    Helper.printChatMessage("&7 - &aName: &f" + command.getName());
+                    Helper.printChatMessage("&7 - &aDescription: &f" + command.getDescription());
+                    Helper.printChatMessage("&8&m-----------------------------------------------------", false);
                     return SINGLE_SUCCESS;
-                }))
-                .then(argument("command", StringArgumentType.word())
-                        .executes(context -> {
-                            String name = context.getArgument("command", String.class);
-                            Command command = ParadiseClient.COMMAND_MANAGER.getCommand(name);
+                })
+                .suggests((context, builder) -> {
+                    String partialName;
+                    try {
+                        partialName = context.getArgument("command", String.class);
+                    } catch (IllegalArgumentException e) {
+                        partialName = "";
+                    }
 
-                            if (command == null) {
-                                Helper.printChatMessage("§4Command not found!");
-                                return SINGLE_SUCCESS;
-                            }
+                    String finalPartialName = partialName;
+                    ParadiseClient.COMMAND_MANAGER.getCommands().stream()
+                            .map(Command::getName)
+                            .filter(cmd -> cmd.toLowerCase().startsWith(finalPartialName.toLowerCase()))
+                            .forEach(builder::suggest);
 
-                            printDash();
-                            Helper.printChatMessage("§a" + command.getName() + " §b" + command.getDescription(), false);
-                            printDash();
-                            return SINGLE_SUCCESS;
-                        })
-                        .suggests((context, builder) -> {
-                            String partialName;
-                            try {
-                                partialName = context.getArgument("command", String.class);
-                            } catch (IllegalArgumentException e) {
-                                partialName = "";
-                            }
-
-                            if (partialName.isEmpty()) {
-                                ParadiseClient.COMMAND_MANAGER.getCommands()
-                                        .stream()
-                                        .map(Command::getName)
-                                        .forEach(builder::suggest);
-                                return builder.buildFuture();
-                            }
-
-                            String finalPartialName = partialName;
-                            ParadiseClient.COMMAND_MANAGER.getCommands()
-                                    .stream()
-                                    .map(Command::getName)
-                                    .filter(name -> name.toLowerCase().startsWith(finalPartialName))
-                                    .forEach(builder::suggest);
-
-                            return builder.buildFuture();
-
-                        })
-                );
-    }
-
-    private void printDash() {
-        double count = MinecraftClient.getInstance().options.getChatWidth().getValue() * 360 / (MinecraftClient.getInstance().textRenderer.getWidth("-") + 1);
-        Helper.printChatMessage("§a" + "-".repeat(((int) count)), false);
+                    return builder.buildFuture();
+                }));
     }
 }
