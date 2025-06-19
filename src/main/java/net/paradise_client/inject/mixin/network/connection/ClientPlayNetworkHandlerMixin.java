@@ -1,5 +1,6 @@
 package net.paradise_client.inject.mixin.network.connection;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.encryption.NetworkEncryptionUtils;
 import net.minecraft.network.message.LastSeenMessagesCollector;
@@ -8,6 +9,8 @@ import net.minecraft.network.message.MessageChain;
 import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.world.World;
 import net.paradise_client.Helper;
 import net.paradise_client.ParadiseClient;
 import net.paradise_client.event.chat.ChatPostEvent;
@@ -51,13 +54,36 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientPlayNetwork
      * @param info   The callback information.
      */
     @Inject(method = "onGameJoin", at = @At("TAIL"))
-    private void onGameJoin(
-            GameJoinS2CPacket packet,
-            CallbackInfo info
-    ) {
+    private void onGameJoin(GameJoinS2CPacket packet, CallbackInfo info) {
         ParadiseClient.NETWORK_MOD.isConnected = true;
-        if (ParadiseClient.MISC_MOD.isClientOutdated)
-            Helper.printChatMessage("&4Client is outdated! Latest version: &2" + ParadiseClient.MISC_MOD.latestVersion);
+
+        Helper.printChatMessage("&8&m-----------------------------------------------------", false);
+
+        if (ParadiseClient.MISC_MOD.isClientOutdated) {
+            Helper.printChatMessage("&c&lWarning: &4Your client is outdated!");
+            Helper.printChatMessage("&7Latest version available: &a" + ParadiseClient.MISC_MOD.latestVersion);
+        }
+
+        Helper.printChatMessage("");
+        Helper.printChatMessage("&b&l[World Info]");
+        Helper.printChatMessage("&7 - Dimension: &f" + packet.commonPlayerSpawnInfo().dimension().getValue());
+        Helper.printChatMessage("&7 - Hashed Seed: &f" + packet.commonPlayerSpawnInfo().seed());
+
+        Helper.printChatMessage("");
+        Helper.printChatMessage("&b&l[Server Dimensions]");
+        for (RegistryKey<World> dimension : packet.dimensionIds()) {
+            Helper.printChatMessage("&7 - &f" + dimension.getValue());
+        }
+
+        Helper.printChatMessage("");
+        Helper.printChatMessage("&b&l[Server Flags]");
+        Helper.printChatMessage("&7 - Secure Chat: " + (packet.enforcesSecureChat() ? "&aEnabled" : "&cDisabled"));
+        Helper.printChatMessage("&7 - Hardcore Mode: " + (packet.hardcore() ? "&aEnabled" : "&cDisabled"));
+        Helper.printChatMessage("&7 - Max Players: &f" + packet.maxPlayers());
+        Helper.printChatMessage("&7 - Render Distance: &f" + packet.viewDistance());
+        Helper.printChatMessage("&7 - Simulation Distance: &f" + packet.simulationDistance());
+
+        Helper.printChatMessage("&8&m-----------------------------------------------------", false);
     }
 
     /**
