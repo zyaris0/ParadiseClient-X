@@ -81,10 +81,10 @@ public abstract class InGameHudMixin {
 
         text.add(Constants.WINDOW_TITLE);
         text.add("Server " + ((!Objects.isNull(this.client.getCurrentServerEntry()) && ParadiseClient.HUD_MOD.showServerIP) ? this.client.getCurrentServerEntry().address : "Hidden"));
-        text.add("Engine " + (Objects.isNull(this.client.player.networkHandler) ? "" : this.client.player.networkHandler.getBrand()));
+        text.add("Engine " + (Objects.isNull(this.client.getNetworkHandler()) ? "" : this.client.getNetworkHandler().getBrand()));
         text.add("FPS " + this.client.getCurrentFps());
         text.add("Protocol " + ProtocolVersion.getProtocolVersion(ParadiseClient.NETWORK_CONFIGURATION.protocolVersion).getVersionIntroducedIn());
-        text.add("Players " + this.client.player.networkHandler.getPlayerList().size());
+        text.add("Players " + this.client.getNetworkHandler().getPlayerList().size());
 
         int i = 0;
         for (String s : text) {

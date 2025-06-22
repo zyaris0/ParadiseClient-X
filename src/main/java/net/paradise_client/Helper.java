@@ -109,7 +109,7 @@ public class Helper {
      */
     public static void sendPacket(DefinedPacket packet) {
         ((ClientConnectionAccessor)
-                MinecraftClient.getInstance().player.networkHandler
+                MinecraftClient.getInstance().getNetworkHandler()
                         .getConnection())
                 .paradiseClient$getChannel()
                 .write(packet);

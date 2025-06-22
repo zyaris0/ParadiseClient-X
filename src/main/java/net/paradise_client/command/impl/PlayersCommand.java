@@ -33,7 +33,7 @@ public class PlayersCommand extends Command {
                 .executes((context) -> {
                     Map<String, PlayerData> playerDataMap = new HashMap<>();
 
-                    getMinecraftClient().player.networkHandler.getPlayerList().forEach(playerInfo -> {
+                    getMinecraftClient().getNetworkHandler().getPlayerList().forEach(playerInfo -> {
                         String playerName = playerInfo.getProfile().getName();
                         String playerUUID = playerInfo.getProfile().getId().toString();
                         String playerGamemode = playerInfo.getGameMode().name();
