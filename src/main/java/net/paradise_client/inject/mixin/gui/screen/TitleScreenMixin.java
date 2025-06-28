@@ -205,7 +205,6 @@ public abstract class TitleScreenMixin extends Screen {
                     this.splashText.render(context, this.width, this.textRenderer, i);
             context.drawTextWithShadow(this.textRenderer, Constants.WINDOW_TITLE, 2, this.height - 10, 16777215 | i);
             if (this.isRealmsNotificationsGuiDisplayed() && f >= 1.0F) {
-                GLHelper.enableDepthTest();
                 this.realmsNotificationGui.render(context, mouseX, mouseY, delta);
             }
         }
