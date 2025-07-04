@@ -2,7 +2,7 @@ package net.paradise_client.inject.mixin.gui;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
-import net.paradise_client.WallPaper;
+import net.paradise_client.wallpaper.ThemeRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,7 +13,7 @@ public class RotatingCubeMapRendererMixin {
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     public void render(DrawContext context, int width, int height, float alpha, float tickDelta, CallbackInfo ci) {
         // Calls dynamic rendering based on the defined theme
-        WallPaper.render(context, width, height);
+        ThemeRenderer.render(context, width, height);
         ci.cancel();
     }
 }

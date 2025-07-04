@@ -1,14 +1,17 @@
-package net.paradise_client;
+package net.paradise_client.wallpaper;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
+import net.paradise_client.ConfigManager;
+import net.paradise_client.Constants;
+import net.paradise_client.Helper;
 
 import java.util.Random;
 
-public class WallPaper {
+public class ThemeRenderer {
     private static final Random random = new Random();
     private static final int[] drops = new int[300];
     private static final Particle[] particles = new Particle[100];
@@ -23,11 +26,11 @@ public class WallPaper {
             particles[i] = new Particle();
     }
 
-    public static String getTheme() {
+    public static Theme getTheme() {
         return ConfigManager.getTheme();
     }
 
-    public static void setTheme(String theme) {
+    public static void setTheme(Theme theme) {
         ConfigManager.setTheme(theme);
     }
 
@@ -36,12 +39,16 @@ public class WallPaper {
      * Switches between themes and calls the appropriate render method.
      */
     public static void render(DrawContext context, int width, int height) {
-        String theme = getTheme(); // Retrieve the theme from configuration
-        switch (theme) {
-            case "ParadiseHack" -> renderMatrix(context, width, height);
-            case "ParadiseParticle" -> renderElegantBackground(context, width, height);
-            case "ParadiseLegacy" -> renderLegacy(context, width, height);
-            default -> renderLegacy(context, width, height); // Default to "Legacy" theme
+        switch (getTheme()) {
+            case MATRIX:
+                renderMatrix(context, width, height);
+                break;
+            case PARTICLE:
+                renderElegantBackground(context, width, height);
+                break;
+            case LEGACY:
+                renderLegacy(context, width, height);
+                break;
         }
     }
 

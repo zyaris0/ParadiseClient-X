@@ -14,6 +14,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.paradise_client.*;
+import net.paradise_client.wallpaper.Theme;
+import net.paradise_client.wallpaper.ThemeRenderer;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -121,21 +123,16 @@ public abstract class TitleScreenMixin extends Screen {
 
         // Adding a button to switch themes dynamically
         // This button toggles between "hack" and "particle" themes
-        String currentTheme = WallPaper.getTheme();
-        this.addDrawableChild(ButtonWidget.builder(Text.literal("Theme: " + WallPaper.getTheme()),
+        Theme currentTheme = ThemeRenderer.getTheme();
+
+        this.addDrawableChild(ButtonWidget.builder(
+                        Text.literal("Theme: " + currentTheme.getName()),
                         onPress -> {
-                            // Switch between available themes
-                            String newTheme = switch (WallPaper.getTheme()) {
-                                case "ParadiseHack" -> "ParadiseParticle";
-                                case "ParadiseParticle" -> "ParadiseLegacy";
-                                default -> "ParadiseHack";
-                            };
-
-                            // Update theme in ConfigManager and interface
-                            WallPaper.setTheme(newTheme);
-
-                            // Update button text
-                            onPress.setMessage(Text.literal("Theme: " + newTheme));
+                            Theme[] themes = Theme.values();
+                            int nextOrdinal = (ThemeRenderer.getTheme().ordinal() + 1) % themes.length;
+                            Theme nextTheme = themes[nextOrdinal];
+                            ThemeRenderer.setTheme(nextTheme);
+                            onPress.setMessage(Text.literal("Theme: " + nextTheme.getName()));
                         })
                 .width(150)
                 .position(this.width / 2 - 75, this.height / 4 + 160)

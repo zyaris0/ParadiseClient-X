@@ -2,6 +2,8 @@ package net.paradise_client;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.dv8tion.jda.annotations.ForRemoval;
+import net.paradise_client.wallpaper.Theme;
 
 import java.io.File;
 import java.io.FileReader;
@@ -42,12 +44,34 @@ public class ConfigManager {
         }
     }
 
-    public static String getTheme() {
-        return config.has("theme") ? config.get("theme").getAsString() : "ParadiseHack"; // ParadiseHack par défaut
+    /**
+     * Gets the current theme from the configuration.
+     * If the theme is not set, it defaults to LEGACY.
+     *
+     * @return The current theme.
+     */
+    @ForRemoval
+    private static Theme migrate() {
+        return switch (config.get("theme").getAsString()) {
+            case "ParadiseHack" -> Theme.MATRIX;
+            case "ParadiseParticle" -> Theme.PARTICLE;
+            case "ParadiseLegacy" -> Theme.LEGACY;
+            default -> Theme.LEGACY;
+        };
     }
 
-    public static void setTheme(String theme) {
-        config.addProperty("theme", theme); // Update
+    public static Theme getTheme() {
+        try {
+            return config.has("theme") ? Theme.class.getEnumConstants()[config.get("theme").getAsInt()]
+                    : Theme.LEGACY;
+        } catch (NumberFormatException e) {
+            setTheme(migrate());
+            return getTheme();
+        }
+    }
+
+    public static void setTheme(Theme type) {
+        config.addProperty("theme", type.ordinal()); // Update
         saveConfig(); // Immediate backup
     }
 
