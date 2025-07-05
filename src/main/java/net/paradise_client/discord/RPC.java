@@ -27,6 +27,7 @@ import java.util.zip.ZipInputStream;
 @SuppressWarnings("BusyWait")
 public class RPC {
     public Core CORE;
+    public Activity ACTIVITY;
     public String RPC_IMAGE = "af9df3fa19b7374e5e7582865f9fb1e7";
     public long RPC_CLIENT = 1164104022265974784L;
 
@@ -72,6 +73,29 @@ public class RPC {
         }
     }
 
+    /**
+     * Updates the large image used in the Discord Rich Presence at runtime.
+     * Safe to call from external threads.
+     *
+     * @param newImageKey New Discord asset image key
+     */
+    public synchronized void setLargeImage(String newImageKey) {
+        this.RPC_IMAGE = newImageKey;
+        if (ACTIVITY != null && CORE != null) {
+            try {
+                ACTIVITY.assets().setLargeImage(newImageKey);
+                CORE.activityManager().updateActivity(ACTIVITY);
+                Constants.LOGGER.info("Updated Discord RPC large image to {}", newImageKey);
+            } catch (Exception e) {
+                Constants.LOGGER.error("Failed to update RPC image: {}", e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Entry point for the Discord RPC thread.
+     * Continuously updates presence based on client state.
+     */
     public void run() {
         try {
             installDiscordSDK();
@@ -96,6 +120,7 @@ public class RPC {
             try (Core core = new Core(params)) {
                 this.CORE = core;
                 try (Activity activity = new Activity()) {
+                    this.ACTIVITY = activity;
                     activity.assets().setLargeImage(RPC_IMAGE);
                     activity.setDetails("In Menu");
                     activity.timestamps().setStart(Instant.now());
@@ -116,6 +141,7 @@ public class RPC {
                                 activity.setState("");
                             }
 
+                            activity.assets().setLargeImage(RPC_IMAGE);
                             core.activityManager().updateActivity(activity);
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
