@@ -16,7 +16,6 @@ import net.paradise_client.addon.AddonLoader;
 import net.paradise_client.command.CommandManager;
 import net.paradise_client.discord.RPC;
 import net.paradise_client.exploit.ExploitManager;
-import net.paradise_client.listener.ChannelListener;
 import net.paradise_client.listener.PacketListener;
 import net.paradise_client.mod.*;
 import net.paradise_client.packet.*;
@@ -112,7 +111,6 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
     private void initializeListeners() {
         EVENT_MANAGER.registerListener(new PacketListener());
         EVENT_MANAGER.registerListener(COMMAND_MANAGER);
-        EVENT_MANAGER.registerListener(new ChannelListener());
     }
 
     private void setupKeyBindings() {
