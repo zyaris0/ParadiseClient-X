@@ -47,9 +47,6 @@ public class Constants {
     public static String WINDOW_TITLE = MOD_NAME + " [" + Constants.EDITION + "] " + Constants.VERSION;
 
     public static void reloadTitle() {
-        WINDOW_TITLE = Constants.MOD_NAME + " [" + Constants.EDITION + "] " + Constants.VERSION + " " +
-                (ParadiseClient.MISC_MOD.isClientOutdated ? "Outdated" : "");
-
         ParadiseClient.MINECRAFT_CLIENT.updateWindowTitle();
     }
 }

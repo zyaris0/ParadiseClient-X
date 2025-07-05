@@ -184,10 +184,6 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
 
                 MISC_MOD.latestVersion = latestVersion;
                 MISC_MOD.isClientOutdated = !Objects.equals(latestVersion, Constants.VERSION);
-                Constants.reloadTitle();
-                if (!MISC_MOD.isClientOutdated) {
-                    return;
-                }
                 try {
                     Helper.showTrayMessage("ParadiseClient is outdated! Latest version: " + latestVersion, TrayIcon.MessageType.WARNING);
                 } catch (AWTException e) {
