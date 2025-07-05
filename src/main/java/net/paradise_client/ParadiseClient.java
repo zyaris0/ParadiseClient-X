@@ -25,6 +25,7 @@ import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.system.MemoryStack;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -184,6 +185,11 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
                 MISC_MOD.latestVersion = latestVersion;
                 MISC_MOD.isClientOutdated = !Objects.equals(latestVersion, Constants.VERSION);
                 Constants.reloadTitle();
+                try {
+                    Helper.showTrayMessage("ParadiseClient is outdated! Latest version: " + latestVersion, TrayIcon.MessageType.WARNING);
+                } catch (AWTException e) {
+                    Constants.LOGGER.error("Failed to show tray message for update", e);
+                }
 
             } catch (IOException e) {
                 Constants.LOGGER.error("Error checking for latest release tag", e);

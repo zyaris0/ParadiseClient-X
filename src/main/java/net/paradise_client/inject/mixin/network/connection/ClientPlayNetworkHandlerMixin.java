@@ -61,7 +61,7 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientPlayNetwork
 
         if (ParadiseClient.MISC_MOD.isClientOutdated) {
             Helper.printChatMessage("&c&lWarning: &4Your client is outdated!");
-            Helper.printChatMessage("&7Latest version available: &a" + ParadiseClient.MISC_MOD.latestVersion);
+            Helper.showNotification("Client is outdated!", ParadiseClient.MISC_MOD.latestVersion);
         }
 
         Helper.printChatMessage("");

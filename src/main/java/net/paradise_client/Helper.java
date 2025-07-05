@@ -294,6 +294,29 @@ public class Helper {
         toastManager.add(toast);
     }
 
+    public static void showTrayMessage(String message) throws AWTException {
+        showTrayMessage("ParadiseClient", message, TrayIcon.MessageType.INFO);
+    }
+
+    public static void showTrayMessage(String message, TrayIcon.MessageType messageType) throws AWTException {
+        showTrayMessage("ParadiseClient", message, messageType);
+    }
+
+    public static void showTrayMessage(String title, String message, TrayIcon.MessageType messageType) throws AWTException {
+        if (!SystemTray.isSupported()) {
+            throw new UnsupportedOperationException();
+        }
+
+        SystemTray tray = SystemTray.getSystemTray();
+        // I don't know why the image isn't working,
+        // I have tried everything I could think of
+        Image image = Toolkit.getDefaultToolkit().createImage("assets/paradiseclient/textures/icon/icon.png");
+        TrayIcon icon = new TrayIcon(image, "ParadiseClient");
+        icon.setImageAutoSize(true);
+        tray.add(icon);
+        icon.displayMessage(title, message, messageType);
+    }
+
     public static PacketByteBuf byteBufToPacketBuf(ByteBuf buf) {
         return new PacketByteBuf(buf);
     }

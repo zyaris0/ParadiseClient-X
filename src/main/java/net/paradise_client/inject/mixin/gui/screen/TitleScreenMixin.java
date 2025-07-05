@@ -116,7 +116,7 @@ public abstract class TitleScreenMixin extends Screen {
         Text updateMessage1 = Helper.parseColoredText("&2Current version: &1" + Constants.VERSION + " &2Latetst version: &1" + ParadiseClient.MISC_MOD.latestVersion + " &fClick to download");
         if (ParadiseClient.MISC_MOD.isClientOutdated) {
             this.addDrawableChild(new PressableTextWidget(this.width - this.textRenderer.getWidth(updateMessage1) - 2, this.height - 20, this.textRenderer.getWidth(updateMessage1), 10, updateMessage1, (button) -> {
-                Util.getOperatingSystem().open("https://paradise-client.net/downloads" + ParadiseClient.MISC_MOD.latestVersion);
+                Util.getOperatingSystem().open("https://paradise-client.net/downloads");
                 MinecraftClient.getInstance().setScreen(new TitleScreen());
             }, this.textRenderer));
         }
