@@ -103,6 +103,7 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientPlayNetwork
         if (content.startsWith(ParadiseClient.COMMAND_MANAGER.prefix)) {
             ParadiseClient.COMMAND_MANAGER.dispatch(content.substring(1));
             ParadiseClient.MINECRAFT_CLIENT.inGameHud.getChatHud().addToMessageHistory(content);
+            ci.cancel();
         }
     }
 
