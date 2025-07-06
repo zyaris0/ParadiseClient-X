@@ -3,21 +3,18 @@ package net.paradise_client.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.spigotrce.eventbus.event.EventHandler;
-import io.github.spigotrce.eventbus.event.listener.Listener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandSource;
 import net.paradise_client.Constants;
 import net.paradise_client.Helper;
 import net.paradise_client.command.impl.*;
-import net.paradise_client.event.chat.ChatPreEvent;
 
 import java.util.ArrayList;
 
 /**
  * Manages and registers commands for the Paradise Client Fabric mod.
  */
-public class CommandManager implements Listener {
+public class CommandManager {
 
     /**
      * The command dispatcher used to register commands.
@@ -122,19 +119,5 @@ public class CommandManager implements Listener {
         } catch (CommandSyntaxException e) {
             Helper.printChatMessage("§c" + e.getMessage());
         }
-    }
-
-    /**
-     * Event handler for client chat messages.
-     *
-     * @param event the {@link ChatPreEvent} instance.
-     */
-    @SuppressWarnings("unused")
-    @EventHandler
-    public void onClientCommand(ChatPreEvent event) {
-        if (!event.getMessage().startsWith(prefix)) return;
-        event.setCancel(true);
-        dispatch(event.getMessage().substring(1));
-        minecraftClient.inGameHud.getChatHud().addToMessageHistory(event.getMessage());
     }
 }

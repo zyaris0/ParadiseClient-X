@@ -16,7 +16,6 @@ import net.paradise_client.addon.AddonLoader;
 import net.paradise_client.command.CommandManager;
 import net.paradise_client.discord.RPC;
 import net.paradise_client.exploit.ExploitManager;
-import net.paradise_client.listener.PacketListener;
 import net.paradise_client.mod.*;
 import net.paradise_client.packet.*;
 import org.lwjgl.glfw.GLFW;
@@ -66,7 +65,6 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
         registerChannels();
         initializeMods();
         initializeManagers();
-        initializeListeners();
         setupKeyBindings();
         checkForUpdates();
         AddonLoader.loadAddons();
@@ -106,11 +104,6 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
 
         COMMAND_MANAGER = new CommandManager(MINECRAFT_CLIENT);
         COMMAND_MANAGER.init();
-    }
-
-    private void initializeListeners() {
-        EVENT_MANAGER.registerListener(new PacketListener());
-        EVENT_MANAGER.registerListener(COMMAND_MANAGER);
     }
 
     private void setupKeyBindings() {

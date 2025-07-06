@@ -28,4 +28,9 @@ public class MiscMod {
      * Latest version retrieved from the API.
      */
     public String latestVersion;
+
+    /**
+     * Command suggestions request id.
+     */
+    public int requestId;
 }

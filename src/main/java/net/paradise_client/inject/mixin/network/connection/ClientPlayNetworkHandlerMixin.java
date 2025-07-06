@@ -1,6 +1,5 @@
 package net.paradise_client.inject.mixin.network.connection;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.encryption.NetworkEncryptionUtils;
 import net.minecraft.network.message.LastSeenMessagesCollector;
@@ -96,7 +95,15 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientPlayNetwork
     private void onSendChatMessageH(String content, CallbackInfo ci) throws InvocationTargetException, IllegalAccessException {
         ChatPreEvent event = new ChatPreEvent(content);
         ParadiseClient.EVENT_MANAGER.fireEvent(event);
-        if (event.isCancel()) ci.cancel();
+        if (event.isCancel()) {
+            ci.cancel();
+            return;
+        }
+
+        if (content.startsWith(ParadiseClient.COMMAND_MANAGER.prefix)) {
+            ParadiseClient.COMMAND_MANAGER.dispatch(content.substring(1));
+            ParadiseClient.MINECRAFT_CLIENT.inGameHud.getChatHud().addToMessageHistory(content);
+        }
     }
 
     /**

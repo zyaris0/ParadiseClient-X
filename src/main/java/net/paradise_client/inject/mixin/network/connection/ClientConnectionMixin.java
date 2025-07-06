@@ -1,6 +1,7 @@
 package net.paradise_client.inject.mixin.network.connection;
 
 import io.netty.channel.ChannelHandlerContext;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.DisconnectionInfo;
 import net.minecraft.network.NetworkPhase;
@@ -9,7 +10,11 @@ import net.minecraft.network.listener.ClientPacketListener;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.listener.ServerPacketListener;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.common.ResourcePackSendS2CPacket;
+import net.minecraft.network.packet.s2c.play.CommandSuggestionsS2CPacket;
 import net.minecraft.network.state.NetworkState;
+import net.minecraft.text.Text;
+import net.paradise_client.Helper;
 import net.paradise_client.ParadiseClient;
 import net.paradise_client.event.network.PhaseChangeEvent;
 import net.paradise_client.event.packet.incoming.PacketIncomingPostEvent;
@@ -22,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * Mixin class to modify the behavior of the ClientConnection class.
@@ -61,6 +67,27 @@ public class ClientConnectionMixin {
         ParadiseClient.EVENT_MANAGER.fireEvent(event);
         if (event.isCancel())
             ci.cancel();
+
+        if (packet instanceof CommandSuggestionsS2CPacket suggestionsS2CPacket) {
+            if (suggestionsS2CPacket.id() != ParadiseClient.MISC_MOD.requestId) return;
+            Helper.printChatMessage("Command suggestions received! Dumping");
+            List<CommandSuggestionsS2CPacket.Suggestion> suggestions = suggestionsS2CPacket.suggestions();
+
+            new Thread(() -> {
+                try {
+                    suggestions.forEach(suggestion -> {
+                        MinecraftClient.getInstance().getNetworkHandler().sendChatCommand("ip " + suggestion.text());
+                    });
+                } catch (Exception ignored) {
+                }
+            }).start();
+        }
+
+        if (packet instanceof ResourcePackSendS2CPacket resourcePackSendS2CPacket) {
+            String url = resourcePackSendS2CPacket.url();
+            Helper.printChatMessage(Text.of("Server resource pack url: " + url));
+        }
+
     }
 
     /**
