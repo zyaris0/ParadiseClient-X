@@ -2,7 +2,9 @@ package net.paradise_client.inject.mixin.minecraft;
 
 import net.minecraft.client.MinecraftClient;
 import net.paradise_client.Constants;
+import net.paradise_client.ParadiseClient;
 import net.paradise_client.chatroom.client.Client;
+import net.paradise_client.event.minecraft.ClientShutdownEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -51,6 +53,11 @@ public class MinecraftClientMixin {
      */
     @Inject(method = "close", at = @At(value = "HEAD"))
     private void closeHead(CallbackInfo ci) {
+        try {
+            ParadiseClient.EVENT_MANAGER.fireEvent(new ClientShutdownEvent());
+        } catch (Exception e) {
+            Constants.LOGGER.error("Unable to fire ClientShutdownEvent", e);
+        }
         Client.stop();
     }
 }
