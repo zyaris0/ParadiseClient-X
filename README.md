@@ -28,19 +28,6 @@ Before installing, ensure you meet these prerequisites:
 - **Java**: Version 21
 - **Fabric & Minecraft**: Version 1.21.5
 
----
-
-## **Recommended Side Mods**
-
-For the best experience, we recommend:
-
-- **Performance Optimization**:  
-  Install mods like **Sodium** to improve performance.
-
-- **Protocol Compatibility**:  
-  Install [ViaFabricPlus](https://modrinth.com/mod/viafabricplus) to enable compatibility with various Minecraft versions.
-
----
 
 ## **Support and Development Builds**
 
