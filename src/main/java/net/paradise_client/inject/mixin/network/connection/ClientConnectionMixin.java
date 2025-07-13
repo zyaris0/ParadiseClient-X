@@ -70,7 +70,9 @@ public class ClientConnectionMixin {
 
         if (packet instanceof CommandSuggestionsS2CPacket suggestionsS2CPacket) {
             if (suggestionsS2CPacket.id() != ParadiseClient.MISC_MOD.requestId) return;
+            if (!ParadiseClient.MISC_MOD.isDumping) return;
             Helper.printChatMessage("Command suggestions received! Dumping");
+            Helper.printChatMessage("Debug request id: " + suggestionsS2CPacket.id());
             List<CommandSuggestionsS2CPacket.Suggestion> suggestions = suggestionsS2CPacket.suggestions();
 
             new Thread(() -> {
