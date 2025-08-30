@@ -3,10 +3,10 @@ package net.paradise_client.netty;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;
-import net.md_5.bungee.protocol.packet.Handshake;
 import net.minecraft.network.PacketByteBuf;
 import net.paradise_client.*;
 import net.paradise_client.protocol.ProtocolVersion;
+import net.paradise_client.protocol.packet.impl.HandshakePacket;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class ParadiseC2SHandshakeHandler extends MessageToMessageEncoder<ByteBuf
   }
 
   private void decodeHandshake(PacketByteBuf b) {
-    Handshake handshake = new Handshake();
+    HandshakePacket handshake = new HandshakePacket();
     handshake.read(b.asByteBuf());
     int protocolVersion = handshake.getProtocolVersion();
     if (!(ProtocolVersion.isSupported(protocolVersion))) {

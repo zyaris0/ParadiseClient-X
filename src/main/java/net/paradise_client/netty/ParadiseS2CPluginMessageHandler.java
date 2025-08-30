@@ -3,11 +3,12 @@ package net.paradise_client.netty;
 import io.netty.buffer.*;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
-import net.md_5.bungee.protocol.*;
-import net.md_5.bungee.protocol.packet.PluginMessage;
 import net.minecraft.network.PacketByteBuf;
 import net.paradise_client.*;
 import net.paradise_client.event.network.message.PluginMessageEvent;
+import net.paradise_client.protocol.*;
+import net.paradise_client.protocol.packet.AbstractPacket;
+import net.paradise_client.protocol.packet.impl.PluginMessagePacket;
 
 import java.nio.charset.Charset;
 import java.util.*;
@@ -22,9 +23,9 @@ public class ParadiseS2CPluginMessageHandler extends MessageToMessageDecoder<Byt
       int id = b.readVarInt();
       int protocolVersion = ParadiseClient.NETWORK_CONFIGURATION.protocolVersion;
 
-      DefinedPacket packet = protocol.TO_CLIENT.createPacket(id, protocolVersion);
-      if (packet instanceof PluginMessage message) {
-        message.read(b.asByteBuf(), ProtocolConstants.Direction.TO_CLIENT, id);
+      AbstractPacket packet = protocol.TO_CLIENT.createPacket(id, protocolVersion);
+      if (packet instanceof PluginMessagePacket message) {
+        message.read(b.asByteBuf(), ProtocolVersion.Direction.TO_CLIENT, id);
         notifyChannels(message);
 
         PluginMessageEvent event =
@@ -40,7 +41,7 @@ public class ParadiseS2CPluginMessageHandler extends MessageToMessageDecoder<Byt
     out.add(in.resetReaderIndex().retain());
   }
 
-  private void notifyChannels(PluginMessage message) {
+  private void notifyChannels(PluginMessagePacket message) {
     String channelName = message.getTag();
     PacketByteBuf buf = Helper.byteBufToPacketBuf(Unpooled.buffer().writeBytes(message.getData()));
 

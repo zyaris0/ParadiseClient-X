@@ -5,12 +5,8 @@ import com.google.common.io.ByteStreams;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.netty.buffer.ByteBuf;
-import net.md_5.bungee.protocol.DefinedPacket;
-import net.md_5.bungee.protocol.Protocol;
-import net.md_5.bungee.protocol.packet.PluginMessage;
+import net.paradise_client.protocol.Protocol;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.toast.SystemToast;
-import net.minecraft.client.toast.ToastManager;
 import net.minecraft.network.NetworkPhase;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.Packet;
@@ -19,6 +15,8 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.paradise_client.inject.accessor.ClientConnectionAccessor;
+import net.paradise_client.protocol.packet.AbstractPacket;
+import net.paradise_client.protocol.packet.impl.PluginMessagePacket;
 import net.paradise_client.ui.notification.Notification;
 
 import java.awt.*;
@@ -108,7 +106,7 @@ public class Helper {
      *
      * @param packet The packet to be sent.
      */
-    public static void sendPacket(DefinedPacket packet) {
+    public static void sendPacket(AbstractPacket packet) {
         ((ClientConnectionAccessor)
                 MinecraftClient.getInstance().getNetworkHandler()
                         .getConnection())
@@ -116,10 +114,10 @@ public class Helper {
                 .write(packet);
     }
 
-    public static void sendPluginMessage(String channel, PluginMessageEncoder encoder) {
+    public static void sendPluginMessage(String channel, PluginMessagePacketEncoder encoder) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         encoder.encode(out);
-        PluginMessage message = new PluginMessage();
+        PluginMessagePacket message = new PluginMessagePacket();
         message.setTag(channel);
         message.setData(out.toByteArray());
         sendPacket(message);
@@ -354,7 +352,7 @@ public class Helper {
     }
 
     @FunctionalInterface
-    public static interface PluginMessageEncoder {
+    public static interface PluginMessagePacketEncoder {
         void encode(ByteArrayDataOutput out);
     }
 }

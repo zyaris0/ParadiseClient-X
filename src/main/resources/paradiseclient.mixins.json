@@ -5,8 +5,6 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "api.PayloadTypeRegistryImplMixin",
-    "bungee.DirectionDataMixin",
-    "bungeecord.PluginMessageMixin",
     "network.connection.ClientConnection_1Mixin",
     "network.connection.ClientConnection_2Mixin",
     "network.handler.DecoderHandlerMixin"
