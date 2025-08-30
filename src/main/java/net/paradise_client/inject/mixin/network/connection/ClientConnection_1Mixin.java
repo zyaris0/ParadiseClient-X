@@ -23,10 +23,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
       pipeline.addBefore(HandlerNames.ENCODER,
         NettyConstants.PARADISE_C2S_HANDSHAKE_HANDLER,
         new ParadiseC2SHandshakeHandler());
+      pipeline.addBefore(HandlerNames.ENCODER, NettyConstants.PARADISE_ENCODER, new ParadiseEncoder());
       pipeline.addBefore(HandlerNames.INBOUND_CONFIG,
         NettyConstants.PARADISE_S2C_PLUGIN_MESSAGE_HANDLER,
         new ParadiseS2CPluginMessageHandler());
-      pipeline.addLast(NettyConstants.PARADISE_ENCODER, new ParadiseEncoder());
     } else {
       Constants.LOGGER.warn("Channel not an instance of netty socket");
     }
