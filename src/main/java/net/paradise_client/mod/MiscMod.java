@@ -14,25 +14,25 @@ import java.util.ArrayList;
  * @since 1.1
  */
 public class MiscMod {
-    /**
-     * Message which needs to be delayed before sending.
-     */
-    public final ArrayList<Text> delayedMessages = new ArrayList<>();
+  /**
+   * Message which needs to be delayed before sending.
+   */
+  public final ArrayList<Text> delayedMessages = new ArrayList<>();
 
-    /**
-     * Weather the client is outdated or not.
-     */
-    public boolean isClientOutdated = false;
+  /**
+   * Weather the client is outdated or not.
+   */
+  public boolean isClientOutdated = false;
 
-    /**
-     * Latest version retrieved from the API.
-     */
-    public String latestVersion;
+  /**
+   * Latest version retrieved from the API.
+   */
+  public String latestVersion;
 
-    /**
-     * Command suggestions request id.
-     */
-    public int requestId;
+  /**
+   * Command suggestions request id.
+   */
+  public int requestId;
 
-    public boolean isDumping = false;
+  public boolean isDumping = false;
 }

@@ -14,17 +14,16 @@ import java.util.ArrayList;
  * @author SpigotRCE
  * @since 2.17
  */
-@SuppressWarnings("unused")
-public class NetworkMod {
-    /**
-     * Indicates whether the client is currently connected to a server.
-     */
-    public boolean isConnected = false;
+@SuppressWarnings("unused") public class NetworkMod {
+  /**
+   * Indicates whether the client is currently connected to a server.
+   */
+  public boolean isConnected = false;
 
-    /**
-     * The registered channels by their names.
-     */
-    public ArrayList<String> getRegisteredChannelsByName() {
-        return ((PayloadTypeRegistryImplAccessor) PayloadTypeRegistry.playC2S()).paradiseClient$getRegisteredChannelsByName();
-    }
+  /**
+   * The registered channels by their names.
+   */
+  public ArrayList<String> getRegisteredChannelsByName() {
+    return ((PayloadTypeRegistryImplAccessor) PayloadTypeRegistry.playC2S()).paradiseClient$getRegisteredChannelsByName();
+  }
 }

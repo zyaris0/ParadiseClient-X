@@ -8,20 +8,16 @@ import net.paradise_client.command.Command;
 import net.paradise_client.inject.accessor.ClientPlayNetworkHandlerAccessor;
 
 public class SayCommand extends Command {
-    public SayCommand() {
-        super("say", "Sends a chat message to the server");
-    }
+  public SayCommand() {
+    super("say", "Sends a chat message to the server");
+  }
 
-    @Override
-    public void build(LiteralArgumentBuilder<CommandSource> root) {
-        root.then(argument("message", StringArgumentType.greedyString())
-                .executes(context -> {
-                            String message = context.getArgument("message", String.class);
-                            ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler())
-                                    .paradiseClient$sendChatMessage(message);
-                            return SINGLE_SUCCESS;
-                        }
-                )
-        );
-    }
+  @Override public void build(LiteralArgumentBuilder<CommandSource> root) {
+    root.then(argument("message", StringArgumentType.greedyString()).executes(context -> {
+      String message = context.getArgument("message", String.class);
+      ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance()
+        .getNetworkHandler()).paradiseClient$sendChatMessage(message);
+      return SINGLE_SUCCESS;
+    }));
+  }
 }
