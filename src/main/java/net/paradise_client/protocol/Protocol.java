@@ -41,21 +41,21 @@ public enum Protocol {
         map(770, 24));
       this.TO_SERVER.registerPacket(PluginMessagePacket.class,
         PluginMessagePacket::new,
-        Protocol.map(47, 23),
-        Protocol.map(107, 9),
-        Protocol.map(335, 10),
-        Protocol.map(338, 9),
-        Protocol.map(393, 10),
-        Protocol.map(477, 11),
-        Protocol.map(755, 10),
-        Protocol.map(759, 12),
-        Protocol.map(760, 13),
-        Protocol.map(761, 12),
-        Protocol.map(762, 13),
-        Protocol.map(764, 15),
-        Protocol.map(765, 16),
-        Protocol.map(766, 18),
-        Protocol.map(768, 20));
+        map(47, 23),
+        map(107, 9),
+        map(335, 10),
+        map(338, 9),
+        map(393, 10),
+        map(477, 11),
+        map(755, 10),
+        map(759, 12),
+        map(760, 13),
+        map(761, 12),
+        map(762, 13),
+        map(764, 15),
+        map(765, 16),
+        map(766, 18),
+        map(768, 20));
     }
   }, STATUS {
   }, LOGIN {
@@ -63,12 +63,12 @@ public enum Protocol {
     {
       this.TO_CLIENT.registerPacket(PluginMessagePacket.class,
         PluginMessagePacket::new,
-        Protocol.map(764, 0),
-        Protocol.map(766, 1));
+        map(764, 0),
+        map(766, 1));
       this.TO_SERVER.registerPacket(PluginMessagePacket.class,
         PluginMessagePacket::new,
-        Protocol.map(764, 1),
-        Protocol.map(766, 2));
+        map(764, 1),
+        map(766, 2));
     }
   };
 

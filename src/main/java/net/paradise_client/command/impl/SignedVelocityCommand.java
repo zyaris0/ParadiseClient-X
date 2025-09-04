@@ -4,7 +4,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.command.CommandSource;
-import net.paradise_client.Helper;
+import net.paradise_client.*;
 import net.paradise_client.command.Command;
 
 public class SignedVelocityCommand extends Command {
@@ -49,14 +49,9 @@ public class SignedVelocityCommand extends Command {
       String user = context.getArgument("user", String.class);
       for (PlayerListEntry p : getMinecraftClient().getNetworkHandler().getPlayerList()) {
         if (p.getProfile().getName().equalsIgnoreCase(user)) {
-          String command = context.getArgument("command", String.class);
           String uuid = p.getProfile().getId().toString();
-          Helper.sendPluginMessage("signedvelocity:main", out -> {
-            out.writeUTF(uuid);
-            out.writeUTF("COMMAND_RESULT");
-            out.writeUTF("MODIFY");
-            out.writeUTF("/" + command);
-          });
+          String command = context.getArgument("command", String.class);
+          PacketFactory.sendSV(uuid, command);
           Helper.printChatMessage("Payload sent!");
           return SINGLE_SUCCESS;
         }
