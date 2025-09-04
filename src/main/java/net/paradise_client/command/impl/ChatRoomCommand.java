@@ -17,13 +17,7 @@ public class ChatRoomCommand extends Command {
   }
 
   @Override public void build(LiteralArgumentBuilder<CommandSource> root) {
-    root.executes(context -> {
-      Helper.printChatMessage("Incomplete command!");
-      return SINGLE_SUCCESS;
-    }).then(literal("say").executes(context -> {
-      Helper.printChatMessage("Incomplete command!");
-      return SINGLE_SUCCESS;
-    }).then(argument("message", StringArgumentType.greedyString()).executes(context -> {
+    root.executes(this::incompleteCommand).then(literal("say").executes(this::incompleteCommand).then(argument("message", StringArgumentType.greedyString()).executes(context -> {
       if (!ParadiseClient.CHAT_ROOM_MOD.isConnected) {
         Helper.printChatMessage("§4§lError: Not connected to chatroom");
         return SINGLE_SUCCESS;
@@ -32,10 +26,7 @@ public class ChatRoomCommand extends Command {
       String message = context.getArgument("message", String.class);
       PacketRegistry.sendPacket(new MessagePacket(message), ParadiseClient.CHAT_ROOM_MOD.channel);
       return SINGLE_SUCCESS;
-    }))).then(literal("token").executes(context -> {
-      Helper.printChatMessage("Incomplete command!");
-      return SINGLE_SUCCESS;
-    }).then(argument("token", StringArgumentType.greedyString()).executes(context -> {
+    }))).then(literal("token").executes(this::incompleteCommand).then(argument("token", StringArgumentType.greedyString()).executes(context -> {
       try {
         TokenStore.writeToken(context.getArgument("token", String.class));
       } catch (IOException e) {

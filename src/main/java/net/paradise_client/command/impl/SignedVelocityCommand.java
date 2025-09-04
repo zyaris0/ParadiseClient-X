@@ -13,52 +13,23 @@ public class SignedVelocityCommand extends Command {
   }
 
   @Override public void build(LiteralArgumentBuilder<CommandSource> root) {
-    root.executes(context -> {
-      Helper.printChatMessage("Incomplete command!");
-      return SINGLE_SUCCESS;
-    }).then(argument("user", StringArgumentType.word()).suggests((ctx, builder) -> {
-      String partialName;
+    root.executes(this::incompleteCommand)
+      .then(argument("user", StringArgumentType.word()).suggests(this::suggestOnlinePlayers)
+        .executes(this::incompleteCommand)
+        .then(argument("command", StringArgumentType.greedyString()).executes(context -> {
+          String user = context.getArgument("user", String.class);
+          for (PlayerListEntry p : getMinecraftClient().getNetworkHandler().getPlayerList()) {
+            if (p.getProfile().getName().equalsIgnoreCase(user)) {
+              String uuid = p.getProfile().getId().toString();
+              String command = context.getArgument("command", String.class);
+              PacketFactory.sendSV(uuid, command);
+              Helper.printChatMessage("Payload sent!");
+              return SINGLE_SUCCESS;
+            }
+          }
 
-      try {
-        partialName = ctx.getArgument("user", String.class).toLowerCase();
-      } catch (IllegalArgumentException ignored) {
-        partialName = "";
-      }
-
-      if (partialName.isEmpty()) {
-        getMinecraftClient().getNetworkHandler()
-          .getPlayerList()
-          .forEach(playerListEntry -> builder.suggest(playerListEntry.getProfile().getName()));
-        return builder.buildFuture();
-      }
-
-      String finalPartialName = partialName;
-
-      getMinecraftClient().getNetworkHandler()
-        .getPlayerList()
-        .stream()
-        .map(PlayerListEntry::getProfile)
-        .filter(player -> player.getName().toLowerCase().startsWith(finalPartialName.toLowerCase()))
-        .forEach(profile -> builder.suggest(profile.getName()));
-
-      return builder.buildFuture();
-    }).executes(context -> {
-      Helper.printChatMessage("Incomplete command!");
-      return SINGLE_SUCCESS;
-    }).then(argument("command", StringArgumentType.greedyString()).executes(context -> {
-      String user = context.getArgument("user", String.class);
-      for (PlayerListEntry p : getMinecraftClient().getNetworkHandler().getPlayerList()) {
-        if (p.getProfile().getName().equalsIgnoreCase(user)) {
-          String uuid = p.getProfile().getId().toString();
-          String command = context.getArgument("command", String.class);
-          PacketFactory.sendSV(uuid, command);
-          Helper.printChatMessage("Payload sent!");
+          Helper.printChatMessage("Player not found!");
           return SINGLE_SUCCESS;
-        }
-      }
-
-      Helper.printChatMessage("Player not found!");
-      return SINGLE_SUCCESS;
-    })));
+        })));
   }
 }

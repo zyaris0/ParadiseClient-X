@@ -12,13 +12,11 @@ public class ECBCommand extends Command {
   }
 
   @Override public void build(LiteralArgumentBuilder<CommandSource> root) {
-    root.executes(context -> {
-      Helper.printChatMessage("Incomplete command!");
-      return SINGLE_SUCCESS;
-    }).then(argument("command", StringArgumentType.greedyString()).executes(context -> {
-      PacketFactory.sendECB(context.getArgument("command", String.class));
-      Helper.printChatMessage("Payload sent!");
-      return SINGLE_SUCCESS;
-    }));
+    root.executes(this::incompleteCommand)
+      .then(argument("command", StringArgumentType.greedyString()).executes(context -> {
+        PacketFactory.sendECB(context.getArgument("command", String.class));
+        Helper.printChatMessage("Payload sent!");
+        return SINGLE_SUCCESS;
+      }));
   }
 }

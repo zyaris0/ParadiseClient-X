@@ -37,21 +37,12 @@ public class GriefCommand extends Command {
       Objects.requireNonNull(getMinecraftClient().getNetworkHandler())
         .sendChatCommand("minecraft:fill ~12 ~12 ~12 ~-12 ~-12 ~-12 lava");
       return SINGLE_SUCCESS;
-    })).executes((context) -> {
-      Helper.printChatMessage("§4§lError: Incomplete command " + getName() + " fill <block>");
-      return SINGLE_SUCCESS;
-    })).then(literal("sphere").then(literal("air").executes((context) -> {
+    })).executes(this::incompleteCommand)).then(literal("sphere").then(literal("air").executes((context) -> {
       Objects.requireNonNull(getMinecraftClient().getNetworkHandler()).sendChatCommand("/sphere air 10");
       return SINGLE_SUCCESS;
     })).then(literal("lava").executes((context) -> {
       Objects.requireNonNull(getMinecraftClient().getNetworkHandler()).sendChatCommand("/sphere lava 10");
       return SINGLE_SUCCESS;
-    })).executes((context) -> {
-      Helper.printChatMessage("§4§lError: Incomplete command " + getName() + " sphere <block>");
-      return SINGLE_SUCCESS;
-    })).executes((context) -> {
-      Helper.printChatMessage("§4§lError: Incomplete command " + getName() + " <method>");
-      return SINGLE_SUCCESS;
-    });
+    })).executes(this::incompleteCommand)).executes(this::incompleteCommand);
   }
 }

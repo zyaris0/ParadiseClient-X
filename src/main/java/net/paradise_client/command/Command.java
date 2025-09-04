@@ -2,8 +2,14 @@ package net.paradise_client.command;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.*;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.*;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.command.CommandSource;
+import net.paradise_client.Helper;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Abstract class representing a command in the Paradise Client Fabric mod. This class provides basic functionality for
@@ -67,6 +73,39 @@ public abstract class Command {
    * Abstract method to build the command using Brigadier's argument builder.
    */
   abstract public void build(LiteralArgumentBuilder<CommandSource> root);
+
+  public CompletableFuture<Suggestions> suggestOnlinePlayers(CommandContext<?> ctx, SuggestionsBuilder builder) {
+    String partialName;
+
+    try {
+      partialName = ctx.getArgument("user", String.class).toLowerCase();
+    } catch (IllegalArgumentException ignored) {
+      partialName = "";
+    }
+
+    if (partialName.isEmpty()) {
+      getMinecraftClient().getNetworkHandler()
+        .getPlayerList()
+        .forEach(playerListEntry -> builder.suggest(playerListEntry.getProfile().getName()));
+      return builder.buildFuture();
+    }
+
+    String finalPartialName = partialName;
+
+    getMinecraftClient().getNetworkHandler()
+      .getPlayerList()
+      .stream()
+      .map(PlayerListEntry::getProfile)
+      .filter(player -> player.getName().toLowerCase().startsWith(finalPartialName.toLowerCase()))
+      .forEach(profile -> builder.suggest(profile.getName()));
+
+    return builder.buildFuture();
+  }
+
+  public int incompleteCommand(CommandContext<?> context) {
+    Helper.printChatMessage("Incomplete command!");
+    return 1;
+  }
 
   /**
    * Getter for the command name.
