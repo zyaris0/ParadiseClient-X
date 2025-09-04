@@ -22,6 +22,7 @@
     "minecraft.MinecraftClientMixin",
     "network.connection.ClientConnectionMixin",
     "network.connection.ClientPlayNetworkHandlerMixin",
+    "network.handler.ClientLoginNetworkHandlerMixin",
     "network.packet.HandshakeC2SPacketMixin"
   ],
   "injectors": {
