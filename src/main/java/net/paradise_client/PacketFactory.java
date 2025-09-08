@@ -1,7 +1,5 @@
 package net.paradise_client;
 
-import net.minecraft.client.MinecraftClient;
-
 public class PacketFactory {
   public static void sendAMV(String name) {
     Helper.sendPluginMessage("authmevelocity:main", out -> {

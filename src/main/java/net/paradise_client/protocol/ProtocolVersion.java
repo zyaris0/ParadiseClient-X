@@ -1,7 +1,6 @@
 package net.paradise_client.protocol;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.*;
 
 import java.util.*;
 
@@ -67,47 +66,6 @@ public enum ProtocolVersion {
     ID_TO_PROTOCOL_CONSTANT = ImmutableMap.copyOf(versions);
   }
 
-  private final int protocol;
-  private final String[] names;
-
-
-  ProtocolVersion(int protocol, String... names) {
-    this.protocol = protocol;
-    this.names = names;
-  }
-
-  public static boolean isSupported(ProtocolVersion protocolVersion) {
-    return isSupported(protocolVersion.getProtocol());
-  }
-
-  public static boolean isSupported(int protocol) {
-    return protocol >= MINIMUM_VERSION.getProtocol() && protocol <= MAXIMUM_VERSION.getProtocol();
-  }
-
-  public static ProtocolVersion getProtocolVersion(int protocol) {
-    return ID_TO_PROTOCOL_CONSTANT.getOrDefault(protocol, UNKNOWN);
-  }
-
-  public int getProtocol() {
-    return protocol;
-  }
-
-  public String getVersionIntroducedIn() {
-    return names[0];
-  }
-
-  public String getMostRecentSupportedVersion() {
-    return names[names.length - 1];
-  }
-
-  public List<String> getVersionsSupportedBy() {
-    return ImmutableList.copyOf(names);
-  }
-
-  @Override public String toString() {
-    return getVersionIntroducedIn();
-  }
-
   static {
     SUPPORTED_VERSION_IDS.add(MINECRAFT_1_8.protocol);
     SUPPORTED_VERSION_IDS.add(MINECRAFT_1_9.protocol);
@@ -152,6 +110,46 @@ public enum ProtocolVersion {
     SUPPORTED_VERSION_IDS.add(MINECRAFT_1_21_2.protocol);
     SUPPORTED_VERSION_IDS.add(MINECRAFT_1_21_4.protocol);
     SUPPORTED_VERSION_IDS.add(MINECRAFT_1_21_5.protocol);
+  }
+
+  private final int protocol;
+  private final String[] names;
+
+  ProtocolVersion(int protocol, String... names) {
+    this.protocol = protocol;
+    this.names = names;
+  }
+
+  public static boolean isSupported(ProtocolVersion protocolVersion) {
+    return isSupported(protocolVersion.getProtocol());
+  }
+
+  public static boolean isSupported(int protocol) {
+    return protocol >= MINIMUM_VERSION.getProtocol() && protocol <= MAXIMUM_VERSION.getProtocol();
+  }
+
+  public int getProtocol() {
+    return protocol;
+  }
+
+  public static ProtocolVersion getProtocolVersion(int protocol) {
+    return ID_TO_PROTOCOL_CONSTANT.getOrDefault(protocol, UNKNOWN);
+  }
+
+  public String getMostRecentSupportedVersion() {
+    return names[names.length - 1];
+  }
+
+  public List<String> getVersionsSupportedBy() {
+    return ImmutableList.copyOf(names);
+  }
+
+  @Override public String toString() {
+    return getVersionIntroducedIn();
+  }
+
+  public String getVersionIntroducedIn() {
+    return names[0];
   }
 
   public enum Direction {

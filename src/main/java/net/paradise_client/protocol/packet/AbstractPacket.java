@@ -17,46 +17,6 @@ import java.util.function.BiConsumer;
  * @author SpigotRCE
  */
 public abstract class AbstractPacket {
-  public <T> T readNullable(Function<ByteBuf, T> reader, ByteBuf buf) {
-    return (T) (buf.readBoolean() ? reader.apply(buf) : null);
-  }
-
-  public <T> void writeNullable(T t0, BiConsumer<T, ByteBuf> writer, ByteBuf buf) {
-    if (t0 != null) {
-      buf.writeBoolean(true);
-      writer.accept(t0, buf);
-    } else {
-      buf.writeBoolean(false);
-    }
-
-  }
-
-  public static void writeString(String s, ByteBuf buf) {
-    writeString(s, buf, 32767);
-  }
-
-  public static void writeString(String s, ByteBuf buf, int maxLength) {
-    if (s.length() > maxLength) {
-      throw new BadPacketException("Cannot send string longer than " +
-        maxLength +
-        " (got " +
-        s.length() +
-        " characters)");
-    } else {
-      byte[] b = s.getBytes(StandardCharsets.UTF_8);
-      if (b.length > maxLength * 3) {
-        throw new BadPacketException("Cannot send string longer than " +
-          maxLength * 3 +
-          " (got " +
-          b.length +
-          " bytes)");
-      } else {
-        writeVarInt(b.length, buf);
-        buf.writeBytes(b);
-      }
-    }
-  }
-
   public static <T> T readStringMapKey(ByteBuf buf, Map<String, T> map) {
     String string = readString(buf);
     T result = (T) map.get(string);
@@ -87,15 +47,46 @@ public abstract class AbstractPacket {
     }
   }
 
+  public static int readVarInt(ByteBuf input) {
+    return readVarInt(input, 5);
+  }
+
+  public static int readVarInt(ByteBuf input, int maxBytes) {
+    int out = 0;
+    int bytes = 0;
+
+    byte in;
+    do {
+      in = input.readByte();
+      out |= (in & 127) << bytes++ * 7;
+      if (bytes > maxBytes) {
+        throw new BadPacketException("VarInt too big (max " + maxBytes + ")");
+      }
+    } while ((in & 128) == 128);
+
+    return out;
+  }
+
   public static void writeArray(byte[] b, ByteBuf buf) {
     if (b.length > 32767) {
-      throw new BadPacketException("Cannot send byte array longer than Short.MAX_VALUE (got " +
-        b.length +
-        " bytes)");
+      throw new BadPacketException("Cannot send byte array longer than Short.MAX_VALUE (got " + b.length + " bytes)");
     } else {
       writeVarInt(b.length, buf);
       buf.writeBytes(b);
     }
+  }
+
+  public static void writeVarInt(int value, ByteBuf output) {
+    do {
+      int part = value & 127;
+      value >>>= 7;
+      if (value != 0) {
+        part |= 128;
+      }
+
+      output.writeByte(part);
+    } while (value != 0);
+
   }
 
   public static byte[] toArray(ByteBuf buf) {
@@ -139,6 +130,32 @@ public abstract class AbstractPacket {
 
   }
 
+  public static void writeString(String s, ByteBuf buf) {
+    writeString(s, buf, 32767);
+  }
+
+  public static void writeString(String s, ByteBuf buf, int maxLength) {
+    if (s.length() > maxLength) {
+      throw new BadPacketException("Cannot send string longer than " +
+        maxLength +
+        " (got " +
+        s.length() +
+        " characters)");
+    } else {
+      byte[] b = s.getBytes(StandardCharsets.UTF_8);
+      if (b.length > maxLength * 3) {
+        throw new BadPacketException("Cannot send string longer than " +
+          maxLength * 3 +
+          " (got " +
+          b.length +
+          " bytes)");
+      } else {
+        writeVarInt(b.length, buf);
+        buf.writeBytes(b);
+      }
+    }
+  }
+
   public static List<String> readStringArray(ByteBuf buf) {
     int len = readVarInt(buf);
     List<String> ret = new ArrayList<>(len);
@@ -148,39 +165,6 @@ public abstract class AbstractPacket {
     }
 
     return ret;
-  }
-
-  public static int readVarInt(ByteBuf input) {
-    return readVarInt(input, 5);
-  }
-
-  public static int readVarInt(ByteBuf input, int maxBytes) {
-    int out = 0;
-    int bytes = 0;
-
-    byte in;
-    do {
-      in = input.readByte();
-      out |= (in & 127) << bytes++ * 7;
-      if (bytes > maxBytes) {
-        throw new BadPacketException("VarInt too big (max " + maxBytes + ")");
-      }
-    } while ((in & 128) == 128);
-
-    return out;
-  }
-
-  public static void writeVarInt(int value, ByteBuf output) {
-    do {
-      int part = value & 127;
-      value >>>= 7;
-      if (value != 0) {
-        part |= 128;
-      }
-
-      output.writeByte(part);
-    } while (value != 0);
-
   }
 
   public static void setVarInt(int value, ByteBuf output, int pos, int len) {
@@ -335,6 +319,14 @@ public abstract class AbstractPacket {
     writeFixedBitSet(bits, enums.length, buf);
   }
 
+  public static void writeFixedBitSet(BitSet bits, int size, ByteBuf buf) {
+    if (bits.length() > size) {
+      throw new BadPacketException("BitSet too large (expected " + size + " got " + bits.size() + ")");
+    } else {
+      buf.writeBytes(Arrays.copyOf(bits.toByteArray(), size + 7 >> 3));
+    }
+  }
+
   public static <E extends Enum<E>> EnumSet<E> readEnumSet(Class<E> oclass, ByteBuf buf) {
     E[] enums = (E[]) (oclass.getEnumConstants());
     BitSet bits = readFixedBitSet(enums.length, buf);
@@ -355,16 +347,18 @@ public abstract class AbstractPacket {
     return BitSet.valueOf(bits);
   }
 
-  public static void writeFixedBitSet(BitSet bits, int size, ByteBuf buf) {
-    if (bits.length() > size) {
-      throw new BadPacketException("BitSet too large (expected " + size + " got " + bits.size() + ")");
-    } else {
-      buf.writeBytes(Arrays.copyOf(bits.toByteArray(), size + 7 >> 3));
-    }
+  public <T> T readNullable(Function<ByteBuf, T> reader, ByteBuf buf) {
+    return (T) (buf.readBoolean() ? reader.apply(buf) : null);
   }
 
-  public void read(ByteBuf buf) {
-    throw new UnsupportedOperationException("Packet must implement read method");
+  public <T> void writeNullable(T t0, BiConsumer<T, ByteBuf> writer, ByteBuf buf) {
+    if (t0 != null) {
+      buf.writeBoolean(true);
+      writer.accept(t0, buf);
+    } else {
+      buf.writeBoolean(false);
+    }
+
   }
 
   public void read(ByteBuf buf, Protocol protocol, ProtocolVersion.Direction direction, int protocolVersion) {
@@ -375,8 +369,8 @@ public abstract class AbstractPacket {
     this.read(buf);
   }
 
-  public void write(ByteBuf buf) {
-    throw new UnsupportedOperationException("Packet must implement write method");
+  public void read(ByteBuf buf) {
+    throw new UnsupportedOperationException("Packet must implement read method");
   }
 
   public void write(ByteBuf buf, Protocol protocol, ProtocolVersion.Direction direction, int protocolVersion) {
@@ -387,15 +381,19 @@ public abstract class AbstractPacket {
     this.write(buf);
   }
 
+  public void write(ByteBuf buf) {
+    throw new UnsupportedOperationException("Packet must implement write method");
+  }
+
   public Protocol nextProtocol() {
     return null;
   }
 
   public abstract void handle(AbstractPacketHandler var1) throws Exception;
 
-  public abstract boolean equals(Object var1);
-
   public abstract int hashCode();
+
+  public abstract boolean equals(Object var1);
 
   public abstract String toString();
 }

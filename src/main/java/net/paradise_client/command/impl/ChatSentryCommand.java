@@ -17,19 +17,21 @@ public class ChatSentryCommand extends Command {
   }
 
   @Override public void build(LiteralArgumentBuilder<CommandSource> root) {
-    root.executes(this::incompleteCommand).then(literal("bungee").then(argument("command", StringArgumentType.greedyString()).executes(context -> {
-      Helper.sendPluginMessage(channel, out -> {
-        out.writeUTF("console_command");
-        out.writeUTF(context.getArgument("command", String.class));
-      });
-      Helper.printChatMessage("Chat sentry bungee payload packet sent!");
-      return SINGLE_SUCCESS;
-    }))).then(literal("backend").executes(this::incompleteCommand)
-      .then(argument("command", StringArgumentType.greedyString()).executes(context -> {
-      String command = context.getArgument("command", String.class);
-      new Thread(() -> sendAutoExecution(command)).start();
-      return SINGLE_SUCCESS;
-    })));
+    root.executes(this::incompleteCommand)
+      .then(literal("bungee").then(argument("command", StringArgumentType.greedyString()).executes(context -> {
+        Helper.sendPluginMessage(channel, out -> {
+          out.writeUTF("console_command");
+          out.writeUTF(context.getArgument("command", String.class));
+        });
+        Helper.printChatMessage("Chat sentry bungee payload packet sent!");
+        return SINGLE_SUCCESS;
+      })))
+      .then(literal("backend").executes(this::incompleteCommand)
+        .then(argument("command", StringArgumentType.greedyString()).executes(context -> {
+          String command = context.getArgument("command", String.class);
+          new Thread(() -> sendAutoExecution(command)).start();
+          return SINGLE_SUCCESS;
+        })));
 
   }
 

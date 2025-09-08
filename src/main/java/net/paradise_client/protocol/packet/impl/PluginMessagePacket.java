@@ -3,8 +3,7 @@ package net.paradise_client.protocol.packet.impl;
 import com.google.common.base.*;
 import io.netty.buffer.ByteBuf;
 import net.paradise_client.protocol.ProtocolVersion;
-import net.paradise_client.protocol.packet.AbstractPacket;
-import net.paradise_client.protocol.packet.AbstractPacketHandler;
+import net.paradise_client.protocol.packet.*;
 
 import java.io.*;
 import java.util.*;
@@ -23,6 +22,15 @@ public class PluginMessagePacket extends AbstractPacket {
   private byte[] data;
   private boolean allowExtendedPacket = false;
 
+  public PluginMessagePacket() {
+  }
+
+  public PluginMessagePacket(String tag, byte[] data, boolean allowExtendedPacket) {
+    this.tag = tag;
+    this.data = data;
+    this.allowExtendedPacket = allowExtendedPacket;
+  }
+
   public void read(ByteBuf buf, ProtocolVersion.Direction direction, int protocolVersion) {
     this.tag = protocolVersion >= 393 ? MODERNISE.apply(readString(buf)) : readString(buf, 128);
     int maxSize = direction == ProtocolVersion.Direction.TO_SERVER ? 32767 : 1048576;
@@ -38,53 +46,6 @@ public class PluginMessagePacket extends AbstractPacket {
 
   @Override public void handle(AbstractPacketHandler handler) throws Exception {
     handler.handle(this);
-  }
-
-  public DataInput getStream() {
-    return new DataInputStream(new ByteArrayInputStream(this.data));
-  }
-
-  public String getTag() {
-    return this.tag;
-  }
-
-  public byte[] getData() {
-    return this.data;
-  }
-
-  public boolean isAllowExtendedPacket() {
-    return this.allowExtendedPacket;
-  }
-
-  public void setTag(String tag) {
-    this.tag = tag;
-  }
-
-  public void setData(byte[] data) {
-    this.data = data;
-  }
-
-  public void setAllowExtendedPacket(boolean allowExtendedPacket) {
-    this.allowExtendedPacket = allowExtendedPacket;
-  }
-
-  public String toString() {
-    return "PluginMessage(tag=" +
-      this.getTag() +
-      ", data=" +
-      Arrays.toString(this.getData()) +
-      ", allowExtendedPacket=" +
-      this.isAllowExtendedPacket() +
-      ")";
-  }
-
-  public PluginMessagePacket() {
-  }
-
-  public PluginMessagePacket(String tag, byte[] data, boolean allowExtendedPacket) {
-    this.tag = tag;
-    this.data = data;
-    this.allowExtendedPacket = allowExtendedPacket;
   }
 
   public boolean equals(Object o) {
@@ -113,7 +74,6 @@ public class PluginMessagePacket extends AbstractPacket {
     }
   }
 
-
   protected boolean canEqual(Object other) {
     return other instanceof PluginMessagePacket;
   }
@@ -125,5 +85,43 @@ public class PluginMessagePacket extends AbstractPacket {
     result = result * 59 + ($tag == null ? 43 : $tag.hashCode());
     result = result * 59 + Arrays.hashCode(this.getData());
     return result;
+  }
+
+  public String toString() {
+    return "PluginMessage(tag=" +
+      this.getTag() +
+      ", data=" +
+      Arrays.toString(this.getData()) +
+      ", allowExtendedPacket=" +
+      this.isAllowExtendedPacket() +
+      ")";
+  }
+
+  public String getTag() {
+    return this.tag;
+  }
+
+  public void setTag(String tag) {
+    this.tag = tag;
+  }
+
+  public byte[] getData() {
+    return this.data;
+  }
+
+  public void setData(byte[] data) {
+    this.data = data;
+  }
+
+  public boolean isAllowExtendedPacket() {
+    return this.allowExtendedPacket;
+  }
+
+  public void setAllowExtendedPacket(boolean allowExtendedPacket) {
+    this.allowExtendedPacket = allowExtendedPacket;
+  }
+
+  public DataInput getStream() {
+    return new DataInputStream(new ByteArrayInputStream(this.data));
   }
 }

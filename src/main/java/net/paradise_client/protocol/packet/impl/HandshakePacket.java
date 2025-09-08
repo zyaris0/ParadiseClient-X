@@ -1,14 +1,23 @@
 package net.paradise_client.protocol.packet.impl;
 
 import io.netty.buffer.ByteBuf;
-import net.paradise_client.protocol.packet.AbstractPacketHandler;
-import net.paradise_client.protocol.packet.AbstractPacket;
+import net.paradise_client.protocol.packet.*;
 
 public class HandshakePacket extends AbstractPacket {
   private int protocolVersion;
   private String host;
   private int port;
   private int requestedProtocol;
+
+  public HandshakePacket() {
+  }
+
+  public HandshakePacket(int protocolVersion, String host, int port, int requestedProtocol) {
+    this.protocolVersion = protocolVersion;
+    this.host = host;
+    this.port = port;
+    this.requestedProtocol = requestedProtocol;
+  }
 
   public void read(ByteBuf buf) {
     this.protocolVersion = readVarInt(buf);
@@ -26,60 +35,6 @@ public class HandshakePacket extends AbstractPacket {
 
   public void handle(AbstractPacketHandler handler) throws Exception {
     handler.handle(this);
-  }
-
-  public int getProtocolVersion() {
-    return this.protocolVersion;
-  }
-
-  public String getHost() {
-    return this.host;
-  }
-
-  public int getPort() {
-    return this.port;
-  }
-
-  public int getRequestedProtocol() {
-    return this.requestedProtocol;
-  }
-
-  public void setProtocolVersion(int protocolVersion) {
-    this.protocolVersion = protocolVersion;
-  }
-
-  public void setHost(String host) {
-    this.host = host;
-  }
-
-  public void setPort(int port) {
-    this.port = port;
-  }
-
-  public void setRequestedProtocol(int requestedProtocol) {
-    this.requestedProtocol = requestedProtocol;
-  }
-
-  public String toString() {
-    return "Handshake(protocolVersion=" +
-      this.getProtocolVersion() +
-      ", host=" +
-      this.getHost() +
-      ", port=" +
-      this.getPort() +
-      ", requestedProtocol=" +
-      this.getRequestedProtocol() +
-      ")";
-  }
-
-  public HandshakePacket() {
-  }
-
-  public HandshakePacket(int protocolVersion, String host, int port, int requestedProtocol) {
-    this.protocolVersion = protocolVersion;
-    this.host = host;
-    this.port = port;
-    this.requestedProtocol = requestedProtocol;
   }
 
   public boolean equals(Object o) {
@@ -101,8 +56,9 @@ public class HandshakePacket extends AbstractPacket {
         Object other$host = other.getHost();
         if (this$host == null) {
           return other$host == null;
-        } else
+        } else {
           return this$host.equals(other$host);
+        }
       }
     }
   }
@@ -119,5 +75,49 @@ public class HandshakePacket extends AbstractPacket {
     Object $host = this.getHost();
     result = result * 59 + ($host == null ? 43 : $host.hashCode());
     return result;
+  }
+
+  public String toString() {
+    return "Handshake(protocolVersion=" +
+      this.getProtocolVersion() +
+      ", host=" +
+      this.getHost() +
+      ", port=" +
+      this.getPort() +
+      ", requestedProtocol=" +
+      this.getRequestedProtocol() +
+      ")";
+  }
+
+  public int getProtocolVersion() {
+    return this.protocolVersion;
+  }
+
+  public void setProtocolVersion(int protocolVersion) {
+    this.protocolVersion = protocolVersion;
+  }
+
+  public String getHost() {
+    return this.host;
+  }
+
+  public void setHost(String host) {
+    this.host = host;
+  }
+
+  public int getPort() {
+    return this.port;
+  }
+
+  public void setPort(int port) {
+    this.port = port;
+  }
+
+  public int getRequestedProtocol() {
+    return this.requestedProtocol;
+  }
+
+  public void setRequestedProtocol(int requestedProtocol) {
+    this.requestedProtocol = requestedProtocol;
   }
 }

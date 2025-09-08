@@ -1,7 +1,9 @@
 # **ParadiseClient**
+
 [![Last Commit](https://img.shields.io/github/last-commit/hydrogen-developments/ParadiseClient-X?style=for-the-badge)](https://paradise-client.net/downloads/)
 
-**ParadiseClient** is a Minecraft Fabric mod specifically designed for penetration testing Minecraft servers and networks.
+**ParadiseClient** is a Minecraft Fabric mod specifically designed for penetration testing Minecraft servers and
+networks.
 
 ---
 
@@ -10,10 +12,12 @@
 This project is open source under the following terms:
 
 - **Modification/Distribution**:  
-  You are **not allowed** to modify, redistribute, or sublicense this project without the explicit written permission of the owner.
+  You are **not allowed** to modify, redistribute, or sublicense this project without the explicit written permission of
+  the owner.
 
 - **Contribution**:  
-  Contributions are welcome through **GitHub commits only**. All contributions are subject to review and approval by the project owner.
+  Contributions are welcome through **GitHub commits only**. All contributions are subject to review and approval by the
+  project owner.
 
 - **Contributor License Agreement (CLA)**:  
   By contributing to this project, you agree to the [Contributor License Agreement](CONTRIBUTOR_LICENSE_AGREEMENT.md).  
@@ -27,7 +31,6 @@ Before installing, ensure you meet these prerequisites:
 
 - **Java**: Version 21
 - **Fabric & Minecraft**: Version 1.21.5
-
 
 ## **Support and Development Builds**
 

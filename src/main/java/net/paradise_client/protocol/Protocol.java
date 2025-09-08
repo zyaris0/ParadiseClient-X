@@ -2,13 +2,13 @@ package net.paradise_client.protocol;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
-import java.util.Arrays;
-import java.util.function.Supplier;
-
 import gnu.trove.map.*;
 import gnu.trove.map.hash.*;
 import net.paradise_client.protocol.packet.AbstractPacket;
 import net.paradise_client.protocol.packet.impl.*;
+
+import java.util.Arrays;
+import java.util.function.Supplier;
 
 /**
  * Minimal implementation of BungeeCord protocol.
@@ -61,14 +61,8 @@ public enum Protocol {
   }, LOGIN {
   }, CONFIGURATION {
     {
-      this.TO_CLIENT.registerPacket(PluginMessagePacket.class,
-        PluginMessagePacket::new,
-        map(764, 0),
-        map(766, 1));
-      this.TO_SERVER.registerPacket(PluginMessagePacket.class,
-        PluginMessagePacket::new,
-        map(764, 1),
-        map(766, 2));
+      this.TO_CLIENT.registerPacket(PluginMessagePacket.class, PluginMessagePacket::new, map(764, 0), map(766, 1));
+      this.TO_SERVER.registerPacket(PluginMessagePacket.class, PluginMessagePacket::new, map(764, 1), map(766, 2));
     }
   };
 
@@ -132,21 +126,15 @@ public enum Protocol {
       this.protocolVersion = protocolVersion;
     }
 
-
-    public int getProtocolVersion() {
-      return this.protocolVersion;
+    public int hashCode() {
+      int PRIME = 59;
+      int result = 1;
+      result = result * 59 + this.getProtocolVersion();
+      Object $packetMap = this.getPacketMap();
+      result = result * 59 + ($packetMap == null ? 43 : $packetMap.hashCode());
+      result = result * 59 + Arrays.deepHashCode(this.getPacketConstructors());
+      return result;
     }
-
-
-    public TObjectIntMap<Class<? extends AbstractPacket>> getPacketMap() {
-      return this.packetMap;
-    }
-
-
-    public Supplier<? extends AbstractPacket>[] getPacketConstructors() {
-      return this.packetConstructors;
-    }
-
 
     public boolean equals(Object o) {
       if (o == this) {
@@ -174,22 +162,21 @@ public enum Protocol {
       }
     }
 
-
     protected boolean canEqual(Object other) {
       return other instanceof ProtocolData;
     }
 
-
-    public int hashCode() {
-      int PRIME = 59;
-      int result = 1;
-      result = result * 59 + this.getProtocolVersion();
-      Object $packetMap = this.getPacketMap();
-      result = result * 59 + ($packetMap == null ? 43 : $packetMap.hashCode());
-      result = result * 59 + Arrays.deepHashCode(this.getPacketConstructors());
-      return result;
+    public int getProtocolVersion() {
+      return this.protocolVersion;
     }
 
+    public TObjectIntMap<Class<? extends AbstractPacket>> getPacketMap() {
+      return this.packetMap;
+    }
+
+    public Supplier<? extends AbstractPacket>[] getPacketConstructors() {
+      return this.packetConstructors;
+    }
 
     public String toString() {
       return "Protocol.ProtocolData(protocolVersion=" +
@@ -204,43 +191,43 @@ public enum Protocol {
 
   private record ProtocolMapping(int protocolVersion, int packetID) {
     public boolean equals(Object o) {
-        if (o == this) {
-          return true;
-        } else if (!(o instanceof ProtocolMapping other)) {
+      if (o == this) {
+        return true;
+      } else if (!(o instanceof ProtocolMapping other)) {
+        return false;
+      } else {
+        if (!other.canEqual(this)) {
+          return false;
+        } else if (this.protocolVersion() != other.protocolVersion()) {
           return false;
         } else {
-          if (!other.canEqual(this)) {
-            return false;
-          } else if (this.protocolVersion() != other.protocolVersion()) {
-            return false;
-          } else {
-            return this.packetID() == other.packetID();
-          }
+          return this.packetID() == other.packetID();
         }
       }
-
-
-      private boolean canEqual(Object other) {
-        return other instanceof ProtocolMapping;
-      }
-
-      public int hashCode() {
-        int PRIME = 59;
-        int result = 1;
-        result = result * 59 + this.protocolVersion();
-        result = result * 59 + this.packetID();
-        return result;
-      }
-
-
-      public String toString() {
-        return "Protocol.ProtocolMapping(protocolVersion=" +
-          this.protocolVersion() +
-          ", packetID=" +
-          this.packetID() +
-          ")";
-      }
     }
+
+
+    private boolean canEqual(Object other) {
+      return other instanceof ProtocolMapping;
+    }
+
+    public int hashCode() {
+      int PRIME = 59;
+      int result = 1;
+      result = result * 59 + this.protocolVersion();
+      result = result * 59 + this.packetID();
+      return result;
+    }
+
+
+    public String toString() {
+      return "Protocol.ProtocolMapping(protocolVersion=" +
+        this.protocolVersion() +
+        ", packetID=" +
+        this.packetID() +
+        ")";
+    }
+  }
 
   public static final class DirectionData {
     private final TIntObjectMap<ProtocolData> protocols = new TIntObjectHashMap<>();
@@ -257,15 +244,6 @@ public enum Protocol {
 
     }
 
-    private ProtocolData getProtocolData(int version) {
-      ProtocolData protocol = this.protocols.get(version);
-      if (protocol == null && this.protocolPhase != Protocol.GAME) {
-        protocol = (ProtocolData) Iterables.getFirst(this.protocols.valueCollection(), (Object) null);
-      }
-
-      return protocol;
-    }
-
     public final AbstractPacket createPacket(int id, int version) {
       ProtocolData protocolData = this.getProtocolData(version);
       if (protocolData == null) {
@@ -276,6 +254,15 @@ public enum Protocol {
       } else {
         throw new BadPacketException("Packet with id " + id + " outside of range");
       }
+    }
+
+    private ProtocolData getProtocolData(int version) {
+      ProtocolData protocol = this.protocols.get(version);
+      if (protocol == null && this.protocolPhase != Protocol.GAME) {
+        protocol = (ProtocolData) Iterables.getFirst(this.protocols.valueCollection(), (Object) null);
+      }
+
+      return protocol;
     }
 
     private void registerPacket(Class<? extends AbstractPacket> packetClass,

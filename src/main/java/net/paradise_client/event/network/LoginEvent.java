@@ -12,14 +12,6 @@ public class LoginEvent extends Event implements Cancellable {
     this.profile = profile;
   }
 
-  public boolean isDisableHandler() {
-    return disableHandler;
-  }
-
-  public void setDisableHandler(boolean disableHandler) {
-    this.disableHandler = disableHandler;
-  }
-
   public GameProfile getProfile() {
     return profile;
   }
@@ -30,6 +22,14 @@ public class LoginEvent extends Event implements Cancellable {
 
   @Override public boolean isCancel() {
     return isDisableHandler();
+  }
+
+  public boolean isDisableHandler() {
+    return disableHandler;
+  }
+
+  public void setDisableHandler(boolean disableHandler) {
+    this.disableHandler = disableHandler;
   }
 
   @Override public void setCancel(boolean b) {

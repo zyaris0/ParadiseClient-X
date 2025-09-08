@@ -102,6 +102,15 @@ public abstract class Command {
     return builder.buildFuture();
   }
 
+  /**
+   * Getter for the Minecraft client instance.
+   *
+   * @return The Minecraft client instance.
+   */
+  public MinecraftClient getMinecraftClient() {
+    return MinecraftClient.getInstance();
+  }
+
   public int incompleteCommand(CommandContext<?> context) {
     Helper.printChatMessage("Incomplete command!");
     return 1;
@@ -123,15 +132,6 @@ public abstract class Command {
    */
   public String getDescription() {
     return description;
-  }
-
-  /**
-   * Getter for the Minecraft client instance.
-   *
-   * @return The Minecraft client instance.
-   */
-  public MinecraftClient getMinecraftClient() {
-    return MinecraftClient.getInstance();
   }
 
   /**

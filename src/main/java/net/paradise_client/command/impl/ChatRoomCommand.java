@@ -17,43 +17,49 @@ public class ChatRoomCommand extends Command {
   }
 
   @Override public void build(LiteralArgumentBuilder<CommandSource> root) {
-    root.executes(this::incompleteCommand).then(literal("say").executes(this::incompleteCommand).then(argument("message", StringArgumentType.greedyString()).executes(context -> {
-      if (!ParadiseClient.CHAT_ROOM_MOD.isConnected) {
-        Helper.printChatMessage("§4§lError: Not connected to chatroom");
-        return SINGLE_SUCCESS;
-      }
+    root.executes(this::incompleteCommand)
+      .then(literal("say").executes(this::incompleteCommand)
+        .then(argument("message", StringArgumentType.greedyString()).executes(context -> {
+          if (!ParadiseClient.CHAT_ROOM_MOD.isConnected) {
+            Helper.printChatMessage("§4§lError: Not connected to chatroom");
+            return SINGLE_SUCCESS;
+          }
 
-      String message = context.getArgument("message", String.class);
-      PacketRegistry.sendPacket(new MessagePacket(message), ParadiseClient.CHAT_ROOM_MOD.channel);
-      return SINGLE_SUCCESS;
-    }))).then(literal("token").executes(this::incompleteCommand).then(argument("token", StringArgumentType.greedyString()).executes(context -> {
-      try {
-        TokenStore.writeToken(context.getArgument("token", String.class));
-      } catch (IOException e) {
-        Helper.printChatMessage("§4§lError: Failed to write token");
-        Constants.LOGGER.error("Failed to write token", e);
+          String message = context.getArgument("message", String.class);
+          PacketRegistry.sendPacket(new MessagePacket(message), ParadiseClient.CHAT_ROOM_MOD.channel);
+          return SINGLE_SUCCESS;
+        })))
+      .then(literal("token").executes(this::incompleteCommand)
+        .then(argument("token", StringArgumentType.greedyString()).executes(context -> {
+          try {
+            TokenStore.writeToken(context.getArgument("token", String.class));
+          } catch (IOException e) {
+            Helper.printChatMessage("§4§lError: Failed to write token");
+            Constants.LOGGER.error("Failed to write token", e);
+            return SINGLE_SUCCESS;
+          }
+          return SINGLE_SUCCESS;
+        })))
+      .then(literal("connect").executes(context -> {
+        if (ParadiseClient.CHAT_ROOM_MOD.isConnected) {
+          Helper.printChatMessage("You are already connected to chatroom");
+          return SINGLE_SUCCESS;
+        }
+        try {
+          Client.connect();
+        } catch (Exception e) {
+          Helper.printChatMessage("§4§lError: Failed to connect to chatroom");
+          Constants.LOGGER.error("Failed to connect to chatroom", e);
+        }
         return SINGLE_SUCCESS;
-      }
-      return SINGLE_SUCCESS;
-    }))).then(literal("connect").executes(context -> {
-      if (ParadiseClient.CHAT_ROOM_MOD.isConnected) {
-        Helper.printChatMessage("You are already connected to chatroom");
+      }))
+      .then(literal("disconnect").executes(context -> {
+        if (!ParadiseClient.CHAT_ROOM_MOD.isConnected) {
+          Helper.printChatMessage("§4§lError: Not connected to chatroom");
+          return SINGLE_SUCCESS;
+        }
+        Client.stop();
         return SINGLE_SUCCESS;
-      }
-      try {
-        Client.connect();
-      } catch (Exception e) {
-        Helper.printChatMessage("§4§lError: Failed to connect to chatroom");
-        Constants.LOGGER.error("Failed to connect to chatroom", e);
-      }
-      return SINGLE_SUCCESS;
-    })).then(literal("disconnect").executes(context -> {
-      if (!ParadiseClient.CHAT_ROOM_MOD.isConnected) {
-        Helper.printChatMessage("§4§lError: Not connected to chatroom");
-        return SINGLE_SUCCESS;
-      }
-      Client.stop();
-      return SINGLE_SUCCESS;
-    }));
+      }));
   }
 }

@@ -1,6 +1,6 @@
 package net.paradise_client.protocol.packet.impl;
 
-import io.netty.buffer.*;
+import io.netty.buffer.ByteBuf;
 import net.paradise_client.protocol.*;
 import net.paradise_client.protocol.packet.*;
 
@@ -25,14 +25,6 @@ public class RawBytesPacket extends AbstractPacket {
   @Override public void handle(AbstractPacketHandler handler) throws Exception {
   }
 
-  public byte[] getBytes() {
-    return bytes;
-  }
-
-  public int getId() {
-    return id;
-  }
-
   @Override public boolean equals(Object o) {
     return false;
   }
@@ -43,5 +35,13 @@ public class RawBytesPacket extends AbstractPacket {
 
   @Override public String toString() {
     return "";
+  }
+
+  public byte[] getBytes() {
+    return bytes;
+  }
+
+  public int getId() {
+    return id;
   }
 }
