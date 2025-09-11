@@ -2,7 +2,6 @@ package net.paradise_client.inject.mixin.minecraft;
 
 import net.minecraft.client.MinecraftClient;
 import net.paradise_client.*;
-import net.paradise_client.chatroom.client.Client;
 import net.paradise_client.event.bus.EventBus;
 import net.paradise_client.event.impl.minecraft.ClientShutdownEvent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -47,6 +46,5 @@ import org.spongepowered.asm.mixin.injection.callback.*;
    */
   @Inject(method = "close", at = @At(value = "HEAD")) private void closeHead(CallbackInfo ci) {
     EventBus.fire(EventBus.CLIENT_SHUTDOWN_EVENT_CHANNEL, new ClientShutdownEvent());
-    Client.stop();
   }
 }

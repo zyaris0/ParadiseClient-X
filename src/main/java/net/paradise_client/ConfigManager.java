@@ -1,7 +1,6 @@
 package net.paradise_client;
 
 import com.google.gson.*;
-import net.dv8tion.jda.annotations.ForRemoval;
 import net.paradise_client.wallpaper.Theme;
 
 import java.io.*;
@@ -45,7 +44,7 @@ public class ConfigManager {
    *
    * @return The current theme.
    */
-  @ForRemoval private static Theme migrate() {
+  private static Theme migrate() {
     return switch (config.get("theme").getAsString()) {
       case "ParadiseHack" -> Theme.MATRIX;
       case "ParadiseParticle" -> Theme.PARTICLE;

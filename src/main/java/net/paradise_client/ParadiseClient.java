@@ -45,7 +45,6 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
   public static BungeeSpoofMod BUNGEE_SPOOF_MOD;
   public static MiscMod MISC_MOD;
   public static HudMod HUD_MOD;
-  public static ChatRoomMod CHAT_ROOM_MOD;
   public static ExploitMod EXPLOIT_MOD;
   public static CommandManager COMMAND_MANAGER;
   public static ExploitManager EXPLOIT_MANAGER;
@@ -97,7 +96,6 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
     BUNGEE_SPOOF_MOD = new BungeeSpoofMod();
     MISC_MOD = new MiscMod();
     HUD_MOD = new HudMod();
-    CHAT_ROOM_MOD = new ChatRoomMod();
     EXPLOIT_MOD = new ExploitMod();
     NETWORK_MOD = new NetworkMod();
   }
