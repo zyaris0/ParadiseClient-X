@@ -2,7 +2,8 @@ package net.paradise_client.mod;
 
 import net.minecraft.text.Text;
 
-import java.util.ArrayList;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Manages miscellaneous data related to network packets and screen state.
@@ -17,7 +18,7 @@ public class MiscMod {
   /**
    * Message which needs to be delayed before sending.
    */
-  public final ArrayList<Text> delayedMessages = new ArrayList<>();
+  public final Queue<Text> delayedMessages = new ConcurrentLinkedQueue<>();
 
   /**
    * Weather the client is outdated or not.

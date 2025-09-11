@@ -9,8 +9,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayerEntity.class) public abstract class ClientPlayerEntityMixin {
   @Inject(method = "tick", at = @At("TAIL")) public void tick(CallbackInfo ci) {
-    ParadiseClient.MISC_MOD.delayedMessages.forEach(this::sendMessage);
-    ParadiseClient.MISC_MOD.delayedMessages.clear();
+    Text msg;
+    while ((msg = ParadiseClient.MISC_MOD.delayedMessages.poll()) != null) {
+      this.sendMessage(msg, false);
+    }
   }
 
   @Unique private void sendMessage(Text message) {
