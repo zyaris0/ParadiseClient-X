@@ -10,9 +10,10 @@ import net.minecraft.network.packet.s2c.play.CommandSuggestionsS2CPacket;
 import net.minecraft.network.state.NetworkState;
 import net.minecraft.text.Text;
 import net.paradise_client.*;
-import net.paradise_client.event.network.PhaseChangeEvent;
-import net.paradise_client.event.network.packet.incoming.*;
-import net.paradise_client.event.network.packet.outgoing.*;
+import net.paradise_client.event.bus.EventBus;
+import net.paradise_client.event.impl.network.PhaseChangeEvent;
+import net.paradise_client.event.impl.network.packet.incoming.*;
+import net.paradise_client.event.impl.network.packet.outgoing.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -46,10 +47,10 @@ import java.util.List;
     at = @At("HEAD"),
     cancellable = true) public void channelRead0Head(ChannelHandlerContext channelHandlerContext,
     Packet<?> packet,
-    CallbackInfo ci) throws InvocationTargetException, IllegalAccessException {
-    PacketIncomingPreEvent event = new PacketIncomingPreEvent(packet);
-    ParadiseClient.EVENT_MANAGER.fireEvent(event);
-    if (event.isCancel()) {
+    CallbackInfo ci) {
+    EventBus.ListenerContext<PacketIncomingPreEvent> ctx =
+      EventBus.fire(EventBus.PACKET_INCOMING_PRE_EVENT_EVENT_CHANNEL, new PacketIncomingPreEvent(packet));
+    if (ctx.isCancelled()) {
       ci.cancel();
     }
 
@@ -94,9 +95,8 @@ import java.util.List;
   @Inject(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/packet/Packet;)V",
     at = @At("TAIL")) public void channelRead0Tail(ChannelHandlerContext channelHandlerContext,
     Packet<?> packet,
-    CallbackInfo ci) throws InvocationTargetException, IllegalAccessException {
-    PacketIncomingPostEvent event = new PacketIncomingPostEvent(packet);
-    ParadiseClient.EVENT_MANAGER.fireEvent(event);
+    CallbackInfo ci) {
+    EventBus.fire(EventBus.PACKET_INCOMING_POST_EVENT_CHANNEL, new PacketIncomingPostEvent(packet));
   }
 
   /**
@@ -111,11 +111,10 @@ import java.util.List;
    * @param ci        Callback information.
    */
   @Inject(method = "sendImmediately", at = @At("HEAD"), cancellable = true)
-  public void sendImmediatelyHead(Packet<?> packet, PacketCallbacks callbacks, boolean flush, CallbackInfo ci)
-    throws InvocationTargetException, IllegalAccessException {
-    PacketOutgoingPreEvent event = new PacketOutgoingPreEvent(packet);
-    ParadiseClient.EVENT_MANAGER.fireEvent(event);
-    if (event.isCancel()) {
+  public void sendImmediatelyHead(Packet<?> packet, PacketCallbacks callbacks, boolean flush, CallbackInfo ci) {
+    EventBus.ListenerContext<PacketOutgoingPreEvent> ctx =
+      EventBus.fire(EventBus.PACKET_OUTGOING_PRE_EVENT_EVENT_CHANNEL, new PacketOutgoingPreEvent(packet));
+    if (ctx.isCancelled()) {
       ci.cancel();
     }
   }
@@ -135,8 +134,7 @@ import java.util.List;
     PacketCallbacks callbacks,
     boolean flush,
     CallbackInfo ci) throws InvocationTargetException, IllegalAccessException {
-    PacketOutgoingPostEvent event = new PacketOutgoingPostEvent(packet);
-    ParadiseClient.EVENT_MANAGER.fireEvent(event);
+    EventBus.fire(EventBus.PACKET_OUTGOING_POST_EVENT_CHANNEL, new PacketOutgoingPostEvent(packet));
   }
 
   /**
@@ -171,6 +169,6 @@ import java.util.List;
     ParadiseClient.NETWORK_CONFIGURATION.set(state.id(),
       state.side(),
       ParadiseClient.NETWORK_CONFIGURATION.protocolVersion);
-    ParadiseClient.EVENT_MANAGER.fireEvent(new PhaseChangeEvent(state.id()));
+    EventBus.fire(EventBus.PHASE_CHANGE_EVENT_EVENT_CHANNEL, new PhaseChangeEvent(state.id()));
   }
 }

@@ -1,6 +1,6 @@
 package net.paradise_client.inject.accessor;
 
-import net.paradise_client.event.chat.*;
+import net.paradise_client.event.impl.chat.*;
 
 public interface ClientPlayNetworkHandlerAccessor {
   /**

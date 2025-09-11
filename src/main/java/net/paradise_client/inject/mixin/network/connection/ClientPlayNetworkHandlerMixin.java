@@ -8,13 +8,13 @@ import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.paradise_client.*;
-import net.paradise_client.event.chat.*;
+import net.paradise_client.event.bus.EventBus;
+import net.paradise_client.event.impl.chat.*;
 import net.paradise_client.inject.accessor.ClientPlayNetworkHandlerAccessor;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
 
 /**
@@ -83,14 +83,17 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientPlayNetwork
    * @param ci      The callback information.
    */
   @Inject(method = "sendChatMessage", at = @At("HEAD"), cancellable = true)
-  private void onSendChatMessageH(String content, CallbackInfo ci)
-    throws InvocationTargetException, IllegalAccessException {
-    ChatPreEvent event = new ChatPreEvent(content);
-    ParadiseClient.EVENT_MANAGER.fireEvent(event);
-    if (event.isCancel()) {
+  private void onSendChatMessageH(String content, CallbackInfo ci) {
+
+    EventBus.ListenerContext<ChatPreEvent> ctx =
+      EventBus.CHAT_PRE_EVENT_CHANNEL.fire(new ChatPreEvent(content));
+
+    if (ctx.isCancelled()) {
       ci.cancel();
       return;
     }
+
+    content = ctx.getEvent().getMessage();
 
     if (content.startsWith(ParadiseClient.COMMAND_MANAGER.prefix)) {
       ParadiseClient.COMMAND_MANAGER.dispatch(content.substring(1));
@@ -105,10 +108,9 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientPlayNetwork
    * @param content The content entered by the player.
    * @param ci      The callback information.
    */
-  @Inject(method = "sendChatMessage", at = @At("TAIL")) private void onSendChatMessageT(String content, CallbackInfo ci)
-    throws InvocationTargetException, IllegalAccessException {
-    ChatPostEvent event = new ChatPostEvent(content);
-    ParadiseClient.EVENT_MANAGER.fireEvent(event);
+  @Inject(method = "sendChatMessage", at = @At("TAIL")) private void onSendChatMessageT(String content,
+    CallbackInfo ci) {
+    EventBus.fire(EventBus.CHAT_POST_EVENT_CHANNEL, new ChatPostEvent(content));
   }
 
   /**

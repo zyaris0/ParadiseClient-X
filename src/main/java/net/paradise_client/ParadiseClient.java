@@ -1,6 +1,5 @@
 package net.paradise_client;
 
-import io.github.spigotrce.eventbus.event.EventManager;
 import net.fabricmc.api.*;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -41,7 +40,6 @@ import java.util.Objects;
 public class ParadiseClient implements ModInitializer, ClientModInitializer {
 
   public static final MinecraftClient MINECRAFT_CLIENT = MinecraftClient.getInstance();
-  public static final EventManager EVENT_MANAGER = new EventManager();
   public static final NetworkConfiguration NETWORK_CONFIGURATION = new NetworkConfiguration();
   public static ParadiseClient INSTANCE;
   public static BungeeSpoofMod BUNGEE_SPOOF_MOD;

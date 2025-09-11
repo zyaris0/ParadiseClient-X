@@ -5,7 +5,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import net.minecraft.network.PacketByteBuf;
 import net.paradise_client.*;
-import net.paradise_client.event.network.message.PluginMessageEvent;
+import net.paradise_client.event.bus.EventBus;
+import net.paradise_client.event.impl.network.message.PluginMessageEvent;
 import net.paradise_client.protocol.*;
 import net.paradise_client.protocol.packet.AbstractPacket;
 import net.paradise_client.protocol.packet.impl.PluginMessagePacket;
@@ -28,11 +29,10 @@ public class ParadiseS2CPluginMessageHandler extends MessageToMessageDecoder<Byt
         message.read(b.asByteBuf(), ProtocolVersion.Direction.TO_CLIENT, id);
         notifyChannels(message);
 
-        PluginMessageEvent event =
-          new PluginMessageEvent(message.getTag(), new PacketByteBuf(Unpooled.buffer().writeBytes(message.getData())));
-        ParadiseClient.EVENT_MANAGER.fireEvent(event);
+        EventBus.ListenerContext<PluginMessageEvent> context = EventBus.fire(EventBus.PLUGIN_MESSAGE_EVENT_CHANNEL,
+          new PluginMessageEvent(message.getTag(), new PacketByteBuf(Unpooled.buffer().writeBytes(message.getData()))));
 
-        if (event.isCancel()) {
+        if (context.isCancelled()) {
           return;
         }
       }
