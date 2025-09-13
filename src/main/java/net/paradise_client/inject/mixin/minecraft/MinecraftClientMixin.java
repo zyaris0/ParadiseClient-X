@@ -1,7 +1,7 @@
 package net.paradise_client.inject.mixin.minecraft;
 
 import net.minecraft.client.MinecraftClient;
-import net.paradise_client.*;
+import net.paradise_client.Constants;
 import net.paradise_client.event.bus.EventBus;
 import net.paradise_client.event.impl.minecraft.ClientShutdownEvent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.callback.*;
       target = "Ljava/lang/StringBuilder;append(Ljava/lang/String;)Ljava/lang/StringBuilder;",
       ordinal = 1),
     cancellable = true) private void getClientTitle(CallbackInfoReturnable<String> callback) {
-    callback.setReturnValue(Constants.WINDOW_TITLE);
+    callback.setReturnValue(Constants.getWindowTitle());
   }
 
   /**

@@ -2,7 +2,6 @@ package net.paradise_client.inject.mixin.network.handler;
 
 import net.minecraft.client.network.ClientLoginNetworkHandler;
 import net.minecraft.network.packet.s2c.login.LoginSuccessS2CPacket;
-import net.paradise_client.ParadiseClient;
 import net.paradise_client.event.bus.EventBus;
 import net.paradise_client.event.impl.network.LoginEvent;
 import org.spongepowered.asm.mixin.Mixin;

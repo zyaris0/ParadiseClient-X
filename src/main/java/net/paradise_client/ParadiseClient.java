@@ -1,7 +1,6 @@
 package net.paradise_client;
 
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.ModInitializer;
+import net.fabricmc.api.*;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -18,15 +17,13 @@ import net.paradise_client.exploit.ExploitManager;
 import net.paradise_client.mod.*;
 import net.paradise_client.packet.DummyPacket;
 import net.paradise_client.ui.notification.NotificationManager;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWImage;
+import org.lwjgl.glfw.*;
 import org.lwjgl.system.MemoryStack;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
@@ -38,7 +35,6 @@ import java.util.Objects;
  * </p>
  *
  * @author SpigotRCE
- *
  */
 public class ParadiseClient implements ModInitializer, ClientModInitializer {
 

@@ -7,10 +7,42 @@ import net.paradise_client.event.impl.network.message.PluginMessageEvent;
 import net.paradise_client.event.impl.network.packet.incoming.*;
 import net.paradise_client.event.impl.network.packet.outgoing.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class EventBus {
+  // Channels
+  public static final EventChannel<ChatPreEvent> CHAT_PRE_EVENT_CHANNEL = new EventChannel<>(new ChatPreEvent());
+  public static final EventChannel<ChatPostEvent> CHAT_POST_EVENT_CHANNEL = new EventChannel<>(new ChatPostEvent());
+  public static final EventChannel<ClientShutdownEvent> CLIENT_SHUTDOWN_EVENT_CHANNEL =
+    new EventChannel<>(new ClientShutdownEvent());
+  public static final EventChannel<PluginMessageEvent> PLUGIN_MESSAGE_EVENT_CHANNEL =
+    new EventChannel<>(new PluginMessageEvent());
+  public static final EventChannel<PacketIncomingPreEvent> PACKET_INCOMING_PRE_EVENT_EVENT_CHANNEL =
+    new EventChannel<>(new PacketIncomingPreEvent());
+  public static final EventChannel<PacketIncomingPostEvent> PACKET_INCOMING_POST_EVENT_CHANNEL =
+    new EventChannel<>(new PacketIncomingPostEvent());
+  public static final EventChannel<PacketOutgoingPreEvent> PACKET_OUTGOING_PRE_EVENT_EVENT_CHANNEL =
+    new EventChannel<>(new PacketOutgoingPreEvent());
+  public static final EventChannel<PacketOutgoingPostEvent> PACKET_OUTGOING_POST_EVENT_CHANNEL =
+    new EventChannel<>(new PacketOutgoingPostEvent());
+  public static final EventChannel<LoginEvent> LOGIN_EVENT_EVENT_CHANNEL = new EventChannel<>(new LoginEvent());
+  public static final EventChannel<PhaseChangeEvent> PHASE_CHANGE_EVENT_EVENT_CHANNEL =
+    new EventChannel<>(new PhaseChangeEvent());
+
+  public static <T> ListenerContext<T> fire(EventChannel<T> channel, T event) {
+    return channel.fire(event);
+  }
+
+  @FunctionalInterface public interface EventHandler<T> {
+    void handle(T event, ListenerContext<T> context);
+  }
+
+  public interface Cancelable {
+    boolean isCancelled();
+
+    void cancel();
+  }
+
   public static class EventChannel<T> {
     private final List<EventHandler<T>> listeners = new ArrayList<>();
     private final T superEvent;
@@ -19,8 +51,8 @@ public class EventBus {
       this.superEvent = superEvent;
     }
 
-    public void on(EventHandler<T> handler) {
-      listeners.add(handler);
+    public static <T> ListenerContext<T> fire(EventChannel<T> channel, T event) {
+      return channel.fire(event);
     }
 
     public ListenerContext<T> fire(T event) {
@@ -33,8 +65,8 @@ public class EventBus {
       return context;
     }
 
-    public static <T> ListenerContext<T> fire(EventChannel<T> channel, T event) {
-      return channel.fire(event);
+    public void on(EventHandler<T> handler) {
+      listeners.add(handler);
     }
 
     public T getSuperEvent() {
@@ -63,10 +95,6 @@ public class EventBus {
     }
   }
 
-  @FunctionalInterface public interface EventHandler<T> {
-    void handle(T event, ListenerContext<T> context);
-  }
-
   public record EventResult<T>(T event) {
     public boolean isCancelled() {
       return event instanceof Cancelable c && c.isCancelled();
@@ -76,39 +104,4 @@ public class EventBus {
       return event;
     }
   }
-
-  public interface Cancelable {
-    boolean isCancelled();
-
-    void cancel();
-  }
-
-  public static <T> ListenerContext<T> fire(EventChannel<T> channel, T event) {
-    return channel.fire(event);
-  }
-
-  // Channels
-  public static final EventChannel<ChatPreEvent> CHAT_PRE_EVENT_CHANNEL = new EventChannel<>(new ChatPreEvent());
-  public static final EventChannel<ChatPostEvent> CHAT_POST_EVENT_CHANNEL = new EventChannel<>(new ChatPostEvent());
-
-  public static final EventChannel<ClientShutdownEvent> CLIENT_SHUTDOWN_EVENT_CHANNEL =
-    new EventChannel<>(new ClientShutdownEvent());
-
-  public static final EventChannel<PluginMessageEvent> PLUGIN_MESSAGE_EVENT_CHANNEL =
-    new EventChannel<>(new PluginMessageEvent());
-
-  public static final EventChannel<PacketIncomingPreEvent> PACKET_INCOMING_PRE_EVENT_EVENT_CHANNEL =
-    new EventChannel<>(new PacketIncomingPreEvent());
-  public static final EventChannel<PacketIncomingPostEvent> PACKET_INCOMING_POST_EVENT_CHANNEL =
-    new EventChannel<>(new PacketIncomingPostEvent());
-
-  public static final EventChannel<PacketOutgoingPreEvent> PACKET_OUTGOING_PRE_EVENT_EVENT_CHANNEL =
-    new EventChannel<>(new PacketOutgoingPreEvent());
-  public static final EventChannel<PacketOutgoingPostEvent> PACKET_OUTGOING_POST_EVENT_CHANNEL =
-    new EventChannel<>(new PacketOutgoingPostEvent());
-
-  public static final EventChannel<LoginEvent> LOGIN_EVENT_EVENT_CHANNEL = new EventChannel<>(new LoginEvent());
-
-  public static final EventChannel<PhaseChangeEvent> PHASE_CHANGE_EVENT_EVENT_CHANNEL =
-    new EventChannel<>(new PhaseChangeEvent());
 }

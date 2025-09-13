@@ -166,6 +166,16 @@ public enum Protocol {
       return other instanceof ProtocolData;
     }
 
+    public String toString() {
+      return "Protocol.ProtocolData(protocolVersion=" +
+        this.getProtocolVersion() +
+        ", packetMap=" +
+        this.getPacketMap() +
+        ", packetConstructors=" +
+        Arrays.deepToString(this.getPacketConstructors()) +
+        ")";
+    }
+
     public int getProtocolVersion() {
       return this.protocolVersion;
     }
@@ -176,16 +186,6 @@ public enum Protocol {
 
     public Supplier<? extends AbstractPacket>[] getPacketConstructors() {
       return this.packetConstructors;
-    }
-
-    public String toString() {
-      return "Protocol.ProtocolData(protocolVersion=" +
-        this.getProtocolVersion() +
-        ", packetMap=" +
-        this.getPacketMap() +
-        ", packetConstructors=" +
-        Arrays.deepToString(this.getPacketConstructors()) +
-        ")";
     }
   }
 

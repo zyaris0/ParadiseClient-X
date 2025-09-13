@@ -22,24 +22,26 @@ public class HudMod {
    */
   public boolean showPlayerList = false;
 
-    /**
-     * Checks if the client is currently connected to a server.
-     *
-     * @param client The Minecraft client instance.
-     * @return True if connected to a server, false otherwise.
-     */
-    public boolean isConnectedToServer(MinecraftClient client) {
-        return client.getNetworkHandler() != null && client.getCurrentServerEntry() != null;
-    }
+  /**
+   * Checks if the client is currently connected to a server.
+   *
+   * @param client The Minecraft client instance.
+   *
+   * @return True if connected to a server, false otherwise.
+   */
+  public boolean isConnectedToServer(MinecraftClient client) {
+    return client.getNetworkHandler() != null && client.getCurrentServerEntry() != null;
+  }
 
-    /**
-     * Retrieves the server status to be displayed on the HUD.
-     *
-     * @param client The Minecraft client instance.
-     * @return A string representing the server status.
-     */
-    public String getServerStatus(MinecraftClient client) {
-        String address = client.getCurrentServerEntry().address;
-        return showServerIP ? "Connected to: " + address : "Connected to: HIDDEN";
-    }
+  /**
+   * Retrieves the server status to be displayed on the HUD.
+   *
+   * @param client The Minecraft client instance.
+   *
+   * @return A string representing the server status.
+   */
+  public String getServerStatus(MinecraftClient client) {
+    String address = client.getCurrentServerEntry().address;
+    return showServerIP ? "Connected to: " + address : "Connected to: HIDDEN";
+  }
 }

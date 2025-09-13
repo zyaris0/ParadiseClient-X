@@ -48,6 +48,15 @@ public class PluginMessagePacket extends AbstractPacket {
     handler.handle(this);
   }
 
+  public int hashCode() {
+    int result = 1;
+    result = result * 59 + (this.isAllowExtendedPacket() ? 79 : 97);
+    Object $tag = this.getTag();
+    result = result * 59 + ($tag == null ? 43 : $tag.hashCode());
+    result = result * 59 + Arrays.hashCode(this.getData());
+    return result;
+  }
+
   public boolean equals(Object o) {
     if (o == this) {
       return true;
@@ -78,15 +87,6 @@ public class PluginMessagePacket extends AbstractPacket {
     return other instanceof PluginMessagePacket;
   }
 
-  public int hashCode() {
-    int result = 1;
-    result = result * 59 + (this.isAllowExtendedPacket() ? 79 : 97);
-    Object $tag = this.getTag();
-    result = result * 59 + ($tag == null ? 43 : $tag.hashCode());
-    result = result * 59 + Arrays.hashCode(this.getData());
-    return result;
-  }
-
   public String toString() {
     return "PluginMessage(tag=" +
       this.getTag() +
@@ -95,6 +95,10 @@ public class PluginMessagePacket extends AbstractPacket {
       ", allowExtendedPacket=" +
       this.isAllowExtendedPacket() +
       ")";
+  }
+
+  public boolean isAllowExtendedPacket() {
+    return this.allowExtendedPacket;
   }
 
   public String getTag() {
@@ -111,10 +115,6 @@ public class PluginMessagePacket extends AbstractPacket {
 
   public void setData(byte[] data) {
     this.data = data;
-  }
-
-  public boolean isAllowExtendedPacket() {
-    return this.allowExtendedPacket;
   }
 
   public void setAllowExtendedPacket(boolean allowExtendedPacket) {

@@ -85,8 +85,7 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientPlayNetwork
   @Inject(method = "sendChatMessage", at = @At("HEAD"), cancellable = true)
   private void onSendChatMessageH(String content, CallbackInfo ci) {
 
-    EventBus.ListenerContext<ChatPreEvent> ctx =
-      EventBus.CHAT_PRE_EVENT_CHANNEL.fire(new ChatPreEvent(content));
+    EventBus.ListenerContext<ChatPreEvent> ctx = EventBus.CHAT_PRE_EVENT_CHANNEL.fire(new ChatPreEvent(content));
 
     if (ctx.isCancelled()) {
       ci.cancel();

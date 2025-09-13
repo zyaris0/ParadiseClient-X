@@ -57,7 +57,7 @@ import static net.paradise_client.Helper.*;
 
     ArrayList<String> text = new ArrayList<>();
 
-    text.add(Constants.WINDOW_TITLE);
+    text.add(Constants.getWindowTitle());
     text.add("Server " +
       ((!Objects.isNull(this.client.getCurrentServerEntry()) && ParadiseClient.HUD_MOD.showServerIP) ?
         this.client.getCurrentServerEntry().address :

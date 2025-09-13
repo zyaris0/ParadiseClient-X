@@ -2,7 +2,7 @@ package net.paradise_client.mod;
 
 import net.minecraft.text.Text;
 
-import java.util.*;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**

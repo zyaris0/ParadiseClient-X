@@ -15,9 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
     }
   }
 
+  @Shadow public abstract void sendMessage(Text message, boolean overlay);
+
   @Unique private void sendMessage(Text message) {
     this.sendMessage(message, false);
   }
-
-  @Shadow public abstract void sendMessage(Text message, boolean overlay);
 }

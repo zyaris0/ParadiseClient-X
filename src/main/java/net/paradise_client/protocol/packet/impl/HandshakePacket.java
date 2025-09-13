@@ -37,6 +37,16 @@ public class HandshakePacket extends AbstractPacket {
     handler.handle(this);
   }
 
+  public int hashCode() {
+    int result = 1;
+    result = result * 59 + this.getProtocolVersion();
+    result = result * 59 + this.getPort();
+    result = result * 59 + this.getRequestedProtocol();
+    Object $host = this.getHost();
+    result = result * 59 + ($host == null ? 43 : $host.hashCode());
+    return result;
+  }
+
   public boolean equals(Object o) {
     if (o == this) {
       return true;
@@ -67,16 +77,6 @@ public class HandshakePacket extends AbstractPacket {
     return other instanceof HandshakePacket;
   }
 
-  public int hashCode() {
-    int result = 1;
-    result = result * 59 + this.getProtocolVersion();
-    result = result * 59 + this.getPort();
-    result = result * 59 + this.getRequestedProtocol();
-    Object $host = this.getHost();
-    result = result * 59 + ($host == null ? 43 : $host.hashCode());
-    return result;
-  }
-
   public String toString() {
     return "Handshake(protocolVersion=" +
       this.getProtocolVersion() +
@@ -97,14 +97,6 @@ public class HandshakePacket extends AbstractPacket {
     this.protocolVersion = protocolVersion;
   }
 
-  public String getHost() {
-    return this.host;
-  }
-
-  public void setHost(String host) {
-    this.host = host;
-  }
-
   public int getPort() {
     return this.port;
   }
@@ -115,6 +107,14 @@ public class HandshakePacket extends AbstractPacket {
 
   public int getRequestedProtocol() {
     return this.requestedProtocol;
+  }
+
+  public String getHost() {
+    return this.host;
+  }
+
+  public void setHost(String host) {
+    this.host = host;
   }
 
   public void setRequestedProtocol(int requestedProtocol) {

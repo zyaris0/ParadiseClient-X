@@ -5,8 +5,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandSource;
-import net.paradise_client.Constants;
-import net.paradise_client.Helper;
+import net.paradise_client.*;
 import net.paradise_client.command.impl.*;
 
 import java.util.ArrayList;
