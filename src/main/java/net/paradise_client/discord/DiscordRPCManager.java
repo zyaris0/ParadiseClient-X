@@ -47,7 +47,7 @@ public class DiscordRPCManager implements ReadyCallback {
         DiscordEventHandlers handlers = new DiscordEventHandlers.Builder()
                 .setReadyEventHandler(
                         user -> Constants.LOGGER.info(
-                                "Connected to Discord: {}#{} ({})%n",
+                                "Connected to Discord: {}#{} ({})",
                                 user.username,
                                 user.discriminator,
                                 user.userId
@@ -108,7 +108,7 @@ public class DiscordRPCManager implements ReadyCallback {
                 wasInGame = isInGame;
                 wasPaused = isPaused;
 
-                Constants.LOGGER.info("[DiscordRPC] State changed to: {} (InGame: {}, Paused: {})%n",
+                Constants.LOGGER.info("[DiscordRPC] State changed to: {} (InGame: {}, Paused: {})",
                         detailedState, isInGame, isPaused);
             }
         } catch (Exception e) {
