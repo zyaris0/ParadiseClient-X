@@ -1,4 +1,8 @@
 # **ParadiseClient**
+[![GitHub Repo Size](https://img.shields.io/github/repo-size/hydrogen-developments/ParadiseClient-X?style=for-the-badge)](https://paradise-client.net/downloads/)
+[![GitHub Issues](https://img.shields.io/github/issues/hydrogen-developments/ParadiseClient-X?style=for-the-badge)](https://paradise-client.net/downloads/)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/hydrogen-developments/ParadiseClient-X?style=for-the-badge)](https://paradise-client.net/downloads/)
+[![GitHub License](https://img.shields.io/github/license/hydrogen-developments/ParadiseClient-X?style=for-the-badge)](https://paradise-client.net/downloads/)
 
 [![Last Commit](https://img.shields.io/github/last-commit/hydrogen-developments/ParadiseClient-X?style=for-the-badge)](https://paradise-client.net/downloads/)
 

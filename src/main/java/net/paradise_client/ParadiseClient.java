@@ -1,6 +1,7 @@
 package net.paradise_client;
 
-import net.fabricmc.api.*;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -12,18 +13,20 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import net.paradise_client.addon.AddonLoader;
 import net.paradise_client.command.CommandManager;
-import net.paradise_client.discord.RPC;
+import net.paradise_client.discord.DiscordRPCManager;
 import net.paradise_client.exploit.ExploitManager;
 import net.paradise_client.mod.*;
 import net.paradise_client.packet.DummyPacket;
 import net.paradise_client.ui.notification.NotificationManager;
-import org.lwjgl.glfw.*;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.system.MemoryStack;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
@@ -50,13 +53,12 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
   public static ExploitManager EXPLOIT_MANAGER;
   public static NetworkMod NETWORK_MOD;
   public static NotificationManager NOTIFICATION_MANAGER;
-  public static RPC RPC;
+  public static DiscordRPCManager DISCORD_RPC_MANAGER;
 
   @Override public void onInitializeClient() {
     INSTANCE = this;
     updateIcon();
-    RPC = new RPC();
-    new Thread(() -> RPC.run()).start();
+    DISCORD_RPC_MANAGER = new DiscordRPCManager(MINECRAFT_CLIENT);
     registerChannels();
     initializeMods();
     initializeManagers();
