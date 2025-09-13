@@ -37,8 +37,8 @@ import java.util.Objects;
  * and modules of the mod when the mod is loaded.
  * </p>
  *
- * @author SpigotRCE
- * @since 1.0
+ * @author 1nstagram
+ *
  */
 public class ParadiseClient implements ModInitializer, ClientModInitializer {
 
