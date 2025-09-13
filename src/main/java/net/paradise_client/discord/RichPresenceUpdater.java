@@ -12,7 +12,6 @@ import net.arikia.dev.drpc.DiscordRichPresence;
  * </p>
  *
  * @author 1nstagram
- * @since 1.10
  */
 public class RichPresenceUpdater {
     private final DiscordRichPresence richPresence;
