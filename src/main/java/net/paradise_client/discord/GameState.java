@@ -17,7 +17,6 @@ import net.paradise_client.ParadiseClient;
  * </p>
  *
  * @author 1nstagram
- * @since 1.10
  */
 public class GameState {
     private static final RichPresenceUpdater richPresenceUpdater = new RichPresenceUpdater();
