@@ -5,7 +5,6 @@ import net.arikia.dev.drpc.DiscordRPC;
 import net.arikia.dev.drpc.DiscordUser;
 import net.arikia.dev.drpc.callbacks.ReadyCallback;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.paradise_client.Constants;
 import net.paradise_client.ParadiseClient;
 
@@ -21,15 +20,10 @@ import java.util.concurrent.TimeUnit;
  * </p>
  *
  * @author 1nstagram
-<<<<<<< Updated upstream
-=======
- *
->>>>>>> Stashed changes
  */
 public class DiscordRPCManager implements ReadyCallback {
     private final MinecraftClient client;
     private final RichPresenceUpdater richPresenceUpdater;
-    private Screen lastScreen;
     private boolean enabled = true;
     private ScheduledExecutorService executorService;
     private GameState.State lastGameState;
@@ -39,7 +33,6 @@ public class DiscordRPCManager implements ReadyCallback {
     public DiscordRPCManager(MinecraftClient client) {
         this.client = client;
         this.richPresenceUpdater = new RichPresenceUpdater();
-        this.lastScreen = null;
         this.lastGameState = null;
         init();
         startTask();

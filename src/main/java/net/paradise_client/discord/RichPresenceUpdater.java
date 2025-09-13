@@ -12,10 +12,6 @@ import net.arikia.dev.drpc.DiscordRichPresence;
  * </p>
  *
  * @author 1nstagram
-<<<<<<< Updated upstream
-=======
- *
->>>>>>> Stashed changes
  */
 public class RichPresenceUpdater {
     private final DiscordRichPresence richPresence;
@@ -78,13 +74,10 @@ public class RichPresenceUpdater {
         // Add pause indicator if paused
         if (isPaused && currentState != null) {
             switch (currentState) {
-                case PAUSED_MULTIPLAYER:
+                case PAUSED_MULTIPLAYER, PAUSED_SINGLEPLAYER:
                     richPresence.state = "⏸️ " + detailedState;
                     break;
-                case PAUSED_SINGLEPLAYER:
-                    richPresence.state = "⏸️ " + detailedState;
-                    break;
-                default:
+              default:
                     break;
             }
         }

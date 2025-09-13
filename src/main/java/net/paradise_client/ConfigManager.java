@@ -35,7 +35,7 @@ public class ConfigManager {
     try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
       writer.write(config.toString());
     } catch (IOException e) {
-      e.printStackTrace();
+      Constants.LOGGER.error("Error saving config: ", e);
     }
   }
 
