@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
  * </p>
  *
  * @author 1nstagram
- * @since 1.10
  */
 public class DiscordRPCManager implements ReadyCallback {
     private final MinecraftClient client;
