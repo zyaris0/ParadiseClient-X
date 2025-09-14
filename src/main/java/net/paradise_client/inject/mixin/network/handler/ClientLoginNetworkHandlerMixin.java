@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ClientLoginNetworkHandler.class) public class ClientLoginNetworkHandlerMixin {
   @Inject(method = "onSuccess", at = @At("HEAD"), cancellable = true)
   public void onSucess(LoginSuccessS2CPacket packet, CallbackInfo ci) {
-    EventBus.fire(EventBus.LOGIN_EVENT_EVENT_CHANNEL, new LoginEvent(packet.profile()));
+    EventBus.fire(EventBus.LOGIN_EVENT_CHANNEL, new LoginEvent(packet.profile()));
   }
 }

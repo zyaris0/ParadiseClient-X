@@ -17,16 +17,16 @@ public class EventBus {
     new EventChannel<>(new ClientShutdownEvent());
   public static final EventChannel<PluginMessageEvent> PLUGIN_MESSAGE_EVENT_CHANNEL =
     new EventChannel<>(new PluginMessageEvent());
-  public static final EventChannel<PacketIncomingPreEvent> PACKET_INCOMING_PRE_EVENT_EVENT_CHANNEL =
+  public static final EventChannel<PacketIncomingPreEvent> PACKET_INCOMING_PRE_EVENT_CHANNEL =
     new EventChannel<>(new PacketIncomingPreEvent());
   public static final EventChannel<PacketIncomingPostEvent> PACKET_INCOMING_POST_EVENT_CHANNEL =
     new EventChannel<>(new PacketIncomingPostEvent());
-  public static final EventChannel<PacketOutgoingPreEvent> PACKET_OUTGOING_PRE_EVENT_EVENT_CHANNEL =
+  public static final EventChannel<PacketOutgoingPreEvent> PACKET_OUTGOING_PRE_EVENT_CHANNEL =
     new EventChannel<>(new PacketOutgoingPreEvent());
   public static final EventChannel<PacketOutgoingPostEvent> PACKET_OUTGOING_POST_EVENT_CHANNEL =
     new EventChannel<>(new PacketOutgoingPostEvent());
-  public static final EventChannel<LoginEvent> LOGIN_EVENT_EVENT_CHANNEL = new EventChannel<>(new LoginEvent());
-  public static final EventChannel<PhaseChangeEvent> PHASE_CHANGE_EVENT_EVENT_CHANNEL =
+  public static final EventChannel<LoginEvent> LOGIN_EVENT_CHANNEL = new EventChannel<>(new LoginEvent());
+  public static final EventChannel<PhaseChangeEvent> PHASE_CHANGE_EVENT_CHANNEL =
     new EventChannel<>(new PhaseChangeEvent());
 
   public static <T> ListenerContext<T> fire(EventChannel<T> channel, T event) {

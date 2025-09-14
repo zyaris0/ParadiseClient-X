@@ -49,7 +49,7 @@ import java.util.List;
     Packet<?> packet,
     CallbackInfo ci) {
     EventBus.ListenerContext<PacketIncomingPreEvent> ctx =
-      EventBus.fire(EventBus.PACKET_INCOMING_PRE_EVENT_EVENT_CHANNEL, new PacketIncomingPreEvent(packet));
+      EventBus.fire(EventBus.PACKET_INCOMING_PRE_EVENT_CHANNEL, new PacketIncomingPreEvent(packet));
     if (ctx.isCancelled()) {
       ci.cancel();
     }
@@ -113,7 +113,7 @@ import java.util.List;
   @Inject(method = "sendImmediately", at = @At("HEAD"), cancellable = true)
   public void sendImmediatelyHead(Packet<?> packet, PacketCallbacks callbacks, boolean flush, CallbackInfo ci) {
     EventBus.ListenerContext<PacketOutgoingPreEvent> ctx =
-      EventBus.fire(EventBus.PACKET_OUTGOING_PRE_EVENT_EVENT_CHANNEL, new PacketOutgoingPreEvent(packet));
+      EventBus.fire(EventBus.PACKET_OUTGOING_PRE_EVENT_CHANNEL, new PacketOutgoingPreEvent(packet));
     if (ctx.isCancelled()) {
       ci.cancel();
     }
@@ -169,6 +169,6 @@ import java.util.List;
     ParadiseClient.NETWORK_CONFIGURATION.set(state.id(),
       state.side(),
       ParadiseClient.NETWORK_CONFIGURATION.protocolVersion);
-    EventBus.fire(EventBus.PHASE_CHANGE_EVENT_EVENT_CHANNEL, new PhaseChangeEvent(state.id()));
+    EventBus.fire(EventBus.PHASE_CHANGE_EVENT_CHANNEL, new PhaseChangeEvent(state.id()));
   }
 }
