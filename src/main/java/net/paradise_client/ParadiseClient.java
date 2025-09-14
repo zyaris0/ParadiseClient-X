@@ -12,6 +12,7 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import net.paradise_client.addon.AddonLoader;
 import net.paradise_client.command.CommandManager;
+import net.paradise_client.config.Config;
 import net.paradise_client.discord.DiscordRPCManager;
 import net.paradise_client.exploit.ExploitManager;
 import net.paradise_client.mod.*;
@@ -50,11 +51,18 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
   public static NetworkMod NETWORK_MOD;
   public static NotificationManager NOTIFICATION_MANAGER;
   public static DiscordRPCManager DISCORD_RPC_MANAGER;
+  public static Config CONFIG;
 
   @Override public void onInitializeClient() {
     INSTANCE = this;
     updateIcon();
     DISCORD_RPC_MANAGER = new DiscordRPCManager(MINECRAFT_CLIENT);
+    CONFIG = new Config();
+    try {
+      CONFIG.load();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
     registerChannels();
     initializeMods();
     initializeManagers();

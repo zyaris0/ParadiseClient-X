@@ -44,11 +44,11 @@ public class ThemeRenderer {
   }
 
   public static Theme getTheme() {
-    return ConfigManager.getTheme();
+    return ParadiseClient.CONFIG.getTheme();
   }
 
   public static void setTheme(Theme theme) {
-    ConfigManager.setTheme(theme);
+    ParadiseClient.CONFIG.setTheme(theme);
   }
 
   /**
