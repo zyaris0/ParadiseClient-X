@@ -7,6 +7,9 @@ import net.minecraft.client.gui.hud.*;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.scoreboard.*;
 import net.paradise_client.*;
+import net.paradise_client.event.bus.EventBus;
+import net.paradise_client.event.impl.minecraft.HudStartRenderEvent;
+import net.paradise_client.mod.HudMod;
 import net.paradise_client.protocol.ProtocolVersion;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
@@ -70,8 +73,12 @@ import static net.paradise_client.Helper.*;
         .getVersionIntroducedIn());
     text.add("Players " + this.client.getNetworkHandler().getPlayerList().size());
 
+    ParadiseClient.HUD_MOD.hudElements.clear();
+    ParadiseClient.HUD_MOD.hudElements.addAll(text);
+    EventBus.HUD_START_RENDER_EVENT_CHANNEL.fire(HudStartRenderEvent.INSTANCE);
+
     int i = 0;
-    for (String s : text) {
+    for (String s : ParadiseClient.HUD_MOD.hudElements) {
       renderTextWithChroma(context, s, 5, 5 + this.client.textRenderer.fontHeight * i);
       i++;
     }

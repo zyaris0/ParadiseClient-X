@@ -2,6 +2,8 @@ package net.paradise_client.mod;
 
 import net.minecraft.client.MinecraftClient;
 
+import java.util.ArrayList;
+
 /**
  * Manages the HUD (Heads-Up Display) settings.
  * <p>
@@ -21,6 +23,11 @@ public class HudMod {
    * Indicates whether the tab list should be toggled or not.
    */
   public boolean showPlayerList = false;
+
+  /**
+   * List of HUD elements to be displayed.
+   */
+  public ArrayList<String> hudElements = new ArrayList<>();
 
   /**
    * Checks if the client is currently connected to a server.

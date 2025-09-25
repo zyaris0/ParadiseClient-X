@@ -1,7 +1,7 @@
 package net.paradise_client.event.bus;
 
 import net.paradise_client.event.impl.chat.*;
-import net.paradise_client.event.impl.minecraft.ClientShutdownEvent;
+import net.paradise_client.event.impl.minecraft.*;
 import net.paradise_client.event.impl.network.*;
 import net.paradise_client.event.impl.network.message.PluginMessageEvent;
 import net.paradise_client.event.impl.network.packet.incoming.*;
@@ -28,6 +28,8 @@ public class EventBus {
   public static final EventChannel<LoginEvent> LOGIN_EVENT_CHANNEL = new EventChannel<>(new LoginEvent());
   public static final EventChannel<PhaseChangeEvent> PHASE_CHANGE_EVENT_CHANNEL =
     new EventChannel<>(new PhaseChangeEvent());
+  public static final EventChannel<HudStartRenderEvent> HUD_START_RENDER_EVENT_CHANNEL =
+    new EventChannel<>(new HudStartRenderEvent());
 
   public static <T> ListenerContext<T> fire(EventChannel<T> channel, T event) {
     return channel.fire(event);
