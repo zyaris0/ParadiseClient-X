@@ -149,7 +149,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
           this.splashText.render(context, this.width, this.textRenderer, i);
         }
       }
-      context.drawTextWithShadow(this.textRenderer, Constants.getWindowTitle(), 2, this.height - 10, 16777215 | i);
+      context.drawTextWithShadow(this.textRenderer, Constants.windowTitle, 2, this.height - 10, 16777215 | i);
       if (this.isRealmsNotificationsGuiDisplayed() && f >= 1.0F) {
         this.realmsNotificationGui.render(context, mouseX, mouseY, delta);
       }

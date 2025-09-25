@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.callback.*;
       target = "Ljava/lang/StringBuilder;append(Ljava/lang/String;)Ljava/lang/StringBuilder;",
       ordinal = 1),
     cancellable = true) private void getClientTitle(CallbackInfoReturnable<String> callback) {
-    callback.setReturnValue(Constants.getWindowTitle());
+    callback.setReturnValue(Constants.windowTitle);
   }
 
   /**

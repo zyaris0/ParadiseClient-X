@@ -16,18 +16,6 @@ public final class Constants {
     .getMetadata()
     .getVersion()
     .getFriendlyString();
-  private static String windowTitle = buildWindowTitle();
 
-  public static String getWindowTitle() {
-    return windowTitle;
-  }
-
-  public static void reloadTitle() {
-    windowTitle = buildWindowTitle();
-    ParadiseClient.MINECRAFT_CLIENT.updateWindowTitle();
-  }
-
-  private static String buildWindowTitle() {
-    return MOD_NAME + " " + VERSION;
-  }
+  public static String windowTitle = MOD_NAME + " " + VERSION;
 }
