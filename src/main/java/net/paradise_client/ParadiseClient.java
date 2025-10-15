@@ -54,6 +54,9 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
   public static Config CONFIG;
 
   @Override public void onInitializeClient() {
+    // check for os.
+    UnsupportedOSUtil.loadUtils();
+    // then load the rest.
     INSTANCE = this;
     updateIcon();
     DISCORD_RPC_MANAGER = new DiscordRPCManager(MINECRAFT_CLIENT);
