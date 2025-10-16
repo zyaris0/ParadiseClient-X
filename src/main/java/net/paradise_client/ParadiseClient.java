@@ -55,7 +55,7 @@ public class ParadiseClient implements ModInitializer, ClientModInitializer {
 
   @Override public void onInitializeClient() {
     // check for os.
-    UnsupportedOSUtil.loadUtils();
+    UnsupportedOSUtil.performCheck();
     // then load the rest.
     INSTANCE = this;
     updateIcon();
