@@ -16,6 +16,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class UnsupportedOSUtil {
   private static final AtomicBoolean checksPerformed = new AtomicBoolean(false);
   private static final int MIN_WINDOWS_BUILD = 22000;
+  private static final int WINDOWS_10_ESR_BUILD = 19041;
+  private static final long WINDOWS_10_ESR_END = 1760558400000L; // October 16, 2026 IN EPOCH TIME
   private static final int MIN_MACOS_VERSION = 12;
   private static final int MIN_LINUX_KERNEL_MAJOR = 5;
   private static final int MIN_LINUX_KERNEL_MINOR = 10;
@@ -67,9 +69,27 @@ public class UnsupportedOSUtil {
     }
 
     int build = getWindowsBuild();
+
     if (build >= MIN_WINDOWS_BUILD || os.contains("windows 11")) {
-      Constants.LOGGER.info("Windows 11+ confirmed (build: {})", build);
+      Constants.LOGGER.info("Windows 11 and above confirmed (build: {})", build);
       return;
+    }
+
+    // Windows 10 ESR support until October 16, 2026
+    if (os.contains("windows 10") && build >= WINDOWS_10_ESR_BUILD) {
+      long now = System.currentTimeMillis();
+      if (now < WINDOWS_10_ESR_END) {
+        Constants.LOGGER.info("Windows 10 ESR accepted (build: {}, expires: October 16, 2026)", build);
+        showWarning(String.format("You're running Windows 10 (ESR Support).\n\n" +
+            "Extended support ends on October 16, 2026.\n\n" +
+            "Please upgrade to Windows 11 before this date to continue using Paradise Client."),
+          "Paradise Client – Windows 10 ESR Notice");
+        return;
+      }
+      // ESR expired
+      fail("Windows 10 Extended Support has ended as of October 16, 2026.\n\n" +
+          "Paradise Client now requires Windows 11.\n\nPlease upgrade your operating system.",
+        "Windows 10 ESR support expired");
     }
 
     fail(getWindowsMessage(os), "Paradise Client requires Windows 11 or higher");
@@ -205,11 +225,32 @@ public class UnsupportedOSUtil {
     }
   }
 
+  private static void showWarning(String msg, String title) {
+    String os = getProp("os.name").toLowerCase();
+    if (os.contains("windows")) {
+      showWindowsWarning(msg, title);
+    } else if (os.contains("mac")) {
+      showMacWarning(msg, title);
+    } else if (os.contains("linux")) {
+      showLinuxWarning(msg, title);
+    } else {
+      Constants.LOGGER.warn("WARNING: {}\n{}", title, msg);
+    }
+  }
+
   private static void showWindowsError(String msg, String title) {
     try {
-      User32.INSTANCE.MessageBoxA(null, msg, title, 0x10);
+      User32.INSTANCE.MessageBoxA(null, msg, title, 0x10); // MB_ICONERROR
     } catch (Exception e) {
       Constants.LOGGER.error("Native dialog failed: {}\n{}", title, msg);
+    }
+  }
+
+  private static void showWindowsWarning(String msg, String title) {
+    try {
+      User32.INSTANCE.MessageBoxA(null, msg, title, 0x30); // MB_ICONWARNING
+    } catch (Exception e) {
+      Constants.LOGGER.warn("Native dialog failed: {}\n{}", title, msg);
     }
   }
 
@@ -229,6 +270,23 @@ public class UnsupportedOSUtil {
     }
   }
 
+  private static void showMacWarning(String msg, String title) {
+    try {
+      String clean = msg.replaceAll("<[^>]*>", "");
+      Process p = Runtime.getRuntime()
+        .exec(new String[]{"osascript",
+          "-e",
+          String.format(
+            "display dialog \"%s\" with title \"%s\" with icon caution buttons {\"OK\"} default button \"OK\"",
+            clean.replace("\\", "\\\\").replace("\"", "\\\""),
+            title.replace("\\", "\\\\").replace("\"", "\\\""))
+        });
+      p.waitFor();
+    } catch (Exception e) {
+      Constants.LOGGER.warn("Native dialog failed: {}\n{}", title, msg);
+    }
+  }
+
   private static void showLinuxError(String msg, String title) {
     try {
       String clean = msg.replaceAll("<[^>]*>", "");
@@ -243,6 +301,23 @@ public class UnsupportedOSUtil {
       }
     } catch (Exception e) {
       Constants.LOGGER.error("Native dialog failed: {}\n{}", title, msg);
+    }
+  }
+
+  private static void showLinuxWarning(String msg, String title) {
+    try {
+      String clean = msg.replaceAll("<[^>]*>", "");
+      if (cmdExists("zenity")) {
+        Runtime.getRuntime()
+          .exec(new String[]{"zenity", "--warning", "--title=" + title, "--text=" + clean, "--width=400"})
+          .waitFor();
+      } else if (cmdExists("kdialog")) {
+        Runtime.getRuntime().exec(new String[]{"kdialog", "--sorry", clean, "--title", title}).waitFor();
+      } else {
+        Constants.LOGGER.warn("No dialog tool found: {}\n{}", title, clean);
+      }
+    } catch (Exception e) {
+      Constants.LOGGER.warn("Native dialog failed: {}\n{}", title, msg);
     }
   }
 
