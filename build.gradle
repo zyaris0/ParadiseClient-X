@@ -40,28 +40,27 @@ repositories {
 }
 
 dependencies {
-    minecraft(
-            "com.mojang:minecraft:${project.minecraft_version}"
-    )
-    mappings(
-            "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    )
-    modImplementation(
-            "net.fabricmc:fabric-loader:${project.loader_version}"
-    )
-    modImplementation(
-            "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    )
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
+    // Dependencies to shadow into final jar
     def shadowLibs = [
             "net.sf.trove4j:trove4j:3.0.3",
             "se.llbit:jo-nbt:1.2.0",
             "com.github.Vatuu:discord-rpc:1.6.2",
-            "dev.dejvokep:boosted-yaml:${boosted_yaml_version}",
+            "dev.dejvokep:boosted-yaml:${project.boosted_yaml_version}"
     ]
     shadowLibs.each {
+        // put them in the 'shadow' configuration so the Shadow plugin packages them
         shadow(implementation(it))
     }
+
+    // If you need other compile/runtime libs that should NOT be shadowed, add them normally:
+    // implementation "net.dv8tion:JDA:${project.jda_version}"
+    // implementation "mysql:mysql-connector-java:${project.mysql}"
+    // implementation "io.netty:netty-all:${project.netty}"
 }
 
 processResources {
@@ -72,8 +71,8 @@ processResources {
 
     filesMatching("fabric.mod.json") {
         expand "git_hash": gitHash,
-                "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version
+               "minecraft_version": project.minecraft_version,
+               "loader_version": project.loader_version
     }
 }
 
@@ -88,7 +87,9 @@ tasks.withType(JavaCompile).configureEach {
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+        }
     }
     withSourcesJar()
 }
@@ -101,11 +102,52 @@ jar {
 }
 
 shadowJar {
+    // use the shadow configuration
     configurations = [project.configurations.shadow]
     archiveClassifier.set("dev")
+    // Optional: minimize if you want to drop unused classes (may be problematic for reflection)
+    // minimize()
 }
 
-remapJar {
-    dependsOn(shadowJar)
-    inputFile = tasks.shadowJar.archiveFile
+tasks.remapJar {
+    // Ensure remapJar will remap the shadowed jar produced by the Shadow plugin
+    dependsOn shadowJar
+    // Use Provider API to reference the shadowJar artifact
+    inputFile.set(tasks.shadowJar.archiveFile)
+    // Remove classifier so final artifact is a normal jar (no "-dev")
+    archiveClassifier.set(null)
+}
+
+loom {
+    // Add run configurations so Loom sets up proper classpath/mappings for client/server tooling
+    runs {
+        client {
+            client()
+            name = "Minecraft Client"
+            runDir = "run"
+        }
+        server {
+            server()
+            name = "Minecraft Server"
+            runDir = "run"
+        }
+    }
+
+    // Optional: make sure access widener / other loom settings are available here if you use them
+    // accessWidener = file("src/main/resources/mymod.accesswidener")
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact(tasks.remapJar) // publish remapped jar when publishing
+            groupId = project.group
+            artifactId = project.archives_base_name
+            version = project.version
+        }
+    }
+    repositories {
+        // configure your repo here if needed
+    }
 }
