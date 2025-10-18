@@ -17,7 +17,7 @@ def gitHash = {
     }
 }.call()
 
-version = project.mod_version + "+" + gitHash
+version = "1.0.0+" + gitHash
 group = project.maven_group
 
 base {
