@@ -2,9 +2,37 @@ plugins {
     id 'fabric-loom' version '1.10.1'
     id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'com.gorylenko.gradle-git-properties' version '2.4.1'
 }
 
-// ... rest of your configuration ...
+def gitHash = {
+    def stdout = new ByteArrayOutputStream()
+    try {
+        exec {
+            commandLine 'git', 'rev-parse', '--short', 'HEAD'
+            standardOutput = stdout
+            ignoreExitValue = true
+        }
+        return stdout.toString().trim()
+    } catch (Exception e) {
+        e.printStackTrace()
+        return "unknown"
+    }
+}.call()
+
+version = gitHash
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.fabricmc.net/' }
+    maven { url 'https://jitpack.io' }
+    flatDir { dirs 'libs' }
+}
 
 configurations {
     shadow
@@ -16,28 +44,60 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation "net.fabricmc.fabric-api:${project.fabric_version}"
 
-    // ✅ External dependencies to be shadowed
+    // ✅ External dependencies to be shadowed (only verified available ones)
     shadow "net.sf.trove4j:trove4j:3.0.3"
     shadow "se.llbit:jo-nbt:1.2.0"
-    // Replace with available Discord RPC library
-    shadow "com.github.JnCrMx:discord-game-sdk4j:0.5.5"
-    // Or use: shadow "club.minnced:discord-rpc-release:v3.4.0"
     shadow "dev.dejvokep:boosted-yaml:${project.boosted_yaml_version}"
 
     // ✅ Regular dependencies (not shadowed)
-    implementation "net.dv8tion:JDA:${project.jda_version}"
     implementation "mysql:mysql-connector-java:${project.mysql}"
     implementation "io.netty:netty-all:${project.netty}"
+    
+    // Discord dependencies commented out for now
+    // implementation "net.dv8tion:JDA:${project.jda_version}"
 }
 
-// ... rest of your configuration ...
+processResources {
+    inputs.property "version", project.version
+    inputs.property "minecraft_version", project.minecraft_version
+    inputs.property "loader_version", project.loader_version
+    filteringCharset "UTF-8"
+
+    filesMatching("fabric.mod.json") {
+        expand "git_hash": gitHash,
+               "minecraft_version": project.minecraft_version,
+               "loader_version": project.loader_version
+    }
+}
+
+def targetJavaVersion = 21
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        it.options.release.set(targetJavaVersion)
+    }
+}
+
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+    withSourcesJar()
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
+    }
+    archiveClassifier.set("dev")
+}
 
 shadowJar {
     configurations = [project.configurations.shadow]
     archiveClassifier.set("dev-shadow")
-    // Exclude Minecraft and Fabric classes from shadow jar
     dependencies {
         exclude(dependency('com.mojang:minecraft:.*'))
         exclude(dependency('net.fabricmc:.*'))
@@ -49,4 +109,27 @@ remapJar {
     dependsOn shadowJar
     inputFile.set(shadowJar.archiveFile)
     archiveClassifier.set(null)
+}
+
+loom {
+    runs {
+        client {
+            client()
+            name = "Minecraft Client"
+            runDir = "run"
+        }
+        server {
+            server()
+            name = "Minecraft Server"
+            runDir = "run"
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
 }
