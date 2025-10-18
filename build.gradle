@@ -1,8 +1,6 @@
 plugins {
     id 'fabric-loom' version '1.10.1'
     id 'maven-publish'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
-    id 'com.gorylenko.gradle-git-properties' version '2.4.1'
 }
 
 def gitHash = {
@@ -15,12 +13,11 @@ def gitHash = {
         }
         return stdout.toString().trim()
     } catch (Exception e) {
-        e.printStackTrace()
         return "unknown"
     }
 }.call()
 
-version = gitHash
+version = project.mod_version + "+" + gitHash
 group = project.maven_group
 
 base {
@@ -29,34 +26,34 @@ base {
 
 repositories {
     mavenCentral()
-    maven { url 'https://maven.fabricmc.net/' }
+    maven { 
+        name = "Fabric"
+        url = "https://maven.fabricmc.net/"
+    }
     maven { url 'https://jitpack.io' }
-    flatDir { dirs 'libs' }
 }
 
-configurations {
-    shadow
-    implementation.extendsFrom shadow
-}
-
+// Remove shadow configurations for now - they complicate Fabric builds
 dependencies {
-    // ✅ Core Fabric dependencies
+    // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    
+    // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    // ✅ External dependencies to be shadowed (only verified available ones)
-    shadow "net.sf.trove4j:trove4j:3.0.3"
-    shadow "se.llbit:jo-nbt:1.2.0"
-    shadow "dev.dejvokep:boosted-yaml:${project.boosted_yaml_version}"
-
-    // ✅ Regular dependencies (not shadowed)
+    // Include these as regular dependencies (Fabric Loom will handle them)
+    implementation "net.sf.trove4j:trove4j:3.0.3"
+    implementation "se.llbit:jo-nbt:1.2.0"
+    implementation "dev.dejvokep:boosted-yaml:${project.boosted_yaml_version}"
     implementation "mysql:mysql-connector-java:${project.mysql}"
     implementation "io.netty:netty-all:${project.netty}"
     
-    // Discord dependencies commented out for now
-    // implementation "net.dv8tion:JDA:${project.jda_version}"
+    // Include them in the jar
+    include "net.sf.trove4j:trove4j:3.0.3"
+    include "se.llbit:jo-nbt:1.2.0"
+    include "dev.dejvokep:boosted-yaml:${project.boosted_yaml_version}"
 }
 
 processResources {
@@ -66,7 +63,7 @@ processResources {
     filteringCharset "UTF-8"
 
     filesMatching("fabric.mod.json") {
-        expand "git_hash": gitHash,
+        expand "version": project.version,
                "minecraft_version": project.minecraft_version,
                "loader_version": project.loader_version
     }
@@ -76,7 +73,7 @@ def targetJavaVersion = 21
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        it.options.release.set(targetJavaVersion)
+        it.options.release = targetJavaVersion
     }
 }
 
@@ -90,46 +87,23 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
-    }
-    archiveClassifier.set("dev")
-}
-
-shadowJar {
-    configurations = [project.configurations.shadow]
-    archiveClassifier.set("dev-shadow")
-    dependencies {
-        exclude(dependency('com.mojang:minecraft:.*'))
-        exclude(dependency('net.fabricmc:.*'))
-        exclude(dependency('net.fabricmc.fabric-api:.*'))
+        rename { "${it}_${project.base.archivesName.get()}"}
     }
 }
 
-remapJar {
-    dependsOn shadowJar
-    inputFile.set(shadowJar.archiveFile)
-    archiveClassifier.set(null)
-}
-
-loom {
-    runs {
-        client {
-            client()
-            name = "Minecraft Client"
-            runDir = "run"
-        }
-        server {
-            server()
-            name = "Minecraft Server"
-            runDir = "run"
-        }
-    }
-}
-
+// configure the maven publication
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
         }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
     }
 }
