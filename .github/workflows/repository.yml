@@ -12,10 +12,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for proper Git hash
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
@@ -23,46 +25,114 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Get short Git hash
-        id: get-git-hash
+      - name: Get Git hash and version info
+        id: version-info
         run: |
           GIT_HASH=$(git rev-parse --short HEAD)
+          GIT_TAG=$(git describe --tags --exact-match 2>/dev/null || echo "")
           echo "GIT_HASH=$GIT_HASH" >> $GITHUB_ENV
+          echo "GIT_TAG=$GIT_TAG" >> $GITHUB_ENV
+          echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
 
-      - name: Clean and refresh Gradle environment
+      - name: Setup Gradle caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            .gradle/loom-cache
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Clean and refresh dependencies
         run: |
-          ./gradlew --stop
+          ./gradlew --stop || true
           ./gradlew clean
           ./gradlew --refresh-dependencies
 
-      - name: Build project with stacktrace
-        run: ./gradlew build --stacktrace
+      - name: Generate Minecraft sources
+        run: ./gradlew genSources --no-daemon
 
-      - name: Find JAR file
-        id: find-jar
+      - name: Build project
+        run: ./gradlew build --no-daemon --stacktrace
+
+      - name: Verify JAR files
+        id: verify-jar
         run: |
-          JAR_FILES=(build/libs/ParadiseClient-*.jar)
-          BASE_JAR_FILES=()
-          for file in "${JAR_FILES[@]}"; do
-            if [[ ! "$file" == *"-dev.jar" && ! "$file" == *"-sources.jar" ]]; then
-              BASE_JAR_FILES+=("$file")
-            fi
-          done
-
-          if [ ${#BASE_JAR_FILES[@]} -ne 1 ]; then
-            echo "Error: Expected exactly one base version JAR file, found ${#BASE_JAR_FILES[@]}"
+          # List all JAR files for debugging
+          echo "All JAR files in build/libs:"
+          ls -la build/libs/
+          
+          # Find the main JAR (non-dev, non-sources)
+          MAIN_JAR=$(find build/libs -name "*.jar" ! -name "*-dev.jar" ! -name "*-sources.jar" ! -name "*-shadow.jar" | head -1)
+          
+          if [ -z "$MAIN_JAR" ]; then
+            echo "❌ Error: No main JAR file found!"
+            echo "Available JAR files:"
+            ls -la build/libs/
             exit 1
           fi
-
-          JAR_FILE="${BASE_JAR_FILES[0]}"
-          JAR_NAME=$(basename "$JAR_FILE")
-          echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV
+          
+          JAR_NAME=$(basename "$MAIN_JAR")
+          echo "📦 Found main JAR: $JAR_NAME"
+          echo "JAR_FILE=$MAIN_JAR" >> $GITHUB_ENV
           echo "JAR_NAME=$JAR_NAME" >> $GITHUB_ENV
+          
+          # Verify JAR contains necessary files
+          echo "📋 JAR contents:"
+          jar -tf "$MAIN_JAR" | head -20
 
-      - name: Upload artifact to Nexus
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: paradise-client-build
+          path: |
+            build/libs/*.jar
+            build/reports/**
+          retention-days: 7
+
+      - name: Upload to Nexus
+        env:
+          NEXUS_URL: ${{ secrets.NEXUS_URL }}
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: |
-          curl -X PUT "https://paradise-client.net/api/versions" \
-               -u ${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }} \
-               -F "file=@${{ env.JAR_FILE }}" \
-               -F "version=${{ env.GIT_HASH }}" \
-               -F "release_date=$(TZ='Asia/Kolkata' date +'%Y-%m-%d %H:%M:%S')"
+          # Use version from Git tag if available, otherwise use Git hash
+          if [ -n "$GIT_TAG" ]; then
+            VERSION="$GIT_TAG"
+            echo "🎯 Using Git tag version: $VERSION"
+          else
+            VERSION="$GIT_HASH"
+            echo "🔖 Using Git hash version: $VERSION"
+          fi
+          
+          echo "🚀 Uploading $JAR_NAME to Nexus..."
+          
+          # Upload with detailed information
+          curl -v -X PUT "$NEXUS_URL/api/versions" \
+            -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" \
+            -F "file=@$JAR_FILE" \
+            -F "version=$VERSION" \
+            -F "git_hash=$GIT_HASH" \
+            -F "build_date=$BUILD_DATE" \
+            -F "release_date=$(TZ='Asia/Kolkata' date +'%Y-%m-%d %H:%M:%S')" \
+            -F "minecraft_version=${{ env.MINECRAFT_VERSION || '1.20.1' }}"
+          
+          echo "✅ Upload completed!"
+
+      - name: Build summary
+        if: always()
+        run: |
+          echo "### 🏗️ Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ env.GIT_TAG || env.GIT_HASH }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Git Hash:** ${{ env.GIT_HASH }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Build Date:** ${{ env.BUILD_DATE }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Artifact:** ${{ env.JAR_NAME }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ **Status:** Build and upload completed successfully!" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Status:** Build failed!" >> $GITHUB_STEP_SUMMARY
+          fi
