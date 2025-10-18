@@ -2,41 +2,13 @@ plugins {
     id 'fabric-loom' version '1.10.1'
     id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
-    id 'com.gorylenko.gradle-git-properties' version '2.4.1'
 }
 
-def gitHash = {
-    def stdout = new ByteArrayOutputStream()
-    try {
-        exec {
-            commandLine 'git', 'rev-parse', '--short', 'HEAD'
-            standardOutput = stdout
-            ignoreExitValue = true
-        }
-        return stdout.toString().trim()
-    } catch (Exception e) {
-        e.printStackTrace()
-        return "unknown"
-    }
-}.call()
+// ... rest of your configuration ...
 
-version = gitHash
-group = project.maven_group
-
-base {
-    archivesName = project.archives_base_name
-}
-
-repositories {
-    mavenCentral()
-
-    // ✅ IMPORTANT: Required for Minecraft and Yarn mappings
-    maven { url 'https://maven.fabricmc.net/' }
-
-    maven { url 'https://jitpack.io' }
-
-    // For manually added local jars
-    flatDir { dirs 'libs' }
+configurations {
+    shadow
+    implementation.extendsFrom shadow
 }
 
 dependencies {
@@ -46,96 +18,33 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    // ✅ External dependencies bundled with your jar
-    def shadowLibs = [
-            "net.sf.trove4j:trove4j:3.0.3",
-            "se.llbit:jo-nbt:1.2.0",
-            "com.github.Vatuu:discord-rpc:1.6.2",
-            "dev.dejvokep:boosted-yaml:${project.boosted_yaml_version}"
-    ]
-    shadowLibs.each {
-        shadow(implementation(it))
-    }
+    // ✅ External dependencies to be shadowed
+    shadow "net.sf.trove4j:trove4j:3.0.3"
+    shadow "se.llbit:jo-nbt:1.2.0"
+    shadow "com.github.Vatuu:discord-rpc:1.6.2"
+    shadow "dev.dejvokep:boosted-yaml:${project.boosted_yaml_version}"
 
-    // ✅ Optional dependencies (not shadowed)
+    // ✅ Regular dependencies (not shadowed)
     implementation "net.dv8tion:JDA:${project.jda_version}"
     implementation "mysql:mysql-connector-java:${project.mysql}"
     implementation "io.netty:netty-all:${project.netty}"
 }
 
-processResources {
-    inputs.property "version", project.version
-    inputs.property "minecraft_version", project.minecraft_version
-    inputs.property "loader_version", project.loader_version
-    filteringCharset "UTF-8"
-
-    filesMatching("fabric.mod.json") {
-        expand "git_hash": gitHash,
-               "minecraft_version": project.minecraft_version,
-               "loader_version": project.loader_version
-    }
-}
-
-def targetJavaVersion = 21
-tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = "UTF-8"
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        it.options.release.set(targetJavaVersion)
-    }
-}
-
-java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
-    withSourcesJar()
-}
-
-jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
-    }
-    archiveClassifier.set("dev")
-}
+// ... rest of your configuration ...
 
 shadowJar {
     configurations = [project.configurations.shadow]
-    archiveClassifier.set("dev")
+    archiveClassifier.set("dev-shadow")
+    // Exclude Minecraft and Fabric classes from shadow jar
+    dependencies {
+        exclude(dependency('com.mojang:minecraft:.*'))
+        exclude(dependency('net.fabricmc:.*'))
+        exclude(dependency('net.fabricmc.fabric-api:.*'))
+    }
 }
 
-tasks.remapJar {
+remapJar {
     dependsOn shadowJar
-    inputFile.set(tasks.shadowJar.archiveFile)
+    inputFile.set(shadowJar.archiveFile)
     archiveClassifier.set(null)
-}
-
-loom {
-    runs {
-        client {
-            client()
-            name = "Minecraft Client"
-            runDir = "run"
-        }
-        server {
-            server()
-            name = "Minecraft Server"
-            runDir = "run"
-        }
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact(tasks.remapJar)
-            groupId = project.group
-            artifactId = project.archives_base_name
-            version = project.version
-        }
-    }
-    repositories {
-        // Add your repository here if publishing is needed
-    }
 }
