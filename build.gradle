@@ -34,12 +34,12 @@ repositories {
 }
 
 dependencies {
-    // Core Minecraft and Fabric - USING PROPERTIES
+    // Core Minecraft and Fabric for 1.21.5
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     
-    // Fabric API
+    // Fabric API for 1.21.5 - CORRECT VERSION
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     
     // Your dependencies
