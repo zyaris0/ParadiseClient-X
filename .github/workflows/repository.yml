@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch all history for proper Git hash
+          fetch-depth: 0
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -25,13 +25,11 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Get Git hash and version info
-        id: version-info
+      - name: Get Git hash
+        id: git-info
         run: |
           GIT_HASH=$(git rev-parse --short HEAD)
-          GIT_TAG=$(git describe --tags --exact-match 2>/dev/null || echo "")
           echo "GIT_HASH=$GIT_HASH" >> $GITHUB_ENV
-          echo "GIT_TAG=$GIT_TAG" >> $GITHUB_ENV
           echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
 
       - name: Setup Gradle caching
@@ -45,94 +43,95 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Clean and refresh dependencies
+      - name: Clean workspace
         run: |
           ./gradlew --stop || true
+          rm -rf .gradle/loom-cache
+          rm -rf build
           ./gradlew clean
+
+      - name: Download dependencies and assets
+        run: |
           ./gradlew --refresh-dependencies
+          ./gradlew downloadAssets
 
       - name: Generate Minecraft sources
-        run: ./gradlew genSources --no-daemon
+        run: ./gradlew genSources --stacktrace --info
+
+      - name: Verify sources generation
+        run: |
+          echo "Checking if Minecraft sources were generated..."
+          find .gradle/loom-cache -name "*.jar" | head -10
+          echo "Source sets:"
+          ./gradlew properties | grep sourceSets || true
 
       - name: Build project
-        run: ./gradlew build --no-daemon --stacktrace
+        run: ./gradlew build --stacktrace --info
 
-      - name: Verify JAR files
-        id: verify-jar
+      - name: Find and verify JAR
+        id: find-jar
         run: |
-          # List all JAR files for debugging
-          echo "All JAR files in build/libs:"
-          ls -la build/libs/
+          echo "Listing all JAR files:"
+          find build/libs -name "*.jar" -type f
           
-          # Find the main JAR (non-dev, non-sources)
-          MAIN_JAR=$(find build/libs -name "*.jar" ! -name "*-dev.jar" ! -name "*-sources.jar" ! -name "*-shadow.jar" | head -1)
+          # Find main JAR (excluding dev, sources, shadow jars)
+          MAIN_JAR=$(find build/libs -name "*.jar" ! -name "*-dev.jar" ! -name "*-sources.jar" ! -name "*-shadow.jar" -type f | head -1)
           
           if [ -z "$MAIN_JAR" ]; then
-            echo "❌ Error: No main JAR file found!"
+            echo "❌ No main JAR file found!"
             echo "Available JAR files:"
             ls -la build/libs/
             exit 1
           fi
           
-          JAR_NAME=$(basename "$MAIN_JAR")
-          echo "📦 Found main JAR: $JAR_NAME"
+          echo "✅ Found main JAR: $MAIN_JAR"
           echo "JAR_FILE=$MAIN_JAR" >> $GITHUB_ENV
-          echo "JAR_NAME=$JAR_NAME" >> $GITHUB_ENV
+          echo "JAR_NAME=$(basename "$MAIN_JAR")" >> $GITHUB_ENV
           
-          # Verify JAR contains necessary files
-          echo "📋 JAR contents:"
-          jar -tf "$MAIN_JAR" | head -20
+          # Verify JAR structure
+          echo "JAR contents overview:"
+          jar -tf "$MAIN_JAR" | grep -E "(fabric.mod.json|net/paradise_client)" | head -10
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: paradise-client-build
-          path: |
-            build/libs/*.jar
-            build/reports/**
-          retention-days: 7
+          name: paradise-client-jars
+          path: build/libs/
+          retention-days: 30
 
       - name: Upload to Nexus
         env:
-          NEXUS_URL: ${{ secrets.NEXUS_URL }}
+          NEXUS_URL: ${{ secrets.NEXUS_URL || 'https://paradise-client.net' }}
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: |
-          # Use version from Git tag if available, otherwise use Git hash
-          if [ -n "$GIT_TAG" ]; then
-            VERSION="$GIT_TAG"
-            echo "🎯 Using Git tag version: $VERSION"
-          else
-            VERSION="$GIT_HASH"
-            echo "🔖 Using Git hash version: $VERSION"
-          fi
-          
           echo "🚀 Uploading $JAR_NAME to Nexus..."
           
-          # Upload with detailed information
-          curl -v -X PUT "$NEXUS_URL/api/versions" \
+          RESPONSE=$(curl -s -w "%{http_code}" -X PUT "$NEXUS_URL/api/versions" \
             -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" \
             -F "file=@$JAR_FILE" \
-            -F "version=$VERSION" \
-            -F "git_hash=$GIT_HASH" \
-            -F "build_date=$BUILD_DATE" \
-            -F "release_date=$(TZ='Asia/Kolkata' date +'%Y-%m-%d %H:%M:%S')" \
-            -F "minecraft_version=${{ env.MINECRAFT_VERSION || '1.20.1' }}"
+            -F "version=$GIT_HASH" \
+            -F "release_date=$(TZ='Asia/Kolkata' date +'%Y-%m-%d %H:%M:%S')")
           
-          echo "✅ Upload completed!"
+          HTTP_CODE=${RESPONSE: -3}
+          RESPONSE_BODY=${RESPONSE%???}
+          
+          if [ "$HTTP_CODE" -eq 200 ] || [ "$HTTP_CODE" -eq 201 ]; then
+            echo "✅ Upload successful! HTTP $HTTP_CODE"
+          else
+            echo "❌ Upload failed! HTTP $HTTP_CODE"
+            echo "Response: $RESPONSE_BODY"
+            exit 1
+          fi
 
-      - name: Build summary
+      - name: Build status
         if: always()
         run: |
-          echo "### 🏗️ Build Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Version:** ${{ env.GIT_TAG || env.GIT_HASH }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Git Hash:** ${{ env.GIT_HASH }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Build Date:** ${{ env.BUILD_DATE }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Artifact:** ${{ env.JAR_NAME }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
           if [ "${{ job.status }}" == "success" ]; then
-            echo "✅ **Status:** Build and upload completed successfully!" >> $GITHUB_STEP_SUMMARY
+            echo "🎉 Build and upload completed successfully!"
+            echo "Version: $GIT_HASH"
+            echo "JAR: $JAR_NAME"
           else
-            echo "❌ **Status:** Build failed!" >> $GITHUB_STEP_SUMMARY
+            echo "💥 Build failed!"
+            exit 1
           fi
