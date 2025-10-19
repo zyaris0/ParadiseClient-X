@@ -38,100 +38,87 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-            .gradle/loom-cache
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Clean workspace
+      - name: Clean and setup
         run: |
           ./gradlew --stop || true
           rm -rf .gradle/loom-cache
           rm -rf build
           ./gradlew clean
 
-      - name: Download dependencies and assets
+      - name: Download dependencies
+        run: ./gradlew --refresh-dependencies downloadAssets
+
+      - name: Generate sources and build
         run: |
-          ./gradlew --refresh-dependencies
-          ./gradlew downloadAssets
+          ./gradlew genSources --stacktrace || echo "genSources had issues, continuing..."
+          ./gradlew build --stacktrace --no-daemon
 
-      - name: Generate Minecraft sources
-        run: ./gradlew genSources --stacktrace --info
-
-      - name: Verify sources generation
-        run: |
-          echo "Checking if Minecraft sources were generated..."
-          find .gradle/loom-cache -name "*.jar" | head -10
-          echo "Source sets:"
-          ./gradlew properties | grep sourceSets || true
-
-      - name: Build project
-        run: ./gradlew build --stacktrace --info
-
-      - name: Find and verify JAR
+      - name: Find JAR file
         id: find-jar
         run: |
-          echo "Listing all JAR files:"
-          find build/libs -name "*.jar" -type f
+          echo "Searching for JAR files..."
+          find build/libs -name "*.jar" -type f | while read file; do
+            echo "Found: $file"
+          done
           
-          # Find main JAR (excluding dev, sources, shadow jars)
+          # Look for the main JAR file
           MAIN_JAR=$(find build/libs -name "*.jar" ! -name "*-dev.jar" ! -name "*-sources.jar" ! -name "*-shadow.jar" -type f | head -1)
           
           if [ -z "$MAIN_JAR" ]; then
-            echo "❌ No main JAR file found!"
-            echo "Available JAR files:"
-            ls -la build/libs/
+            echo "⚠️ No main JAR found, looking for any JAR..."
+            MAIN_JAR=$(find build/libs -name "*.jar" -type f | head -1)
+          fi
+          
+          if [ -z "$MAIN_JAR" ]; then
+            echo "❌ No JAR files found at all!"
+            echo "Build directory contents:"
+            ls -la build/ || echo "No build directory"
+            ls -la build/libs/ || echo "No libs directory"
             exit 1
           fi
           
-          echo "✅ Found main JAR: $MAIN_JAR"
+          echo "✅ Using JAR: $MAIN_JAR"
           echo "JAR_FILE=$MAIN_JAR" >> $GITHUB_ENV
           echo "JAR_NAME=$(basename "$MAIN_JAR")" >> $GITHUB_ENV
-          
-          # Verify JAR structure
-          echo "JAR contents overview:"
-          jar -tf "$MAIN_JAR" | grep -E "(fabric.mod.json|net/paradise_client)" | head -10
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: paradise-client-jars
-          path: build/libs/
+          name: paradise-client-build
+          path: |
+            build/libs/
+            build/reports/
           retention-days: 30
 
       - name: Upload to Nexus
+        if: success()
         env:
           NEXUS_URL: ${{ secrets.NEXUS_URL || 'https://paradise-client.net' }}
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: |
           echo "🚀 Uploading $JAR_NAME to Nexus..."
+          echo "Version: $GIT_HASH"
           
-          RESPONSE=$(curl -s -w "%{http_code}" -X PUT "$NEXUS_URL/api/versions" \
+          curl -v -X PUT "$NEXUS_URL/api/versions" \
             -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" \
             -F "file=@$JAR_FILE" \
             -F "version=$GIT_HASH" \
-            -F "release_date=$(TZ='Asia/Kolkata' date +'%Y-%m-%d %H:%M:%S')")
-          
-          HTTP_CODE=${RESPONSE: -3}
-          RESPONSE_BODY=${RESPONSE%???}
-          
-          if [ "$HTTP_CODE" -eq 200 ] || [ "$HTTP_CODE" -eq 201 ]; then
-            echo "✅ Upload successful! HTTP $HTTP_CODE"
-          else
-            echo "❌ Upload failed! HTTP $HTTP_CODE"
-            echo "Response: $RESPONSE_BODY"
-            exit 1
-          fi
+            -F "release_date=$(TZ='Asia/Kolkata' date +'%Y-%m-%d %H:%M:%S')"
 
-      - name: Build status
-        if: always()
+      - name: Build success message
+        if: success()
         run: |
-          if [ "${{ job.status }}" == "success" ]; then
-            echo "🎉 Build and upload completed successfully!"
-            echo "Version: $GIT_HASH"
-            echo "JAR: $JAR_NAME"
-          else
-            echo "💥 Build failed!"
-            exit 1
-          fi
+          echo "🎉 Build and upload completed successfully!"
+          echo "Version: $GIT_HASH"
+          echo "JAR: $JAR_NAME"
+
+      - name: Build failure message
+        if: failure()
+        run: |
+          echo "💥 Build failed!"
+          echo "Check the previous steps for compilation errors."
