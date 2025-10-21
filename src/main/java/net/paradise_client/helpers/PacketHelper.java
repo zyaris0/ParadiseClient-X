@@ -1,6 +1,7 @@
 package net.paradise_client.helpers;
 
 import net.minecraft.client.MinecraftClient;
+import net.paradise_client.helpers.TimerHelper;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.*;
 
