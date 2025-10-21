@@ -1,6 +1,6 @@
 package net.paradise_client.helpers;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 
@@ -23,10 +23,11 @@ public class PacketHelper {
     private static int packetsPerSecondTemp = 0;
     public static int packetReceived = 0;
     public static int packetSent = 0;
-    private static final Minecraft mc = Minecraft.getInstance();
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
 
     public static void onPacketReceive(Packet<?> event) {
         lastTps = tps;
+
         if (event instanceof ClientboundLoginPacket) {
             tps = 20.0D;
             fiveMinuteTPS = 20.0F;
@@ -42,12 +43,10 @@ public class PacketHelper {
                 if (tps < 0.0D) {
                     tps = 0.0D;
                 }
-
                 if (tps > 20.0D) {
                     tps = 20.0D;
                 }
             }
-
             lastReceiveTime = currentReceiveTime;
         }
 
@@ -56,11 +55,11 @@ public class PacketHelper {
         }
     }
 
-    public static void onAnyPacketReceived(){
+    public static void onAnyPacketReceived() {
         packetReceived += 1;
     }
 
-    public static void onAnyPacketSent(){
+    public static void onAnyPacketSent() {
         packetSent += 1;
     }
 
@@ -70,11 +69,11 @@ public class PacketHelper {
             tps /= 2.0D;
         }
 
-        if (Minecraft.getInstance().player == null) {
+        if (MinecraftClient.getInstance().player == null) {
             tpsList.clear();
         }
 
-        float tteemmpp = 0.0F;
+        float temp = 0.0F;
         if (tempTicks >= 20) {
             tpsList.add((float) tps);
             tempTicks = 0;
@@ -85,13 +84,13 @@ public class PacketHelper {
             tpsList.add((float) tps);
         }
 
-        Float aFloat;
-        for (Iterator<Float> var1 = tpsList.iterator(); var1.hasNext(); tteemmpp += aFloat) {
-            aFloat = var1.next();
+        for (Float value : tpsList) {
+            temp += value;
         }
 
-        fiveMinuteTPS = tteemmpp / (float) tpsList.size();
+        fiveMinuteTPS = temp / (float) tpsList.size();
         ++tempTicks;
+
         if (System.currentTimeMillis() - lastMS >= 1000L) {
             lastMS = System.currentTimeMillis();
             packetsPerSecond = packetsPerSecondTemp;
@@ -109,7 +108,6 @@ public class PacketHelper {
             if (doneOneTime) {
                 doneOneTime = false;
             }
-
             startTime = 0L;
         }
     }
@@ -126,20 +124,19 @@ public class PacketHelper {
         return 0;
     }
 
-    public static void send(Packet<?> packet){
-        if(isPlayerConnected()) mc.getConnection().send(packet);
+    public static void send(Packet<?> packet) {
+        if (isPlayerConnected()) mc.getNetworkHandler().send(packet);
     }
 
-    public static void sendChat(String message){
-        if(isPlayerConnected()) mc.getConnection().sendChat(message);
+    public static void sendChat(String message) {
+        if (isPlayerConnected()) mc.getNetworkHandler().sendChatMessage(message);
     }
 
-    public static void sendCommand(String message){
-        if(isPlayerConnected()) mc.getConnection().sendCommand(message);
+    public static void sendCommand(String message) {
+        if (isPlayerConnected()) mc.getNetworkHandler().sendCommand(message);
     }
 
-    private static boolean isPlayerConnected(){
-        return mc.getConnection() != null && mc.getConnection().getConnection().isConnected();
+    private static boolean isPlayerConnected() {
+        return mc.getNetworkHandler() != null && mc.getNetworkHandler().getConnection().isConnected();
     }
-
-      }
+}
