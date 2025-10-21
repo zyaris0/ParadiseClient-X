@@ -1,8 +1,8 @@
 package net.paradise_client.helpers;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.*;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,39 +28,35 @@ public class PacketHelper {
     public static void onPacketReceive(Packet<?> event) {
         lastTps = tps;
 
-        if (event instanceof ClientboundLoginPacket) {
+        if (event instanceof LoginS2CPacket) {
             tps = 20.0D;
             fiveMinuteTPS = 20.0F;
         }
 
-        if (event instanceof ClientboundKeepAlivePacket || event instanceof ClientboundSetTimePacket) {
+        if (event instanceof KeepAliveS2CPacket || event instanceof TimeUpdateS2CPacket) {
             long currentReceiveTime = System.currentTimeMillis();
             if (lastReceiveTime != -1L) {
                 long timeBetween = currentReceiveTime - lastReceiveTime;
                 double neededTps = (double) timeBetween / 50.0D;
                 double multi = neededTps / 20.0D;
                 tps = 20.0D / multi;
-                if (tps < 0.0D) {
-                    tps = 0.0D;
-                }
-                if (tps > 20.0D) {
-                    tps = 20.0D;
-                }
+                if (tps < 0.0D) tps = 0.0D;
+                if (tps > 20.0D) tps = 20.0D;
             }
             lastReceiveTime = currentReceiveTime;
         }
 
-        if (event instanceof ClientboundKeepAlivePacket || event instanceof ClientboundSetTimePacket) {
+        if (event instanceof KeepAliveS2CPacket || event instanceof TimeUpdateS2CPacket) {
             ++packetsPerSecondTemp;
         }
     }
 
     public static void onAnyPacketReceived() {
-        packetReceived += 1;
+        packetReceived++;
     }
 
     public static void onAnyPacketSent() {
-        packetSent += 1;
+        packetSent++;
     }
 
     public static void onUpdate() {
@@ -79,7 +75,7 @@ public class PacketHelper {
             tempTicks = 0;
         }
 
-        if ((float) tpsList.size() >= listTime) {
+        if (tpsList.size() >= listTime) {
             tpsList.clear();
             tpsList.add((float) tps);
         }
@@ -88,7 +84,7 @@ public class PacketHelper {
             temp += value;
         }
 
-        fiveMinuteTPS = temp / (float) tpsList.size();
+        fiveMinuteTPS = tpsList.isEmpty() ? 0.0F : temp / tpsList.size();
         ++tempTicks;
 
         if (System.currentTimeMillis() - lastMS >= 1000L) {
@@ -117,7 +113,7 @@ public class PacketHelper {
     }
 
     public static double lagTimeForSec() {
-        double lagTime = PacketHelper.getServerLagTime();
+        double lagTime = getServerLagTime();
         if (lagTime > 100) {
             return Math.round(lagTime / 1000.0 * 10.0) / 10.0;
         }
@@ -125,7 +121,7 @@ public class PacketHelper {
     }
 
     public static void send(Packet<?> packet) {
-        if (isPlayerConnected()) mc.getNetworkHandler().send(packet);
+        if (isPlayerConnected()) mc.getNetworkHandler().sendPacket(packet);
     }
 
     public static void sendChat(String message) {
@@ -137,6 +133,6 @@ public class PacketHelper {
     }
 
     private static boolean isPlayerConnected() {
-        return mc.getNetworkHandler() != null && mc.getNetworkHandler().getConnection().isConnected();
+        return mc.getNetworkHandler() != null && mc.getNetworkHandler().getConnection().isOpen();
     }
 }
