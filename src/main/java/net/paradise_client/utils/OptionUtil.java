@@ -1,4 +1,4 @@
-package net.paradide_client.utils;
+package net.paradise_client.utils;
 import net.paradise_client.utils.OptionType;
 
 public record OptionUtil(String name, OptionType type, String[] args) {
