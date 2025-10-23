@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.*;
 import net.minecraft.network.packet.s2c.login.LoginHelloS2CPacket;
+import net.minecraft.network.packet.s2c.common.CommonPingS2CPacket;
 
 import java.util.ArrayList;
 
@@ -28,13 +29,12 @@ public class PacketHelper {
     public static void onPacketReceive(Packet<?> event) {
         lastTps = tps;
 
-        //  LoginHelloS2CPacket instead
         if (event instanceof LoginHelloS2CPacket) {
             tps = 20.0D;
             fiveMinuteTPS = 20.0F;
         }
 
-        if (event instanceof KeepAliveS2CPacket || event instanceof TimeUpdateS2CPacket) {
+        if (event instanceof CommonPingS2CPacket || event instanceof TickTimeUpdateS2CPacket) {
             long currentReceiveTime = System.currentTimeMillis();
             if (lastReceiveTime != -1L) {
                 long timeBetween = currentReceiveTime - lastReceiveTime;
@@ -47,7 +47,7 @@ public class PacketHelper {
             lastReceiveTime = currentReceiveTime;
         }
 
-        if (event instanceof KeepAliveS2CPacket || event instanceof TimeUpdateS2CPacket) {
+        if (event instanceof CommonPingS2CPacket || event instanceof TickTimeUpdateS2CPacket) {
             ++packetsPerSecondTemp;
         }
     }
