@@ -1,12 +1,11 @@
 package net.paradise_client.helpers;
 
 import net.minecraft.client.MinecraftClient;
-import net.paradise_client.helpers.TimerHelper;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.*;
+import net.minecraft.network.packet.s2c.login.LoginHelloS2CPacket;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class PacketHelper {
     private static final TimerHelper th = new TimerHelper();
@@ -16,7 +15,7 @@ public class PacketHelper {
     public static double lastTps;
     public static double tps;
     private static int tempTicks = 0;
-    private static long lastReceiveTime;
+    private static long lastReceiveTime = -1L;
     private static long startTime;
     private static boolean doneOneTime;
     private static long lastMS;
@@ -29,7 +28,8 @@ public class PacketHelper {
     public static void onPacketReceive(Packet<?> event) {
         lastTps = tps;
 
-        if (event instanceof LoginS2CPacket) {
+        //  LoginHelloS2CPacket instead
+        if (event instanceof LoginHelloS2CPacket) {
             tps = 20.0D;
             fiveMinuteTPS = 20.0F;
         }
