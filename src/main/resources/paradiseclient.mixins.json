@@ -18,6 +18,7 @@
     "gui.screen.MultiplayerScreenMixin",
     "gui.screen.ScreenMixin",
     "gui.screen.TitleScreenMixin",
+    "gui.PressableWidgetMixin",
     "minecraft.MainMixin",
     "minecraft.MinecraftClientMixin",
     "network.connection.ClientConnectionMixin",

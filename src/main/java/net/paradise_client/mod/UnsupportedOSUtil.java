@@ -16,8 +16,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class UnsupportedOSUtil {
   private static final AtomicBoolean checksPerformed = new AtomicBoolean(false);
   private static final int MIN_WINDOWS_BUILD = 22000;
-  private static final int WINDOWS_10_ESR_BUILD = 19041;
-  private static final long WINDOWS_10_ESR_END = 1760558400000L; // October 16, 2026 IN EPOCH TIME
   private static final int MIN_MACOS_VERSION = 12;
   private static final int MIN_LINUX_KERNEL_MAJOR = 5;
   private static final int MIN_LINUX_KERNEL_MINOR = 10;
@@ -73,23 +71,6 @@ public class UnsupportedOSUtil {
     if (build >= MIN_WINDOWS_BUILD || os.contains("windows 11")) {
       Constants.LOGGER.info("Windows 11 and above confirmed (build: {})", build);
       return;
-    }
-
-    // Windows 10 ESR support until October 16, 2026
-    if (os.contains("windows 10") && build >= WINDOWS_10_ESR_BUILD) {
-      long now = System.currentTimeMillis();
-      if (now < WINDOWS_10_ESR_END) {
-        Constants.LOGGER.info("Windows 10 ESR accepted (build: {}, expires: October 16, 2026)", build);
-        showWarning(String.format("You're running Windows 10 (ESR Support).\n\n" +
-            "Extended support ends on October 16, 2026.\n\n" +
-            "Please upgrade to Windows 11 before this date to continue using Paradise Client."),
-          "Paradise Client – Windows 10 ESR Notice");
-        return;
-      }
-      // ESR expired
-      fail("Windows 10 Extended Support has ended as of October 16, 2026.\n\n" +
-          "Paradise Client now requires Windows 11.\n\nPlease upgrade your operating system.",
-        "Windows 10 ESR support expired");
     }
 
     fail(getWindowsMessage(os), "Paradise Client requires Windows 11 or higher");
