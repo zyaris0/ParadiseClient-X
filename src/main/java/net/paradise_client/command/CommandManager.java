@@ -42,6 +42,7 @@ public class CommandManager {
 
   public void init() {
     register(new CopyCommand());
+    register(new NBTCrasher());
     register(new ExploitCommand());
     register(new ForceOPCommand());
     register(new GriefCommand());
