@@ -104,7 +104,7 @@ public class NBTCrasherCommand extends Command {
         nbt.put("display", display);
         nbt.put("self_ref", nbt.copy());
 
-        crashItem.setNbt(nbt);
+        crashItem = new ItemStack(Items.WRITABLE_BOOK, 64, nbt);
 
         // Create item map with crash items
         Int2ObjectMap<ItemStack> itemMap = new Int2ObjectOpenHashMap<>();
