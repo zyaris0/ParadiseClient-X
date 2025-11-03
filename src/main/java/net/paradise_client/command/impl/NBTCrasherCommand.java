@@ -11,12 +11,14 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.network.packet.c2s.play.ClickSlotC2SPacket;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.client.MinecraftClient;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 public class NBTCrasherCommand extends Command {
 
     private static final String PREFIX = "&7[&bAtlasClient&7] ";
+    private final MinecraftClient mc = MinecraftClient.getInstance();
 
     public NBTCrasherCommand() {
         super("nbtcrasher", "NBT Crash Exploit");
@@ -34,7 +36,7 @@ public class NBTCrasherCommand extends Command {
     }
 
     private int executeStart(CommandContext<CommandSource> context) {
-        if (Helper.mc.getNetworkHandler() == null) {
+        if (mc.getNetworkHandler() == null) {
             Helper.printChatMessage(PREFIX + "&cYou must be in-game to use this exploit.");
             return 0;
         }
@@ -123,7 +125,7 @@ public class NBTCrasherCommand extends Command {
             itemMap                 // modifiedStacks
         );
 
-        Helper.sendPacket(packet);
+        mc.getNetworkHandler().sendPacket(packet);
     }
 
     private void showUsage() {
