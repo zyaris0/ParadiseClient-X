@@ -1,4 +1,4 @@
-package dev.atlasclient.packet;
+package net.paradise_client.packet;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
