@@ -1,6 +1,6 @@
-package dev.atlasclient.packet;
+package net.paradise_client.packet;
 
-import dev.atlasclient.Helper;
+import net.paradise_client.Helper;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.network.packet.CustomPayload;
