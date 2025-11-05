@@ -42,7 +42,14 @@ public class CommandManager {
 
   public void init() {
     register(new CopyCommand());
-    register(new NBTCrasherCommand());
+    register(new BungeeGuardCommand());
+    register(new T2CExploitCommand());
+    register(new MultiChatExploitCommand());
+    register(new DiscordRankSyncExploitCommand());
+    register(new CommandBridgeExploitCommand());
+    register(new CloudSyncExploitCommand());
+    register(new VelocityCrasherCommand());
+    register(new InterchatExploitCommand());
     register(new ExploitCommand());
     register(new ForceOPCommand());
     register(new GriefCommand());
