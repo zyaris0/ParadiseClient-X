@@ -42,6 +42,7 @@ public class CommandManager {
 
   public void init() {
     register(new CopyCommand());
+    register(new BungeeConsoleExploitCommand());
     register(new BungeeGuardCommand());
     register(new T2CExploitCommand());
     register(new MultiChatExploitCommand());
