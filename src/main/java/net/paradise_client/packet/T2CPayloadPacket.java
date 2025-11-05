@@ -1,4 +1,4 @@
-package dev.atlasclient.packet;
+package net.paradise_client.packet;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -7,7 +7,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.network.packet.CustomPayload.Id;
 import net.minecraft.util.Identifier;
-import dev.atlasclient.Helper;
+import net.paradise_client.Helper;
 
 public final class T2CPayloadPacket implements CustomPayload {
     private final String command;
