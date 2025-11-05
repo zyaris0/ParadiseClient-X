@@ -1,4 +1,4 @@
-package dev.atlasclient.command.impl;
+package net.paradise_client.command.impl;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
@@ -10,8 +10,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.command.CommandSource;
 
-import dev.atlasclient.Helper;
-import dev.atlasclient.command.Command;
+import net.paradise_client.Helper;
+import net.paradise_client.command.Command;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
