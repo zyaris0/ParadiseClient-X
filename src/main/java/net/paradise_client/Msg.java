@@ -1,4 +1,4 @@
-package dev.atlasclient;
+package net.paradise_client;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.ClickEvent;
