@@ -3,7 +3,7 @@ package net.paradise_client.packet;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import dev.atlasclient.Constants;
-import dev.atlasclient.Helper;
+import net.paradise_client.Helper;
 import java.nio.charset.StandardCharsets;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
