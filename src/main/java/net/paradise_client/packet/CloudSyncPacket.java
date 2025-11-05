@@ -1,4 +1,4 @@
-package dev.atlasclient.packet;
+package net.paradise_client.packet;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
